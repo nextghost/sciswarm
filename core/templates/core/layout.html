@@ -1,0 +1,40 @@
+{% load static %}{% load i18n %}{% load sciswarm %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}<html class="no-js" lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% trans 'Scientific social network' %}">
+    <title>{% block title %}{% trans 'Sciswarm' %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'js/sciswarm.js' %}"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div class="wrapper">
+        <div class="pull-left"><span class="title"><a href="{% url 'core:homepage' %}">Sciswarm</a></span></div>
+	<div class="userinfo">
+        {% if request.user.is_authenticated %}
+          {% url 'core:edit_profile' as edit_profile_url%}
+          {% blocktrans with username=request.user.get_full_name|default:request.user.get_username %}Welcome, <a href="{{ edit_profile_url }}">{{ username }}</a>{% endblocktrans %} |
+          <a href="{% url 'core:logout' %}">{% trans 'Log out' %}</a>
+	{% else %}
+	  <a href="{% url 'core:login' %}">{% trans 'Log in' %}</a> | <a href="{% url 'core:register' %}">{% trans 'Register' %}</a>
+	{% endif %}
+	</div>
+      </div>
+    </div>
+    <div id="body" class="wrapper">
+      <div id="left-sidebar">
+        <div class="menu">
+	  <div class="menu_item"><a href="{% url 'core:homepage' %}">{% trans 'Home' %}</a></div>
+        </div>
+      </div>
+
+      <div id="main">
+        {% block content %}
+	{% endblock %}
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+* {
+	box-sizing: border-box;
+}
+
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
+	font-size: 11pt;
+	color: #333333;
+	line-height: 1.4;
+	margin: 0;
+	padding: 0;
+	background-color: white;
+}
+
+th {
+	text-align: left;
+}
+
+#header {
+	background-color: #ddddff;
+	overflow: auto;
+	padding: 1em;
+}
+
+#header .userinfo {
+	float: right;
+}
+
+#footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 3.5em;
+	padding: 1em;
+	background-color: #f7f7ff;
+}
+
+#footer-margin {
+	clear: both;
+	margin-bottom: 5em;
+}
+
+#body {
+	display: table;
+	border-spacing: 5px;
+	width: 100%;
+	vertical-align: top;
+}
+
+#left-sidebar {
+	width: 16em;
+	min-width: 16em;
+	margin: 5px;
+	float: left;
+}
+
+#left-sidebar + #main {
+	margin-left: 17em;
+}
+
+#content {
+	padding: 1em;
+}
+
+.wrapper {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.sidebar {
+	margin: 5px;
+}
+
+.menu {
+	margin: 5px;
+	border: 1px solid #ccccff;
+	padding-left: 0px;
+	border-radius: 5px;
+	background-color: #f7f7ff;
+	padding-left: 1em;
+	padding-right: 1em;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.errorlist, .error {
+	font-weight: bold;
+	color: red;
+}
+
+.pull-left {
+	float: left;
+}

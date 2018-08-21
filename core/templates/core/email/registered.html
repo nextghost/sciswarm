@@ -1,0 +1,12 @@
+{% extends 'core/email/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block content %}
+<h1>{% trans 'Welcome to Sciswarm!' %}</h1>
+<div class="box">
+<p>{% blocktrans %}Thank you for using Sciswarm.{% endblocktrans %}</p>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

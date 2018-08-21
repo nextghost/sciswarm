@@ -1,0 +1,12 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Log In' %}{% endblock %}
+
+{% block content %}
+{# Translators: Page title #}
+<h1>{% trans 'Log In' %}</h1>
+<div class="box">
+<p class="error">{% trans 'Your IP address has been temporarily blocked due to high number of failed login attempts. Please try again later.' %}</p>
+</div>
+{% endblock %}

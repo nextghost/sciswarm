@@ -1,0 +1,5 @@
+{% load i18n %}
+{% load sciswarm %}
+{% trans 'Welcome to Sciswarm!' %}
+
+{% blocktrans %}Thank you for using Sciswarm.{% endblocktrans %}

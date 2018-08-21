@@ -1,0 +1,18 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Create Account' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Create Account' %}</h1>
+<div class="box">
+<form method="post" action="?">
+{% csrf_token %}
+<table class="form">
+  {{ form.as_table }}
+  {# Traslators: Link/submit button caption #}
+  <tr><td>&nbsp;</td><td><input type="submit" value="{% trans 'Register' %}"/></td></tr>
+</table>
+</form>
+</div>
+{% endblock %}
