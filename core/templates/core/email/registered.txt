@@ -1,5 +1,6 @@
-{% load i18n %}
-{% load sciswarm %}
-{% trans 'Welcome to Sciswarm!' %}
+{% load i18n %}{% load sciswarm %}
+{% autoescape off %}{% trans 'Welcome to Sciswarm!' %}
 
-{% blocktrans %}Thank you for using Sciswarm.{% endblocktrans %}
+{% blocktrans %}To finish your registration, you need to verify your e-mail address by visiting the URL below. If the verification is successful, you will be redirected to the login page immediately.{% endblocktrans %}
+{{ verify_url }}
+{% endautoescape %}

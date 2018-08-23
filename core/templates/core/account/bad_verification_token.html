@@ -1,0 +1,12 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'E-mail Verification Error' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'E-mail Verification Error' %}</h1>
+<div class="box">
+{% blocktrans %}The verification token is invalid. Please make sure that you have copied the verification URL correctly.{% endblocktrans %}
+</div>
+{% endblock %}

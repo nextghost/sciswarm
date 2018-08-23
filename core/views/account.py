@@ -2,11 +2,13 @@ from django.conf import settings
 from django.contrib.auth import views, REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import login_required
 from django.db.transaction import atomic, on_commit
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.utils import translation
 from django.utils.decorators import method_decorator
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
@@ -15,7 +17,7 @@ from . import utils
 from .base import BaseCreateView, BaseUpdateView
 from ..forms.auth import (LoginForm, RegistrationForm, UserProfileUpdateForm,
     PasswordChangeForm, SetPasswordForm)
-from ..utils.html import NavigationBar
+from ..utils.html import NavigationBar, full_reverse, query_string
 from ..utils.mail import send_template_mail
 from .. import models
 
@@ -69,10 +71,33 @@ def password_reset_confirm(request):
     return views.password_reset_confirm(request, uid, token,
         set_password_form=SetPasswordForm, post_reset_redirect=next_url)
 
+def verify_user_email(request):
+    user_id = request.GET.get('ref')
+    token = request.GET.get('token')
+    if user_id is None:
+        raise Http404()
+    try:
+        user_id = force_text(urlsafe_base64_decode(user_id))
+        user = models.User.objects.get(pk=user_id)
+    except:
+        raise Http404()
+
+    if user.verification_key is not None:
+        if token is not None and token == user.verification_key:
+            user.verification_key = None
+            user.save(update_fields=['verification_key'])
+        else:
+            template = 'core/account/bad_verification_token.html'
+            return render(request, template, dict())
+    return HttpResponseRedirect(reverse('core:login'))
+
+def registration_complete(request):
+    return render(request, 'core/account/registered.html', dict())
+
 class RegistrationView(BaseCreateView):
     template_name = 'core/account/register.html'
     form_class = RegistrationForm
-    success_url = reverse_lazy('core:login')
+    success_url = reverse_lazy('core:registered')
 
     @method_decorator(sensitive_post_parameters())
     @method_decorator(csrf_protect)
@@ -88,7 +113,12 @@ class RegistrationView(BaseCreateView):
         def callback(request=self.request, form=form):
             template = 'core/email/registered'
             subject = _('Welcome to Sciswarm!')
-            send_template_mail(self.request, subject, template, dict(),
+            uid = urlsafe_base64_encode(force_bytes(form.instance.pk))
+            verify_args = query_string(ref=uid,
+                token=form.instance.verification_key)
+            url = full_reverse(self.request, 'core:verify_user_email')
+            context = dict(verify_url=''.join([url, '?', verify_args]))
+            send_template_mail(self.request, subject, template, context,
                 [form.instance.email])
         on_commit(callback)
         return ret

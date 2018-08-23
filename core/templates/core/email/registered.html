@@ -5,7 +5,7 @@
 {% block content %}
 <h1>{% trans 'Welcome to Sciswarm!' %}</h1>
 <div class="box">
-<p>{% blocktrans %}Thank you for using Sciswarm.{% endblocktrans %}</p>
+{% blocktrans %}To finish your registration, you need to verify your e-mail address by <a href="{{ verify_url }}">clicking here</a>. If the verification is successful, you will be redirected to the login page immediately.{% endblocktrans %}
 </div>
 {% endblock %}
 

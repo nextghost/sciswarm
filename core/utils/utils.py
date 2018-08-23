@@ -43,6 +43,16 @@ def session_storage_get(request, *path, **kwargs):
         tmp = tmp[item]
     return tmp
 
+def generate_token(bytelen):
+    try:
+        import secrets
+        return secrets.token_urlsafe(bytelen)
+    except ImportError:
+        import os
+        from django.utils.http import urlsafe_base64_encode
+        data = os.urandom(bytelen)
+        return urlsafe_base64_encode(data).decode('ascii')
+
 def update_diff(old, new):
     oldset, newset = set(old), set(new)
     delete = list(oldset - newset)

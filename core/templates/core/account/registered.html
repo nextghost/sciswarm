@@ -1,0 +1,12 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'Registration Complete' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Registration Complete' %}</h1>
+<div class="box">
+{% blocktrans %}Thank you for registering. As a final step, you need to verify your e-mail address before you log in. We have sent you an e-mail with verification link. Simply visit the link and enjoy using Sciswarm.{% endblocktrans %}
+</div>
+{% endblock %}

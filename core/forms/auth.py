@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _, ugettext_noop
 from django import forms
 from .base import HelpTextMixin, ModelForm
 from .. import models
+from ..utils.utils import generate_token
 
 # FIXME: Fix upstream translation and remove this
 ugettext_noop(
@@ -28,11 +29,21 @@ class LoginForm(auth.AuthenticationForm):
             models.BruteBlock.login_failure(self.request, username)
             raise
 
+    def confirm_login_allowed(self, user):
+        super(LoginForm, self).confirm_login_allowed(user)
+        if user.verification_key is not None:
+            msg = _('You need to verify your e-mail address before first login. If you have not received the verification e-mail, please contact the administrator.')
+            raise ValidationError(msg, 'verification_pending')
+
 class RegistrationForm(HelpTextMixin, auth.UserCreationForm):
     class Meta(auth.UserCreationForm.Meta):
         model = models.User
         fields = ['username', 'password1', 'password2', 'email', 'first_name',
             'last_name']
+
+    def save(self, commit=True):
+        self.instance.verification_key = generate_token(32)
+        return super(RegistrationForm, self).save(commit)
 
 class UserProfileUpdateForm(ModelForm):
     class Meta:

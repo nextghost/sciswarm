@@ -7,6 +7,11 @@ def full_reverse(request, viewname, *args, **kwargs):
     url = reverse(viewname, *args, **kwargs)
     return request.build_absolute_uri(url)
 
+def query_string(**kwargs):
+    ret = QueryDict(mutable=True)
+    ret.update(kwargs)
+    return ret.urlencode()
+
 class NavigationBar(object):
     def __init__(self, request, links, exclude_kwargs=[]):
         resolver = request.resolver_match
