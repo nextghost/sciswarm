@@ -1,10 +1,12 @@
 from django.contrib.auth import forms as auth
 from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _, ugettext_noop
+from django.utils import timezone
 from django import forms
 from .base import HelpTextMixin, ModelForm
 from .. import models
 from ..utils.utils import generate_token
+import datetime
 
 # FIXME: Fix upstream translation and remove this
 ugettext_noop(
@@ -34,6 +36,9 @@ class LoginForm(auth.AuthenticationForm):
         if user.verification_key is not None:
             msg = _('You need to verify your e-mail address before first login. If you have not received the verification e-mail, please contact the administrator.')
             raise ValidationError(msg, 'verification_pending')
+        if user.delete_deadline is not None:
+            msg = _('Your account is set to be deleted soon. If you have changed your mind, please contact the administrator.')
+            raise ValidationError(msg, 'delete_pending')
 
 class RegistrationForm(HelpTextMixin, auth.UserCreationForm):
     class Meta(auth.UserCreationForm.Meta):
@@ -57,6 +62,16 @@ class UserProfileUpdateForm(ModelForm):
         if not self.instance.check_password(pwd):
             raise ValidationError(_('Wrong password.'), code='bad_password')
         return pwd
+
+class DeleteAccountForm(UserProfileUpdateForm):
+    class Meta:
+        model = models.User
+        fields = []
+
+    def save(self, commit=True):
+        delta = datetime.timedelta(days=30)
+        self.instance.delete_deadline = timezone.now() + delta
+        return super(DeleteAccountForm, self).save(commit)
 
 class SetPasswordForm(auth.SetPasswordForm):
     def __init__(self, *args, **kwargs):

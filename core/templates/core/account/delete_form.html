@@ -1,0 +1,22 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Delete Account' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Delete Account' %}</h1>
+{{ navbar }}
+<div class="box">
+{% blocktrans %}Enter your password to confirm deleting your account. If you choose to proceed, your account will be deleted in 30 days. You will not be able to log in during that time but you can contact the administrator if you change your mind to have your account restored.{% endblocktrans %}
+</div>
+<div class="box">
+<form method="post" action="?">
+{% csrf_token %}
+<table class="form">
+  {{ form.as_table }}
+  {# Traslators: Link/submit button caption #}
+  <tr><td>&nbsp;</td><td><input type="submit" value="{% trans 'Delete account' %}"/></td></tr>
+</table>
+</form>
+</div>
+{% endblock %}

@@ -16,7 +16,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from . import utils
 from .base import BaseCreateView, BaseUpdateView
 from ..forms.auth import (LoginForm, RegistrationForm, UserProfileUpdateForm,
-    PasswordChangeForm, SetPasswordForm)
+    PasswordChangeForm, SetPasswordForm, DeleteAccountForm)
 from ..utils.html import NavigationBar, full_reverse, query_string
 from ..utils.mail import send_template_mail
 from .. import models
@@ -45,8 +45,10 @@ def login(request):
 @login_required
 def password_change(request):
     next_url = reverse('core:homepage')
-    nav_links = [(_('Update user profile'), 'core:edit_profile', tuple(),
-        dict())]
+    nav_links = [
+        (_('Edit profile'), 'core:edit_profile', tuple(), dict()),
+        (_('Delete account'), 'core:delete_account', tuple(), dict())
+    ]
     context = dict(navbar=NavigationBar(request, nav_links))
     return views.password_change(request, post_change_redirect=next_url,
         password_change_form=PasswordChangeForm, extra_context=context)
@@ -94,6 +96,7 @@ def verify_user_email(request):
 def registration_complete(request):
     return render(request, 'core/account/registered.html', dict())
 
+@method_decorator(sensitive_post_parameters(), name='dispatch')
 class RegistrationView(BaseCreateView):
     template_name = 'core/account/register.html'
     form_class = RegistrationForm
@@ -130,14 +133,23 @@ class ProfileUpdateView(BaseUpdateView):
     template_name = 'core/account/profile_form.html'
     form_class = UserProfileUpdateForm
     success_url = reverse_lazy('core:homepage')
+    page_title = _('Update User Profile')
 
     def get_object(self):
         return self.request.user
 
     def get_context_data(self, **kwargs):
-        nav_links = [(_('Change password'), 'core:password_change', tuple(),
-            dict())]
+        nav_links = [
+            (_('Edit profile'), 'core:edit_profile', tuple(), dict()),
+            (_('Change password'), 'core:password_change', tuple(), dict()),
+            (_('Delete account'), 'core:delete_account', tuple(), dict())
+        ]
         context = super(ProfileUpdateView, self).get_context_data(**kwargs)
-        context['page_title'] = _('Update User Profile')
         context['navbar'] = NavigationBar(self.request, nav_links)
         return context
+
+# Decorators applied in parent class
+class DeleteAccountView(ProfileUpdateView):
+    template_name = 'core/account/delete_form.html'
+    form_class = DeleteAccountForm
+    page_title = _('Delete Account')

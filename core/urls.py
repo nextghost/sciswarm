@@ -19,6 +19,8 @@ account_patterns = [
         name='password_reset_confirm'),
     url(r'^verify_email/?\Z', account.verify_user_email,
         name='verify_user_email'),
+    url(r'^delete/?\Z', account.DeleteAccountView.as_view(),
+        name='delete_account'),
 ]
 
 urlpatterns = [

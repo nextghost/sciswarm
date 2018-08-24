@@ -32,5 +32,5 @@ class NavigationBar(object):
             url = reverse(urlname, args=args, kwargs=kwargs)
             links.append((url, title))
         link_tpl = '<a href="{}">{}</a>'
-        content = format_html_join('', link_tpl, links)
+        content = format_html_join(' | ', link_tpl, links)
         return format_html('<div class="navbar">{}</div>', content)

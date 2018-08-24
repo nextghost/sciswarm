@@ -10,6 +10,12 @@ class User(AbstractUser):
     delete_deadline = models.DateTimeField(_('account deletion date'),
         null=True, db_index=True, editable=False)
 
+    # Force logout when the user deletes their account
+    def get_session_auth_hash(self):
+        if self.delete_deadline is not None:
+            return ''
+        return super(User, self).get_session_auth_hash()
+
 class BruteBlockManager(models.Manager):
     def purge_stale(self):
         start = timezone.now() - datetime.timedelta(hours=1)
