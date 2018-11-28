@@ -1,0 +1,18 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'Delete Citation' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Delete Citation' %}</h1>
+<div class="box">
+<div>{{ object|html }}</div>
+{% if object.target is not None %}<div>{{ object.target|object_link }}</div>{% endif %}
+</div>
+<h2>{% trans 'Do you really want to delete this citation?' %}</h2>
+<form method="post" action="?">
+{% csrf_token %}
+<p><input type="submit" value="{% trans 'Delete' %}"/></p>
+</form>
+{% endblock %}

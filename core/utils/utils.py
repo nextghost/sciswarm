@@ -2,7 +2,7 @@ from django.utils import timezone
 import datetime
 import logging
 
-logger = logging.getLogger('ioerp')
+logger = logging.getLogger('sciswarm')
 
 def request_storage(request, *path):
     """Create or return dict in request.ioerp"""
@@ -114,3 +114,14 @@ def fold_and(value_list):
     for value in value_list[1:]:
         ret &= value
     return ret
+
+def remove_duplicates(item_list, queryset=None):
+    if not item_list:
+        return item_list
+    item_map = dict(((x.pk, x) for x in item_list))
+    if queryset is not None:
+        query = item_list[0].__class__.query_model.pk.belongs(list(item_map))
+        del_items = queryset.filter(query).values_list('pk', flat=True)
+        for key in del_items:
+            del item_map[key]
+    return list(item_map.values())

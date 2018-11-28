@@ -1,6 +1,6 @@
 from django.conf.urls import include, url
 from django.contrib.auth import views as auth
-from .views import account, main
+from .views import account, main, paper, user
 
 account_patterns = [
     url(r'^login/?\Z', account.login, name='login'),
@@ -10,6 +10,10 @@ account_patterns = [
     url(r'^registered/?\Z', account.registration_complete, name='registered'),
     url(r'^edit_profile/?\Z', account.ProfileUpdateView.as_view(),
         name='edit_profile'),
+    url(r'^add_identifier/?\Z', user.LinkUserAliasView.as_view(),
+        name='add_user_identifier'),
+    url(r'^delete_identifier/(?P<pk>[0-9]+)/?\Z',
+        user.UnlinkUserAliasView.as_view(), name='unlink_user_identifier'),
     url(r'^change_password/?\Z', account.password_change,
         name='password_change'),
     url(r'^reset_password/?\Z', account.password_reset, name='password_reset'),
@@ -23,7 +27,38 @@ account_patterns = [
         name='delete_account'),
 ]
 
+user_patterns = [
+    url(r'^(?P<username>[^/]+)/?\Z', user.UserDetailView.as_view(),
+        name='user_detail'),
+]
+
+paper_patterns = [
+    url(r'^new/?\Z', paper.CreatePaperView.as_view(), name='create_paper'),
+    url(r'^delete_identifier/(?P<pk>[0-9]+)/?\Z',
+        paper.UnlinkPaperAliasView.as_view(), name='unlink_paper_identifier'),
+    url(r'^delete_author/(?P<pk>[0-9]+)/?\Z',
+        paper.DeletePaperAuthorView.as_view(), name='delete_paper_author'),
+    url(r'^delete_author_name/(?P<pk>[0-9]+)/?\Z',
+        paper.DeletePaperAuthorNameView.as_view(),
+        name='delete_paper_author_name'),
+    url(r'^(?P<pk>[0-9]+)/edit/?\Z', paper.UpdatePaperView.as_view(),
+        name='edit_paper'),
+    url(r'^(?P<pk>[0-9]+)/add_author/?\Z',
+        paper.AddPaperAuthorView.as_view(), name='add_paper_author'),
+    url(r'^(?P<pk>[0-9]+)/add_identifier/?\Z',
+        paper.LinkPaperAliasView.as_view(), name='add_paper_identifier'),
+    url(r'^(?P<pk>[0-9]+)/add_citations/?\Z',
+        paper.AddCitationsFormView.as_view(), name='add_paper_citations'),
+    url(r'^(?P<paper>[0-9]+)/delete_citation/(?P<ref>[0-9]+)/?\Z',
+        paper.DeleteCitationView.as_view(), name='delete_paper_citation'),
+    url(r'^(?P<pk>[0-9]+)/?\Z', paper.PaperDetailView.as_view(),
+        name='paper_detail'),
+]
+
 urlpatterns = [
     url(r'^\Z', main.homepage, name='homepage'),
+    url(r'^p/?\Z', paper.PaperListView.as_view(), name='paper_list'),
+    url(r'^u/', include(user_patterns)),
+    url(r'^p/', include(paper_patterns)),
     url(r'^account/', include(account_patterns)),
 ]

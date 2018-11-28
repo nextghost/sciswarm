@@ -1,0 +1,15 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'Delete Paper Author Name' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Delete Paper Author Name' %}</h1>
+<div class="box">{{ object }}</div>
+<h2>{% trans 'Do you really want to delete this author name?' %}</h2>
+<form method="post" action="?">
+{% csrf_token %}
+<p><input type="submit" value="{% trans 'Delete' %}"/></p>
+</form>
+{% endblock %}

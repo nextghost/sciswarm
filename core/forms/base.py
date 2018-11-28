@@ -1,9 +1,13 @@
 from django import forms
-from django.utils.html import mark_safe
+from django.core.exceptions import ImproperlyConfigured
+from django.db import IntegrityError
+from django.utils.html import conditional_escape, format_html, mark_safe
 from django.utils.translation import ugettext as _
 from .widgets import SubmitButton
+from ..models import const
 from ..utils.utils import logger
 from ..utils.transaction import lock_record
+from ..utils.validators import validate_alias
 
 class HelpTextMixin(object):
     def __getitem__(self, name):
@@ -107,3 +111,94 @@ class StateChangeForm(Form):
 
     def as_p(self):
         return ''
+
+class BaseAliasForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        allow_sciswarm = kwargs.pop('allow_sciswarm', False)
+        require_unlinked = kwargs.pop('require_unlinked', False)
+        label = kwargs.pop('label', _('Identifier:'))
+        super(BaseAliasForm, self).__init__(*args, **kwargs)
+        self.allow_sciswarm = allow_sciswarm
+        self.require_unlinked = require_unlinked
+        self.label = label
+        if self.instance.pk is not None:
+            msg = 'Editing existing aliases is not allowed.'
+            raise ImproperlyConfigured(msg)
+        if not self.allow_sciswarm:
+            field = self.fields['scheme']
+            blocked = const.person_alias_schemes.SCISWARM
+            field.choices = [(k,v) for (k,v) in field.choices if k != blocked]
+
+    def _html_output(self, template):
+        scheme = self['scheme']
+        ident = self['identifier']
+        err_list = [y for x in self.errors.values() for y in x]
+        errors = self.error_class([conditional_escape(e) for e in err_list])
+        return format_html(template, label=self.label, errors=errors,
+            scheme=scheme, identifier=ident)
+
+    def as_table(self):
+        tpl = '<tr><th>{label}</th><td>{errors}{scheme}{identifier}</tr>'
+        return self._html_output(tpl)
+
+    def as_ul(self):
+        tpl = '<li>{errors}{label} {scheme}{identifier}</li>'
+        return self._html_output(tpl)
+
+    def as_p(self):
+        tpl = '{errors}\n<p>{label} {scheme}{identifier}</p>'
+        return self._html_output(tpl)
+
+    def validate_alias(self, scheme, identifier):
+        return validate_alias(scheme, identifier)
+
+    def clean(self):
+        scheme = self.cleaned_data.get('scheme')
+        identifier = self.cleaned_data.get('identifier')
+        target = self.instance.target or self.initial.get('target')
+
+        if identifier:
+            try:
+                (scheme, identifier) = self.validate_alias(scheme, identifier)
+                self.cleaned_data['scheme'] = scheme
+                self.cleaned_data['identifier'] = identifier
+            except forms.ValidationError as err:
+                self.add_error('identifier', err)
+                scheme = None
+                identifier = None
+        if scheme:
+            maxlen = self._meta.model._meta.get_field('scheme').max_length
+            if len(scheme) > maxlen:
+                msg = _('Scheme prefix is too long.')
+                err = forms.ValidationError(msg, 'max_length')
+                self.add_error('identifier', err)
+        if not self.allow_sciswarm:
+            if scheme == const.person_alias_schemes.SCISWARM:
+                msg = _('This scheme prefix is not allowed.')
+                err = forms.ValidationError(msg, 'invalid')
+                self.add_error('identifier', err)
+        if ((self.require_unlinked or target is not None) and
+            not (self.has_error('identifier') or self.has_error('scheme'))):
+            objs = self._meta.model.objects
+            if not objs.check_alias_available(scheme, identifier, target):
+                msg = _('This identifier is already in use.')
+                err = forms.ValidationError(msg, 'unique')
+                self.add_error('identifier', err)
+
+    def save(self, commit=True):
+        target = self.instance.target or self.initial.get('target')
+        objs = self._meta.model.objects
+        tmp = super(BaseAliasForm, self).save(commit=False)
+
+        if target is None:
+            return objs.create_alias(tmp.scheme, tmp.identifier)
+
+        try:
+            return objs.link_alias(tmp.scheme, tmp.identifier, target)
+        except IntegrityError:
+            msg = _('This identifier is already in use.')
+            err = forms.ValidationError(msg, 'unique')
+            self.add_error('identifier', err)
+            raise
+
+    save.alters_data = True

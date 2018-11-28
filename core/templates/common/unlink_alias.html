@@ -1,0 +1,17 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<h1>{{ page_title }}</h1>
+<div class="box">
+{{ object|html }}
+</div>
+<h2>{% trans 'Do you really want to delete this identifier?' %}</h2>
+<form method="post" action="?">
+{% csrf_token %}
+<p><input type="submit" value="{% trans 'Delete' %}"/></p>
+</form>
+{% endblock %}

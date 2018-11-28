@@ -6,6 +6,9 @@
 {% block content %}
 <h1>{% trans 'Create Account' %}</h1>
 <div class="box">
+{% blocktrans %}Your e-mail address will be used as one of your unique identifiers in the system. Please do not use an address like director@institution.org that you will eventually pass to somebody else.{% endblocktrans %}
+</div>
+<div class="box">
 <form method="post" action="?">
 {% csrf_token %}
 <table class="form">

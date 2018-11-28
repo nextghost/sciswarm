@@ -1,22 +1,15 @@
+from django.conf import settings
 from django.contrib.auth import forms as auth
 from django.forms import ValidationError
-from django.utils.translation import ugettext_lazy as _, ugettext_noop
-from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone, translation
 from django import forms
 from .base import HelpTextMixin, ModelForm
 from .. import models
+from ..models import const
 from ..utils.utils import generate_token
 import datetime
-
-# FIXME: Fix upstream translation and remove this
-ugettext_noop(
-    'Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.')
-ugettext_noop(
-    'Enter a valid username. This value may contain only English letters, '
-    'numbers, and @/./+/-/_ characters.')
-ugettext_noop(
-    'Enter a valid username. This value may contain only letters, '
-    'numbers, and @/./+/-/_ characters.')
+import re
 
 class LoginForm(auth.AuthenticationForm):
     def clean(self):
@@ -43,17 +36,52 @@ class LoginForm(auth.AuthenticationForm):
 class RegistrationForm(HelpTextMixin, auth.UserCreationForm):
     class Meta(auth.UserCreationForm.Meta):
         model = models.User
-        fields = ['username', 'password1', 'password2', 'email', 'first_name',
-            'last_name']
+        fields = ['username', 'password1', 'password2', 'email',
+            'title_before', 'first_name', 'last_name', 'title_after',
+            'language', 'bio']
+        help_texts = {'username': _('Required. 150 characters or fewer. Lowercase English letters, digits and @/./+/-/_ only.')}
+        error_messages = {
+            'username': {'invalid': _('This username is not allowed. Username may contain only lowercase English letters, numbers, and @/./+/-/_ characters.')}
+        }
+    language = forms.ChoiceField(label=_('Language'),
+        choices=settings.LANGUAGES)
+
+    def __init__(self, *args, **kwargs):
+        super(RegistrationForm, self).__init__(*args, **kwargs)
+        self.initial.setdefault('language', translation.get_language())
+
+    def clean(self):
+        super(RegistrationForm, self).clean()
+        email = self.cleaned_data.get('email')
+        username = self.cleaned_data.get('username')
+        if email is not None:
+            aliasobj = models.UserAlias.objects
+            scheme = const.person_alias_schemes.EMAIL
+            if not aliasobj.check_alias_available(scheme, email):
+                msg = _('This e-mail address is already taken.')
+                err = ValidationError(msg, 'unique')
+                self.add_error('email', err)
+        if username is not None and not re.match(r'^[a-z0-9@.+_-]+$',username):
+            msg = _('This username is not allowed.')
+            err = ValidationError(msg, 'invalid')
+            self.add_error('username', err)
 
     def save(self, commit=True):
         self.instance.verification_key = generate_token(32)
-        return super(RegistrationForm, self).save(commit)
+        ret = super(RegistrationForm, self).save(commit)
+        scheme = const.person_alias_schemes.EMAIL
+        models.UserAlias.objects.link_alias(scheme, ret.email, ret)
+        scheme = const.person_alias_schemes.SCISWARM
+        models.UserAlias.objects.link_alias(scheme, 'u/' + ret.username, ret)
+        return ret
 
 class UserProfileUpdateForm(ModelForm):
     class Meta:
         model = models.User
-        fields = ['email', 'first_name', 'last_name', 'password_check']
+        fields = ['password_check', 'email', 'title_before', 'first_name',
+            'last_name', 'title_after', 'language', 'bio']
+    language = forms.ChoiceField(label=_('Language'),
+        choices=settings.LANGUAGES)
     password_check = forms.CharField(label=_('Password'),
         widget=forms.PasswordInput)
 
@@ -63,10 +91,35 @@ class UserProfileUpdateForm(ModelForm):
             raise ValidationError(_('Wrong password.'), code='bad_password')
         return pwd
 
-class DeleteAccountForm(UserProfileUpdateForm):
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        if email is not None and 'email' in self.changed_data:
+            aliasobj = models.UserAlias.objects
+            scheme = const.person_alias_schemes.EMAIL
+            if not aliasobj.check_alias_available(scheme,email, self.instance):
+                msg = _('This e-mail address is already taken.')
+                err = ValidationError(msg, 'unique')
+                self.add_error('email', err)
+
+    def save(self, commit=True):
+        ret = super(UserProfileUpdateForm, self).save(commit)
+        if 'email' in self.changed_data:
+            scheme = const.person_alias_schemes.EMAIL
+            models.UserAlias.objects.link_alias(scheme, ret.email, ret)
+        return ret
+
+class DeleteAccountForm(ModelForm):
     class Meta:
         model = models.User
         fields = []
+    password_check = forms.CharField(label=_('Password'),
+        widget=forms.PasswordInput)
+
+    def clean_password_check(self):
+        pwd = self.cleaned_data.get('password_check', '')
+        if not self.instance.check_password(pwd):
+            raise ValidationError(_('Wrong password.'), code='bad_password')
+        return pwd
 
     def save(self, commit=True):
         delta = datetime.timedelta(days=30)

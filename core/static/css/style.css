@@ -96,3 +96,21 @@ th {
 .pull-left {
 	float: left;
 }
+
+.title {
+	font-size: 150%;
+}
+
+.list_item {
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+	border-bottom: 1px dotted black;
+}
+
+span.author.rejected {
+	text-decoration: line-through;
+}
+
+span.author.unconfirmed {
+	background-color: yellow;
+}

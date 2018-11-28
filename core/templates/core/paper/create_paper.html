@@ -1,0 +1,42 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<h1>{{ page_title }}</h1>
+<div class="box">
+<form method="post" action="?">
+{% csrf_token %}
+<table class="form">
+  {{ form }}
+</table>
+
+<h2>{% trans 'Authors' %}</h2>
+{{ authors.management_form }}
+{{ author_names.management_form }}
+<table class="form">
+  {% for item in authors %}{{ item }}
+  {% endfor %}
+  {% for item in author_names %}{{ item }}
+  {% endfor %}
+</table>
+
+<h2>{% trans 'Paper Identifiers' %}</h2>
+{{ aliases.management_form }}
+<table class="form">
+  {% for item in aliases %}{{ item }}
+  {% endfor %}
+</table>
+
+<h2>{% trans 'Bibliography' %}</h2>
+{{ bibliography.management_form }}
+<table class="form">
+  {% for item in bibliography %}{{ item }}
+  {% endfor %}
+  {# Traslators: Link/submit button caption #}
+  <tr><td>&nbsp;</td><td><input type="submit" value="{% trans 'Save' %}"/></td></tr>
+</table>
+</form>
+</div>
+{% endblock %}

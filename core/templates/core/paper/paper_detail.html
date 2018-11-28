@@ -1,0 +1,45 @@
+{% extends 'core/layout.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% load sciswarm %}
+
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ object.name }}</h1>
+{{ navbar }}
+<table class="info">
+<tr><th>{% trans 'Authors:' %}</th><td>{% for item in author_list %}{{ item.target_link }}{% if edit_access %} <a href="{% url 'core:delete_paper_author' pk=item.pk %}"><img src="{% static 'img/delete.png' %}" alt="{% trans '(delete)'%}"/></a>{% endif %}{% if author_names or not forloop.last %}, {% endif %}{% endfor %}{% for item in author_names %}{{ item }}{% if edit_access %} <a href="{% url 'core:delete_paper_author_name' pk=item.pk %}"><img src="{% static 'img/delete.png' %}" alt="{% trans '(delete)'%}"/></a>{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}{% if edit_access %} <a href="{% url 'core:add_paper_author' pk=object.pk %}"><img src="{% static 'img/create.png' %}" alt="{% trans '(add)' %}"/></a>{% endif %}</td></tr>
+<tr><td colspan="2">{{ object.abstract|linebreaks }}</td></tr>
+{% if edit_access %}<tr><td colspan="2" class="error">{% trans 'THIS PAPER HAS INCOMPLETE METADATA!' %}</td></tr>{% endif %}
+<tr><th>{% trans 'Contents:' %}</th><td>{{ object.contents_info }}</td></tr>
+<tr><th>{% trans 'Keywords:' %}</th><td>{% for item in keyword_list %}{{ item }}{% if not forloop.last %}, {% endif %}{% endfor %}</td></tr>
+<tr><th>{% trans 'Officially published:' %}</th><td>{{ object.year_published|default_if_none:_('No')|unlocalize }}</td></tr>
+<tr><th>{% trans 'Cite as:' %}</th><td>{{ object.cite_as }}</td></tr>
+<tr><th>{% trans 'Posted:' %}</th><td>{{ object.date_posted }}</td></tr>
+<tr><th>{% trans 'Posted by:' %}</th><td>{{ object.posted_by|object_link }}</td></tr>
+<tr><th>{% trans 'Last changed:' %}</th><td>{{ object.last_changed }}</td></tr>
+{% if edit_access %}<tr><th>{% trans 'Changed by:' %}</th><td>{{ object.changed_by|object_link }}</td></tr>{% endif %}
+</table>
+
+<h2>{% trans 'Identifiers' %}{% if edit_access %} <a href="{% url 'core:add_paper_identifier' pk=object.pk %}"><img src="{% static 'img/create.png' %}" alt="{% trans '(add)' %}"/></a>{% endif %}</h2>
+<div class="box">
+<ul>
+{% for item in alias_list %}<li>{{ item|html }}{% if edit_access and item.is_deletable %} <a href="{% url 'core:unlink_paper_identifier' pk=item.pk %}"><img src="{% static 'img/delete.png' %}" alt="{% trans '(delete)'%}"/></a>{% endif %}</li>
+{% endfor %}
+</ul>
+</div>
+
+<h2>{% trans 'Bibliography' %}{% if edit_access %} <a href="{% url 'core:add_paper_citations' pk=object.pk %}"><img src="{% static 'img/create.png' %}" alt="{% trans '(add)' %}"/></a>{% endif %}</h2>
+<div class="box">
+{% if bibliography %}<ol>
+{% for item in bibliography %}<li>{{ item.target_link }}{% if edit_access %} <a href="{% url 'core:delete_paper_citation' paper=object.pk ref=item.pk %}"><img src="{% static 'img/delete.png' %}" alt="{% trans '(delete)'%}"/></a>{% endif %}</li>
+{% endfor %}
+</ol>
+{% else %}
+<p>{% trans 'No citations have been entered.' %}</p>
+{% endif %}
+</div>
+
+{% endblock %}

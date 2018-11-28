@@ -1,0 +1,19 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'Delete Paper Author' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Delete Paper Author' %}</h1>
+<div class="box">
+<div>{{ object|html }}</div>
+{% if object.author_alias.target is not None %}<div>{{ object.author_alias.target|object_link }}</div>{% endif %}
+<div>{% trans 'Status:' %} {{ object.confirmed|yesno:_('Confirmed,Rejected,Pending') }}</div>
+</div>
+<h2>{% trans 'Do you really want to delete this author?' %}</h2>
+<form method="post" action="?">
+{% csrf_token %}
+<p><input type="submit" value="{% trans 'Delete' %}"/></p>
+</form>
+{% endblock %}

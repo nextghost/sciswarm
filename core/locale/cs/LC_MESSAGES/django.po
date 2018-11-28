@@ -1,0 +1,937 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-11-28 12:00+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2);\n"
+"X-Language: cs_CZ\n"
+"X-Source-Language: en_US\n"
+
+#: forms/auth.py:19
+msgid ""
+"This account has been temporarily blocked due to high number of login "
+"failures. Please try again later."
+msgstr ""
+"Tento účet byl dočasně zablokován z důvodu velkého počtu neúspěšných "
+"přihlášení. Zkuste to prosím později."
+
+#: forms/auth.py:30
+msgid ""
+"You need to verify your e-mail address before first login. If you have not "
+"received the verification e-mail, please contact the administrator."
+msgstr ""
+"Před prvním přihlášením musíte potvrdit svoji e-mailovou adresu. Pokud jste "
+"nedostali ověřovací e-mail, kontaktujte prosím správce serveru."
+
+#: forms/auth.py:33
+msgid ""
+"Your account is set to be deleted soon. If you have changed your mind, "
+"please contact the administrator."
+msgstr ""
+"Váš účet má být brzy smazán. Pokud jste si to rozmysleli, kontaktujte prosím "
+"správce serveru."
+
+#: forms/auth.py:42
+msgid ""
+"Required. 150 characters or fewer. Lowercase English letters, digits and @/./"
+"+/-/_ only."
+msgstr ""
+"Povinná položka. Maximálně 150 znaků. Smí obsahovat pouze malá písmena "
+"anglické abecedy, číslice a znaky @/./+/-/_."
+
+#: forms/auth.py:44
+msgid ""
+"This username is not allowed. Username may contain only lowercase English "
+"letters, numbers, and @/./+/-/_ characters."
+msgstr ""
+"Toto uživatelské jméno není povoleno. Uživatelské jméno smí obsahovat pouze "
+"malá písmena anglické abecedy, číslice a znaky @/./+/-/_."
+
+#: forms/auth.py:46 forms/auth.py:83
+msgid "Language"
+msgstr "Jazyk"
+
+#: forms/auth.py:61 forms/auth.py:100
+msgid "This e-mail address is already taken."
+msgstr "Tato e-mailová adresa už je zaregistrovaná."
+
+#: forms/auth.py:65
+msgid "This username is not allowed."
+msgstr "Toto uživatelské jméno není povoleno."
+
+#: forms/auth.py:85 forms/auth.py:115
+msgid "Password"
+msgstr "Heslo"
+
+#: forms/auth.py:91 forms/auth.py:121
+msgid "Wrong password."
+msgstr "Špatné heslo."
+
+#: forms/base.py:66
+msgid "Invalid value"
+msgstr "Neplatná hodnota"
+
+#: forms/base.py:119
+msgid "Identifier:"
+msgstr "Identifikátor:"
+
+#: forms/base.py:172
+msgid "Scheme prefix is too long."
+msgstr "Prefix identifikátoru je příliš dlouhý."
+
+#: forms/base.py:177
+msgid "This scheme prefix is not allowed."
+msgstr "Tento typ identifikátoru není povolen."
+
+#: forms/base.py:184 forms/base.py:199
+msgid "This identifier is already in use."
+msgstr "Tento identifikátor už je zaregistrovaný."
+
+#: forms/paper.py:18
+msgid "Keywords"
+msgstr "Klíčová slova"
+
+#: forms/paper.py:19
+msgid "List of keywords separated by commas or newlines."
+msgstr "Seznam klíčových slov oddělený čárkami nebo konci řádků."
+
+#: forms/paper.py:26
+msgid "I am an author"
+msgstr "Jsem jedním z autorů"
+
+#: forms/paper.py:39
+#, python-format
+msgid "Some keywords are longer than %(limit_value)s characters."
+msgstr "Některá klíčová slova jsou delší než %(limit_value)s znaků."
+
+#: forms/paper.py:48
+msgid "Database error, please try again later."
+msgstr "Chyba databáze, zkuste to prosím později."
+
+#: forms/user.py:51
+msgid "This user has rejected authorship."
+msgstr "Tento uživatel odmítl autorství."
+
+#: models/auth.py:19
+msgid "titles before name"
+msgstr "tituly před jménem"
+
+#: models/auth.py:21
+msgid "titles after name"
+msgstr "tituly za jménem"
+
+#: models/auth.py:23
+msgid "system language"
+msgstr "jazyk systému"
+
+#: models/auth.py:24
+msgid "about you"
+msgstr "o vás"
+
+#: models/auth.py:25
+msgid "e-mail verification key"
+msgstr "ověřovací klíč e-mailové adresy"
+
+#: models/auth.py:27
+msgid "account deletion date"
+msgstr "datum pro smazání účtu"
+
+#: models/auth.py:35
+#, python-brace-format
+msgid "{last_name}, {first_name}"
+msgstr "{last_name}, {first_name}"
+
+#: models/const.py:29
+msgid "E-mail"
+msgstr "E-mail"
+
+#: models/const.py:30
+msgid "ORCID iD"
+msgstr "ORCID iD"
+
+#: models/const.py:31
+msgid "XMPP"
+msgstr "XMPP"
+
+#: models/const.py:32
+msgid "Twitter"
+msgstr "Twitter"
+
+#: models/const.py:33 models/const.py:42 templates/core/email/layout.html:78
+#: templates/core/layout.html:7
+msgid "Sciswarm"
+msgstr "Sciswarm"
+
+#: models/const.py:34
+msgid "Personal website"
+msgstr "Osobní web"
+
+#: models/const.py:35 models/const.py:44
+msgid "Other"
+msgstr "Jiné"
+
+#: models/const.py:39
+msgid "DOI"
+msgstr "DOI"
+
+#: models/const.py:40
+msgid "ISBN"
+msgstr "ISBN"
+
+#: models/const.py:41
+msgid "arXiv"
+msgstr "arXiv"
+
+#: models/const.py:43
+msgid "Web URL"
+msgstr "Webové URL"
+
+#: models/paper.py:69 models/paper.py:196
+msgid "scheme"
+msgstr "schéma"
+
+#: models/paper.py:71 models/paper.py:198
+msgid "identifier"
+msgstr "identifikátor"
+
+#: models/paper.py:72
+msgid "user"
+msgstr "uživatel"
+
+#: models/paper.py:118
+msgid "title"
+msgstr "název"
+
+#: models/paper.py:119
+msgid "abstract"
+msgstr "abstrakt"
+
+#: models/paper.py:120
+msgid "theory development"
+msgstr "rozvoj teorie"
+
+#: models/paper.py:121
+msgid "Check this box if the paper expands prior theory."
+msgstr "Zaškrtněte toto pole, pokud článek dále rozvíjí dřívější teorii."
+
+#: models/paper.py:123
+msgid "survey data"
+msgstr "dotazníková data"
+
+#: models/paper.py:124
+msgid "Check this box if the paper contains or analyzes survey data."
+msgstr ""
+"Zaškrtněte toto pole, pokud článek obsahuje nebo analyzuje data z dotazníků."
+
+#: models/paper.py:126
+msgid "observational data"
+msgstr "data z pozorování"
+
+#: models/paper.py:127
+msgid ""
+"Check this box if the paper contains or analyzes data from observation of "
+"natural phenomena."
+msgstr ""
+"Zaškrtněte toto pole, pokud článek obsahuje nebo analyzuje data z pozorování "
+"přírodních úkazů."
+
+#: models/paper.py:129
+msgid "experimental data"
+msgstr "experimentální data"
+
+#: models/paper.py:130
+msgid ""
+"Check this box if the paper contains or analyzes data from controlled "
+"experiments."
+msgstr ""
+"Zaškrtněte toto pole, pokud článek obsahuje nebo analyzuje data z řízených "
+"experimentů."
+
+#: models/paper.py:132
+msgid "metaanalysis"
+msgstr "metaanalýza"
+
+#: models/paper.py:133
+msgid ""
+"Check this box if the paper contains extensive metaanalysis or literature "
+"review (aside from the usual summary in introduction)."
+msgstr ""
+"Zaškrtněte toto pole, pokud článek obsahuje rozsáhlou metaanalýzu nebo "
+"přehled literatury (mimo obvyklé shrnutí v úvodu)."
+
+#: models/paper.py:135
+msgid "year published"
+msgstr "rok vydání"
+
+#: models/paper.py:137
+msgid ""
+"Year when this paper was officially published, e.g. in a journal. Leave "
+"blank if publication date is pending."
+msgstr ""
+"Rok, kdy byl článek oficiálně vydán, např. ve vědeckém časopise. Pokud o "
+"datu vydání ještě není rozhodnuto, nechte prázdné."
+
+#: models/paper.py:138
+msgid "cite as"
+msgstr "doporučená citace"
+
+#: models/paper.py:139
+msgid "Preferred citation text."
+msgstr "Doporučená forma, jak tento článek citovat."
+
+#: models/paper.py:140
+msgid "incomplete metadata"
+msgstr "neúplná metadata"
+
+#: models/paper.py:141
+msgid ""
+"Check this box if some information about this paper is missing (e.g. omitted "
+"citations because the cited papers have no usable identifier)."
+msgstr ""
+"Zaškrtněte toto pole, pokud některé informace o článku chybí (např. "
+"vynechané citace článků, které zatím nemají žádný použitelný identifikátor)."
+
+#: models/paper.py:143
+msgid "date posted"
+msgstr "datum vložení"
+
+#: models/paper.py:145
+msgid "posted by"
+msgstr "vložil(a)"
+
+#: models/paper.py:148
+msgid "last changed"
+msgstr "poslední změna"
+
+#: models/paper.py:150
+msgid "changed by"
+msgstr "změnil(a)"
+
+#: models/paper.py:153
+msgid "public"
+msgstr "veřejný"
+
+#: models/paper.py:199 models/paper.py:236 models/paper.py:257
+#: models/paper.py:297
+msgid "paper"
+msgstr "článek"
+
+#: models/paper.py:235
+msgid "keyword"
+msgstr "klíčové slovo"
+
+#: models/paper.py:259 models/paper.py:299
+msgid "author"
+msgstr "autor"
+
+#: models/paper.py:261
+msgid "confirmed"
+msgstr "potvrzeno"
+
+#: models/paper.py:300
+msgid "Additional authors with no unique identifier"
+msgstr "Další autoři, kteří nemají žádný unikátní identifikátor"
+
+#: templates/common/edit.html:14 templates/common/formset.html:16
+#: templates/core/account/profile_form.html:15
+#: templates/core/paper/create_paper.html:38
+#: templates/registration/password_change_form.html:16
+msgid "Save"
+msgstr "Uložit"
+
+#: templates/common/unlink_alias.html:12
+msgid "Do you really want to delete this identifier?"
+msgstr "Opravdu chcete smazat tento identifikátor?"
+
+#: templates/common/unlink_alias.html:15
+#: templates/core/paper/delete_citation.html:16
+#: templates/core/paper/delete_paper_author.html:17
+#: templates/core/paper/delete_paper_author_name.html:13
+msgid "Delete"
+msgstr "Smazat"
+
+#: templates/core/account/bad_verification_token.html:5
+#: templates/core/account/bad_verification_token.html:8
+msgid "E-mail Verification Error"
+msgstr "Chyba při ověření e-mailové adresy"
+
+#: templates/core/account/bad_verification_token.html:10
+msgid ""
+"The verification token is invalid. Please make sure that you have copied the "
+"verification URL correctly."
+msgstr ""
+"Tento ověřovací kód je neplatný. Zkontrolujte prosím, že jste ověřovací URL "
+"zkopírovali správně."
+
+#: templates/core/account/delete_form.html:4
+#: templates/core/account/delete_form.html:7 views/account.py:177
+msgid "Delete Account"
+msgstr "Smazat účet"
+
+#: templates/core/account/delete_form.html:10
+msgid ""
+"Enter your password to confirm deleting your account. If you choose to "
+"proceed, your account will be deleted in 30 days. You will not be able to "
+"log in during that time but you can contact the administrator if you change "
+"your mind to have your account restored."
+msgstr ""
+"Zadejte své heslo pro potvrzení smazání účtu. Pokud tuto akci provedete, Váš "
+"účet bude smazán za 30 dnů. Během této doby se nebudete moci přihlásit, ale "
+"pokud si to rozmyslíte, můžete kontaktovat správce serveru a požádat o "
+"obnovení účtu."
+
+#: templates/core/account/delete_form.html:18 views/account.py:53
+#: views/account.py:167
+msgid "Delete account"
+msgstr "Smazat účet"
+
+#: templates/core/account/register.html:4
+#: templates/core/account/register.html:7
+msgid "Create Account"
+msgstr "Vytvořit účet"
+
+#: templates/core/account/register.html:9
+msgid ""
+"Your e-mail address will be used as one of your unique identifiers in the "
+"system. Please do not use an address like director@institution.org that you "
+"will eventually pass to somebody else."
+msgstr ""
+"Vaše e-mailová adresa bude sloužit jako jeden z Vašich unikátních "
+"identifikátorů v tomto systému. Prosím nezadávejte adresu typu "
+"reditel@organizace.cz, kterou časem budete muset předat někomu jinému."
+
+#: templates/core/account/register.html:17 templates/core/layout.html:22
+msgid "Register"
+msgstr "Registrovat"
+
+#: templates/core/account/registered.html:5
+#: templates/core/account/registered.html:8
+msgid "Registration Complete"
+msgstr "Registrace dokončena"
+
+#: templates/core/account/registered.html:10
+msgid ""
+"Thank you for registering. As a final step, you need to verify your e-mail "
+"address before you log in. We have sent you an e-mail with verification "
+"link. Simply visit the link and enjoy using Sciswarm."
+msgstr ""
+"Děkujeme za registraci. Na závěr ještě před prvním přihlášením musíte "
+"potvrdit svoji e-mailovou adresu. Poslali jsme Vám e-mail s ověřovacím "
+"odkazem. Jednoduše tento odkaz navštivte a přejeme příjemné používání "
+"Sciswarmu."
+
+#. Translators: Page title
+#: templates/core/account/tempblock.html:4
+#: templates/core/account/tempblock.html:8 templates/registration/login.html:4
+#: templates/registration/login.html:8
+msgid "Log In"
+msgstr "Přihlásit"
+
+#: templates/core/account/tempblock.html:10
+msgid ""
+"Your IP address has been temporarily blocked due to high number of failed "
+"login attempts. Please try again later."
+msgstr ""
+"Vaše IP adresa byla dočasně zablokována z důvodu velkého počtu neúspěšných "
+"pokusů o přihlášení. Zkuste to prosím později."
+
+#: templates/core/email/password_reset.html:6
+msgid "Password Reset Confirmation"
+msgstr "Potvrzení resetu hesla"
+
+#: templates/core/email/password_reset.html:9
+#, python-format
+msgid ""
+"Somebody has requested password reset for your Sciswarm account "
+"“%(username)s”. If that was you, <a href=\"%(finish_url)s?ref="
+"%(url_uid)s&token=%(url_token)s\">click here</a> to reset your password. "
+"Otherwise simply delete this e-mail."
+msgstr ""
+"Někdo požádal o reset hesla k Vašemu Sciswarm účtu “%(username)s”. Pokud "
+"jste to byli Vy, pro reset hesla <a href=\"%(finish_url)s?ref="
+"%(url_uid)s&token=%(url_token)s\">klikněte sem</a>. Jinak tento e-mail "
+"prostě smažte."
+
+#: templates/core/email/password_reset.txt:1
+#, python-format
+msgid ""
+"Somebody has requested password reset for your Sciswarm account "
+"“%(username)s”. If that was you, visit the link below to reset your "
+"password. Otherwise simply delete this e-mail."
+msgstr ""
+"Někdo požádal o reset hesla k Vašemu Sciswarm účtu “%(username)s”. Pokud "
+"jste to byli Vy, navštivte níže uvedenou adresu pro dokončení resetu hesla. "
+"Jinak tento e-mail prostě smažte."
+
+#: templates/core/email/password_reset_subject.txt:1
+msgid "[Sciswarm] Password reset confirmation"
+msgstr "[Sciswarm] Potvrzení resetu hesla"
+
+#: templates/core/email/registered.html:6 templates/core/email/registered.txt:2
+#: views/account.py:139
+msgid "Welcome to Sciswarm!"
+msgstr "Vítejte v systému Sciswarm!"
+
+#: templates/core/email/registered.html:8
+#, python-format
+msgid ""
+"To finish your registration, you need to verify your e-mail address by <a "
+"href=\"%(verify_url)s\">clicking here</a>. If the verification is "
+"successful, you will be redirected to the login page immediately."
+msgstr ""
+"Pro dokončení registrace potvrďte svoji e-mailovou adresu <a href="
+"\"%(verify_url)s\">kliknutím sem</a>. Pokud bude ověření úspěšné, budete "
+"okamžitě přesměrováni na přihlašovací stránku."
+
+#: templates/core/email/registered.txt:4
+msgid ""
+"To finish your registration, you need to verify your e-mail address by "
+"visiting the URL below. If the verification is successful, you will be "
+"redirected to the login page immediately."
+msgstr ""
+"Pro dokončení registrace navštivte níže uvedený odkaz, abyste potvrdili "
+"svoji e-mailovou adresu. Pokud bude ověření úspěšné, budete okamžitě "
+"přesměrováni na přihlašovací stránku."
+
+#: templates/core/layout.html:6
+msgid "Scientific social network"
+msgstr "Vědecká sociální síť"
+
+#: templates/core/layout.html:19
+#, python-format
+msgid "Welcome, <a href=\"%(edit_profile_url)s\">%(username)s</a>"
+msgstr "Přihlášen(a): <a href=\"%(edit_profile_url)s\">%(username)s</a>"
+
+#: templates/core/layout.html:20
+msgid "Log out"
+msgstr "Odhlásit"
+
+#: templates/core/layout.html:22 templates/registration/login.html:23
+msgid "Log in"
+msgstr "Přihlásit"
+
+#: templates/core/layout.html:30
+msgid "Home"
+msgstr "Hlavní stránka"
+
+#: templates/core/layout.html:31 views/paper.py:25
+msgid "Latest papers"
+msgstr "Nejnovější články"
+
+#: templates/core/layout.html:33
+msgid "New paper"
+msgstr "Nový článek"
+
+#: templates/core/layout.html:34
+msgid "My profile"
+msgstr "Můj profil"
+
+#: templates/core/main/homepage.html:6
+msgid "Publish anywhere. Discover, review and share on Sciswarm."
+msgstr "Publikujte kdekoliv. Objevujte, hodnoťte a sdílejte na Sciswarmu."
+
+#: templates/core/main/homepage.html:8
+msgid ""
+"Prestige is the currency of academic world. Yet most open science platforms "
+"focus exclusively on article contents and leave control over prestige in the "
+"hands of corporate publishers."
+msgstr ""
+"Středobodem akademického světa je vědecká prestiž. Přesto se většina online "
+"platforem pro otevřenou vědu soustředí pouze na obsah vědeckých článků a "
+"všechny cesty k dosažení zasloužené prestiže nechávají v rukou komerčních "
+"vydavatelů."
+
+#: templates/core/main/homepage.html:9
+msgid ""
+"Sciswarm is an academic social network focused on altmetrics and post-"
+"publication review. Its goal is to even the playing field between preprint "
+"repositories and traditional journals by separating academic prestige from "
+"any particular publishing venue. You can publish your papers anywhere you "
+"want, even in paywalled journals. Then simply enter basic metadata (title, "
+"abstract, authors, bibliography) into Sciswarm and let other users review "
+"and recommend your work here."
+msgstr ""
+"Sciswarm je akademická sociální síť zaměřená na altmetriky a otevřené "
+"recenzování článků po vydání. Jejím cílem je smazat rozdíly mezi preprint "
+"repozitáři a tradičními vědeckými časopisy tím, že vytvoří novou cestu k "
+"prestiži bez ohledu na způsob vydání článku. Své články můžete publikovat "
+"kdekoliv, včetně tradičních uzavřených časopisů. Pak do Sciswarmu jednoduše "
+"zadejte metadata článku (název, abstrakt, autory, literaturu) a nechte "
+"ostatní uživatele, aby zde Vaši práci hodnotili a sdíleli."
+
+#: templates/core/main/homepage.html:10
+msgid ""
+"Unique identifiers like DOI or ORCID iD allow lazy linking of bibliography "
+"and authors. Some of your own papers may already be in the database, waiting "
+"only for you to register and confirm your authorship."
+msgstr ""
+"Unikátní identifikátory jako DOI nebo ORCID iD umožňují dodatečně párovat "
+"citace a autory, kteří v době vložení článku ještě nebyli v systému. Některé "
+"Vaše vlastní články už mohou být v databázi a čekají jen až se "
+"zaregistrujete a potvrdíte autorství."
+
+#: templates/core/paper/create_paper.html:15
+msgid "Authors"
+msgstr "Autoři"
+
+#: templates/core/paper/create_paper.html:25
+msgid "Paper Identifiers"
+msgstr "Identifikátory článku"
+
+#: templates/core/paper/create_paper.html:32
+#: templates/core/paper/paper_detail.html:34
+msgid "Bibliography"
+msgstr "Literatura"
+
+#: templates/core/paper/delete_citation.html:5
+#: templates/core/paper/delete_citation.html:8
+msgid "Delete Citation"
+msgstr "Smazat citaci"
+
+#: templates/core/paper/delete_citation.html:13
+msgid "Do you really want to delete this citation?"
+msgstr "Opravdu chcete smazat tuto citaci?"
+
+#: templates/core/paper/delete_paper_author.html:5
+#: templates/core/paper/delete_paper_author.html:8
+msgid "Delete Paper Author"
+msgstr "Smazat autora článku"
+
+#: templates/core/paper/delete_paper_author.html:12
+msgid "Status:"
+msgstr "Stav:"
+
+#: templates/core/paper/delete_paper_author.html:12
+msgid "Confirmed,Rejected,Pending"
+msgstr "Potvrzeno,Odmítnuto,Nepotvrzeno"
+
+#: templates/core/paper/delete_paper_author.html:14
+msgid "Do you really want to delete this author?"
+msgstr "Opravdu chcete smazat tohoto autora?"
+
+#: templates/core/paper/delete_paper_author_name.html:5
+#: templates/core/paper/delete_paper_author_name.html:8
+msgid "Delete Paper Author Name"
+msgstr "Smazat jméno autora"
+
+#: templates/core/paper/delete_paper_author_name.html:10
+msgid "Do you really want to delete this author name?"
+msgstr "Opravdu chcete smazat toto jméno autora?"
+
+#: templates/core/paper/paper_detail.html:13
+msgid "Authors:"
+msgstr "Autoři:"
+
+#: templates/core/paper/paper_detail.html:13
+#: templates/core/paper/paper_detail.html:29
+#: templates/core/paper/paper_detail.html:37
+#: templates/core/user/user_detail.html:17
+msgid "(delete)"
+msgstr "(smazat)"
+
+#: templates/core/paper/paper_detail.html:13
+#: templates/core/paper/paper_detail.html:26
+#: templates/core/paper/paper_detail.html:34
+#: templates/core/user/user_detail.html:14
+msgid "(add)"
+msgstr "(přidat)"
+
+#: templates/core/paper/paper_detail.html:15
+msgid "THIS PAPER HAS INCOMPLETE METADATA!"
+msgstr "TENTO ČLÁNEK MÁ NEÚPLNÁ METADATA!"
+
+#: templates/core/paper/paper_detail.html:16
+msgid "Contents:"
+msgstr "Obsah:"
+
+#: templates/core/paper/paper_detail.html:17
+msgid "Keywords:"
+msgstr "Klíčová slova:"
+
+#: templates/core/paper/paper_detail.html:18
+msgid "Officially published:"
+msgstr "Oficiálně vydáno:"
+
+#: templates/core/paper/paper_detail.html:18
+msgid "No"
+msgstr "Ne"
+
+#: templates/core/paper/paper_detail.html:19
+msgid "Cite as:"
+msgstr "Doporučená citace:"
+
+#: templates/core/paper/paper_detail.html:20
+msgid "Posted:"
+msgstr "Vloženo:"
+
+#: templates/core/paper/paper_detail.html:21
+msgid "Posted by:"
+msgstr "Vložil(a):"
+
+#: templates/core/paper/paper_detail.html:22
+msgid "Last changed:"
+msgstr "Poslední změna:"
+
+#: templates/core/paper/paper_detail.html:23
+msgid "Changed by:"
+msgstr "Změnil(a):"
+
+#: templates/core/paper/paper_detail.html:26
+#: templates/core/user/user_detail.html:14
+msgid "Identifiers"
+msgstr "Identifikátory"
+
+#: templates/core/paper/paper_detail.html:41
+msgid "No citations have been entered."
+msgstr "Nebyly zadány žádné citace."
+
+#: templates/core/paper/paper_list.html:16
+msgid "No papers found."
+msgstr "Nenalezeny žádné články."
+
+#: templates/registration/login.html:14
+msgid "Invalid username or password"
+msgstr "Neplatné uživatelské jméno nebo heslo"
+
+#. Translators: Page title
+#: templates/registration/password_change_form.html:4
+#: templates/registration/password_change_form.html:8
+msgid "Change Password"
+msgstr "Změnit heslo"
+
+#. Translators: Page title
+#: templates/registration/password_reset_confirm.html:4
+#: templates/registration/password_reset_confirm.html:8
+#: templates/registration/password_reset_done.html:4
+#: templates/registration/password_reset_done.html:8
+#: templates/registration/password_reset_form.html:4
+#: templates/registration/password_reset_form.html:8
+msgid "Reset Password"
+msgstr "Resetovat heslo"
+
+#: templates/registration/password_reset_confirm.html:16
+#: templates/registration/password_reset_form.html:15
+msgid "Submit"
+msgstr "Odeslat"
+
+#: templates/registration/password_reset_confirm.html:20
+msgid "Your password reset link is not valid."
+msgstr "Tento odkaz na reset hesla je neplatný."
+
+#: templates/registration/password_reset_done.html:10
+msgid ""
+"We have sent you an e-mail with verification link. Use the link to reset "
+"your password."
+msgstr ""
+"E-mailem jsme Vám poslali ověřovací odkaz. Pomocí tohoto odkazu dokončete "
+"reset hesla."
+
+#: utils/html.py:27
+msgid "(at)"
+msgstr "(zavináč)"
+
+#: utils/validators.py:10
+msgid "Invalid Sciswarm user identifier."
+msgstr "Neplatný Sciswarm identifikátor uživatele."
+
+#: utils/validators.py:14
+msgid "This user does not exist."
+msgstr "Tento uživatel neexistuje."
+
+#: utils/validators.py:18
+msgid "Invalid Sciswarm paper identifier."
+msgstr "Neplatný Sciswarm identifikátor článku."
+
+#: utils/validators.py:26
+msgid "This paper does not exist."
+msgstr "Tento článek neexistuje."
+
+#: utils/validators.py:34
+msgid "Invalid Sciswarm identifier."
+msgstr "Neplatný Sciswarm identifikátor."
+
+#: utils/validators.py:39 utils/validators.py:52 utils/validators.py:75
+msgid "Invalid identifier format."
+msgstr "Neplatný formát identifikátoru."
+
+#: utils/validators.py:49 utils/validators.py:69
+msgid "Identifier checksum is incorrect."
+msgstr "Chybný kontrolní součet identifikátoru."
+
+#: utils/validators.py:121
+msgid ""
+"Generic identifier must have a scheme prefix separated by color (e.g. scheme:"
+"identifier)."
+msgstr ""
+"Obecný identifikátor musí mít prefix schématu oddělený dvojtečkou (tj. "
+"schema:identifikator)."
+
+#: views/account.py:36
+msgid "Lost password?"
+msgstr "Zapomněli jste heslo?"
+
+#: views/account.py:52 views/account.py:165
+msgid "Edit profile"
+msgstr "Upravit profil"
+
+#: views/account.py:158
+msgid "Update User Profile"
+msgstr "Upravit uživatelský profil"
+
+#: views/account.py:166
+msgid "Change password"
+msgstr "Změnit heslo"
+
+#: views/base.py:11
+msgid "Create Record"
+msgstr "Vytvořit záznam"
+
+#: views/base.py:20
+msgid "Update Record"
+msgstr "Upravit záznam"
+
+#: views/base.py:32
+msgid "You do not have permission to edit this record."
+msgstr "Nemáte oprávnění upravit tento záznam."
+
+#: views/paper.py:50
+msgid "This paper is not available for legal reasons."
+msgstr "Tento článek je z právních důvodů nedostupný."
+
+#: views/paper.py:67
+msgid "Edit"
+msgstr "Upravit"
+
+#: views/paper.py:80
+msgid "Create Paper"
+msgstr "Vložit článek"
+
+#: views/paper.py:88
+msgid "Author:"
+msgstr "Autor:"
+
+#: views/paper.py:100 views/paper.py:311
+msgid "Biblio entry:"
+msgstr "Citace:"
+
+#: views/paper.py:152
+msgid "Edit Paper"
+msgstr "Upravit článek"
+
+#: views/paper.py:157 views/paper.py:176 views/paper.py:206 views/paper.py:226
+#: views/paper.py:246 views/paper.py:278 views/paper.py:307 views/paper.py:343
+msgid "You are not one of the authors."
+msgstr "Nejste jedním z autorů."
+
+#: views/paper.py:168
+msgid "Add Paper Author"
+msgstr "Přidat autora článku"
+
+#: views/paper.py:208
+msgid "Rejected authorship cannot be deleted."
+msgstr "Odmítnuté autorství nelze smazat."
+
+#: views/paper.py:240
+msgid "Add Paper Identifier"
+msgstr "Přidat identifikátor článku"
+
+#: views/paper.py:271
+msgid "Delete Paper Identifier"
+msgstr "Smazat identifikátor článku"
+
+#: views/paper.py:280 views/user.py:62
+msgid "This identifier is permanent."
+msgstr "Tento identifikátor je trvalý."
+
+#: views/paper.py:297
+msgid "Add Citations"
+msgstr "Přidat citace"
+
+#: views/user.py:31
+msgid "Add Personal Identifier"
+msgstr "Přidat osobní identifikátor"
+
+#: views/user.py:55
+msgid "Delete Personal Identifier"
+msgstr "Smazat osobní identifikátor"
+
+#: views/utils.py:15
+#, python-brace-format
+msgid "Error {0}"
+msgstr "Chyba {0}"
+
+#: views/utils.py:23
+msgid "Invalid request"
+msgstr "Neplatný požadavek"
+
+#: views/utils.py:27
+msgid "Permission denied"
+msgstr "Přístup zamítnut"
+
+#: views/utils.py:31
+msgid "You do not have permission to access this page."
+msgstr "Nemáte oprávnění navštívit tuto stránku."
+
+#: views/utils.py:35
+msgid "The requested page does not exist."
+msgstr "Požadovaná stránka neexistuje."
+
+#: views/utils.py:42
+#, python-brace-format
+msgid "Accessing this page using the {0} method is not allowed."
+msgstr "Přístup k této stránce pomocí HTTP metody {0} není povolen."
+
+#: views/utils.py:50
+msgid ""
+"Unexpected error occurred while processing your request. We will fix the "
+"problem soon."
+msgstr ""
+"Během zpracování požadavku došlo k neočekávané chybě. Problém brzy "
+"odstraníme."
+
+#: views/utils.py:54
+msgid "Cannot Edit Record"
+msgstr "Nelze upravit záznam"
+
+#: views/utils.py:56
+msgid "You cannot edit this record."
+msgstr "Tento záznam nemůžete upravit."
+
+#: views/utils.py:78
+msgctxt "navigation"
+msgid "First"
+msgstr "První"
+
+#: views/utils.py:84
+msgctxt "navigation"
+msgid "Previous"
+msgstr "Předchozí"
+
+#: views/utils.py:87
+#, python-format
+msgctxt "navigation"
+msgid "%(page)s of %(total)s"
+msgstr "%(page)s z %(total)s"
+
+#: views/utils.py:92
+msgctxt "navigation"
+msgid "Next"
+msgstr "Další"
+
+#: views/utils.py:96
+msgctxt "navigation"
+msgid "Last"
+msgstr "Poslední"

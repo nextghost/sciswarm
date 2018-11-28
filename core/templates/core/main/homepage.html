@@ -1,9 +1,12 @@
 {% extends 'core/layout.html' %}
 {% load i18n %}
+{% load sciswarm %}
 
 {% block content %}
-<h1>{% trans 'Welcome to Sciswarm' %}</h1>
+<h1>{% trans 'Publish anywhere. Discover, review and share on Sciswarm.' %}</h1>
 <div class="box">
-{% blocktrans %}Publish anywhere. Discover, review and share on Sciswarm.{% endblocktrans %}
+<p>{% blocktrans %}Prestige is the currency of academic world. Yet most open science platforms focus exclusively on article contents and leave control over prestige in the hands of corporate publishers.{% endblocktrans %}</p>
+<p>{% blocktrans %}Sciswarm is an academic social network focused on altmetrics and post-publication review. Its goal is to even the playing field between preprint repositories and traditional journals by separating academic prestige from any particular publishing venue. You can publish your papers anywhere you want, even in paywalled journals. Then simply enter basic metadata (title, abstract, authors, bibliography) into Sciswarm and let other users review and recommend your work here.{% endblocktrans %}</p>
+<p>{% blocktrans %}Unique identifiers like DOI or ORCID iD allow lazy linking of bibliography and authors. Some of your own papers may already be in the database, waiting only for you to register and confirm your authorship.{% endblocktrans %}</p>
 </div>
 {% endblock %}

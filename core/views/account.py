@@ -37,6 +37,9 @@ def login(request):
     context = dict(navbar=NavigationBar(request, nav_links))
     ret = views.login(request, authentication_form=LoginForm,
         extra_context=context)
+    if request.user.is_authenticated:
+        lang = request.user.language
+        request.session[translation.LANGUAGE_SESSION_KEY] = lang
     return ret
 
 @sensitive_post_parameters()
@@ -97,6 +100,7 @@ def registration_complete(request):
     return render(request, 'core/account/registered.html', dict())
 
 @method_decorator(sensitive_post_parameters(), name='dispatch')
+@method_decorator(atomic(), name='post')
 class RegistrationView(BaseCreateView):
     template_name = 'core/account/register.html'
     form_class = RegistrationForm
@@ -129,6 +133,7 @@ class RegistrationView(BaseCreateView):
 @method_decorator(sensitive_post_parameters(), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
 @method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
 class ProfileUpdateView(BaseUpdateView):
     template_name = 'core/account/profile_form.html'
     form_class = UserProfileUpdateForm

@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ImproperlyConfigured
+from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
@@ -94,3 +95,86 @@ class SearchListView(BaseListView):
         ret = super(SearchListView, self).get_context_data(*args, **kwargs)
         ret['form'] = self.form
         return ret
+
+class BaseModelFormsetView(generic.FormView):
+    model = None
+    queryset = None
+    template_name = 'common/formset.html'
+    page_title = None
+    extra_forms = None
+
+    def get_queryset(self):
+        if self.queryset is not None:
+            return self.queryset.all()
+        elif self.model is not None:
+            return self.model._default_manager.all()
+        msg = '%(cls)s is missing a queryset. Define %(cls)s.model, %(cls)s.queryset or override %(cls)s.get_queryset().'
+        raise ImproperlyConfigured(msg % {'cls': self.__class__.__name__})
+
+    def get_form_kwargs(self):
+        return dict()
+
+    def get_formset_kwargs(self):
+        kwargs = {
+            'queryset': self.get_queryset(),
+            'form_kwargs': self.get_form_kwargs(),
+            'initial': self.get_initial(),
+            'prefix': self.get_prefix()
+        }
+
+        if self.request.method in ('POST', 'PUT'):
+            kwargs.update({
+                'data': self.request.POST,
+                'files': self.request.FILES,
+            })
+        return kwargs
+
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = form_class(**self.get_formset_kwargs())
+        if self.extra_forms is not None:
+            form.extra = self.extra_forms
+        return form
+
+    def form_valid(self, form):
+        self.object_list = form.save()
+        return super(BaseModelFormsetView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(BaseModelFormsetView,self).get_context_data(*args,**kwargs)
+        if self.page_title is not None:
+            ret['page_title'] = self.page_title
+        return ret
+
+    def get(self, *args, **kwargs):
+        self.object_list = None
+        return super(BaseModelFormsetView, self).get(*args, **kwargs)
+
+    def post(self, *args, **kwargs):
+        self.object_list = None
+        return super(BaseModelFormsetView, self).post(*args, **kwargs)
+
+class BaseDeleteView(generic.DeleteView):
+    page_title = None
+
+    def perform_delete(self):
+        self.object.delete()
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.perform_delete()
+        return HttpResponseRedirect(success_url)
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(BaseDeleteView, self).get_context_data(*args,**kwargs)
+        if self.page_title is not None:
+            ret['page_title'] = self.page_title
+        return ret
+
+class BaseUnlinkAliasView(BaseDeleteView):
+    template_name = 'common/unlink_alias.html'
+
+    def perform_delete(self):
+        self.object.unlink()

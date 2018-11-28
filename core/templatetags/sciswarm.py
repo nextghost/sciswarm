@@ -9,6 +9,7 @@ from django.template import defaulttags
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
+from ..utils import html
 from .. import models
 
 register = template.Library()
@@ -54,14 +55,14 @@ def object_link(obj):
     kwargs = dict(name=obj.name, url=obj.get_absolute_url())
     return format_html('<a href="{url}">{name}</a>', **kwargs)
 
+@register.filter(name='html')
+def filter_html(obj):
+    return obj.__html__()
+
 @register.filter
 @stringfilter
 def email(value):
-    box, tmp, domain = value.partition('@')
-    display = value.replace('@', _('(at)'), 1)
-    args = {'class': 'maillink', 'data-box': box, 'data-domain': domain}
-    template = '<span{attr}>{content}</span><script type="text/javascript">sciswarm_unmask();</script>'
-    return format_html(template, attr=flatatt(args), content=display)
+    return html.email_link('mailto', value)
 
 def parse_var_block(parser, token, endblock):
     try:

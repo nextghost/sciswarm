@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth import REDIRECT_FIELD_NAME, views as auth
 from django.core import paginator
 from django.utils.encoding import force_text
@@ -57,23 +56,14 @@ def editing_forbidden_error(request, message=None):
         message = _('You cannot edit this record.')
     return error_page(request, 403, message, title)
 
-def redirect_to_login(next, login_url=None, redirect_field_name=None):
-    if not redirect_field_name:
-        redirect_field_name = settings.SYSTEM_GET_FIELDS.get('login_next',
-            REDIRECT_FIELD_NAME)
-    return auth.redirect_to_login(next, login_url=login_url,
-        redirect_field_name=redirect_field_name)
-
 class PageNavigator(object):
     def __init__(self, request, object_list, per_page=25, arg_name=None):
-        if not arg_name:
-            arg_name = settings.SYSTEM_GET_FIELDS.get('page_number', 'page')
         self.request = request
         self.object_list = object_list
-        self.arg_name = arg_name
+        self.arg_name = arg_name or 'page'
         self.paginator = paginator.Paginator(object_list, per_page)
         try:
-            self.page = self.paginator.page(request.GET.get(arg_name, 1))
+            self.page = self.paginator.page(request.GET.get(self.arg_name, 1))
         except (paginator.PageNotAnInteger, paginator.EmptyPage):
             raise Http404()
 

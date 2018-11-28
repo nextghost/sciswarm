@@ -24,3 +24,22 @@ class ConstEnum(OrderedDict):
     def __setitem__(self, name, value):
         msg = "'{0}' object is read-only".format(self.__class__.__name__)
         raise KeyError(msg)
+
+person_alias_schemes = ConstEnum(
+    ('EMAIL', 'mailto', _('E-mail')),
+    ('ORCID', 'orcid', _('ORCID iD')),
+    ('XMPP', 'xmpp', _('XMPP')),
+    ('TWITTER', 'twitter', _('Twitter')),
+    ('SCISWARM', 'swarm', _('Sciswarm')),
+    ('URL', 'http', _('Personal website')),
+    ('OTHER', '', _('Other')),
+)
+
+paper_alias_schemes = ConstEnum(
+    ('DOI', 'doi', _('DOI')),
+    ('ISBN', 'isbn', _('ISBN')),
+    ('ARXIV', 'arxiv', _('arXiv')),
+    ('SCISWARM', 'swarm', _('Sciswarm')),
+    ('URL', 'http', _('Web URL')),
+    ('OTHER', '', _('Other')),
+)
