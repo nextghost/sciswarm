@@ -22,6 +22,8 @@ class UserDetailView(DetailView):
     def get_context_data(self, *args, **kwargs):
         ret = super(UserDetailView, self).get_context_data(*args, **kwargs)
         obj = ret['object']
+        # Security precaution
+        obj.password = ''
         ret['alias_list'] = obj.useralias_set.select_related('target')
         # TODO: Show latest events from this user
         return ret
