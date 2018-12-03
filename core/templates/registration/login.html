@@ -9,9 +9,9 @@
 {{ navbar }}
 <div class="box">
 {% if form.non_field_errors %}
-<p class="error">{{ form.non_field_errors }}</p>
+<div class="error">{{ form.non_field_errors }}</div>
 {% elif form.errors %}
-<p class="error">{% trans 'Invalid username or password' %}</p>
+<div class="error"><ul><li>{% trans 'Invalid username or password' %}</li></ul></div>
 {% endif %}
 
 <form method="post" action="?">

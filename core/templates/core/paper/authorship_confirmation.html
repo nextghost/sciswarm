@@ -1,0 +1,24 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'Manage Paper Authorship' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Manage Paper Authorship' %}</h1>
+<div class="box">
+<p>{% with paper_link=object|object_link %}{% blocktrans %}Paper: {{ paper_link }}{% endblocktrans %}{% endwith %}</p>
+<form method="post" action="?">
+{% csrf_token %}
+<table class="list">
+<thead><tr><td>{% trans 'Identifier' %}</td><td>{% trans 'Status' %}</td></tr></thead>
+<tbody>
+{% for item in alias_list %}
+<tr><td>{{ item.author_alias|html }}</td><td>{{ item.status }}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+<p>{{ form.submit_buttons }}</p>
+</form>
+</div>
+{% endblock %}

@@ -1,7 +1,10 @@
+from django import forms
 from django.core.exceptions import ImproperlyConfigured
 from django.forms import modelformset_factory, ValidationError
+from django.utils.html import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from .base import ModelForm, BaseAliasForm
+from .base import Form, ModelForm, BaseAliasForm
+from .widgets import SubmitButton
 from ..models import const
 from ..utils.transaction import lock_record
 from ..utils.validators import validate_person_alias
@@ -59,5 +62,85 @@ class PaperAuthorForm(UserAliasForm):
             models.PaperAuthorReference.objects.create(paper=self.parent,
                 author_alias=ret, confirmed=None)
         return ret
+
+    save.alters_data = True
+
+# This form must be processed and saved under transaction
+class BaseAuthorshipConfirmationForm(Form):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        if user is None:
+            raise ImproperlyConfigured('"user" keyword argument is required')
+        super(BaseAuthorshipConfirmationForm, self).__init__(*args, **kwargs)
+        self.user = user
+        self.selected_papers = []
+
+    def get_buttons(self):
+        return (('_confirm_authorship', _('Confirm')),
+            ('_reject_authorship', _('Reject')))
+
+    def submit_buttons(self):
+        button = SubmitButton()
+        ret = [button.render(name, title) for name,title in self.get_buttons()]
+        return mark_safe(' '.join(ret))
+
+    def clean(self):
+        action_count = len([x for x,y in self.get_buttons() if x in self.data])
+        if action_count != 1:
+            msg = _('Please choose whether to accept or reject authorship.')
+            raise ValidationError(msg, 'no_action')
+        # Lock papers where authorship is about to be confirmed/rejected
+        pk_list = [x.pk for x in self.paper_list]
+        query = models.Paper.query_model.pk.belongs(pk_list)
+        models.Paper.objects.filter(query).select_for_update().first()
+
+    def save(self):
+        if not self.selected_papers:
+            return
+        table = models.PaperAuthorReference.query_model
+        query = (table.paper.belongs(self.selected_papers) &
+            (table.author_alias.target == self.user))
+        qs = models.PaperAuthorReference.objects.filter(query)
+        if '_confirm_authorship' in self.data:
+            qs.update(confirmed=True)
+        elif '_reject_authorship' in self.data:
+            qs.update(confirmed=False)
+
+    save.alters_data = True
+
+class MassAuthorshipConfirmationForm(BaseAuthorshipConfirmationForm):
+    def __init__(self, *args, **kwargs):
+        paper_list = kwargs.pop('paper_list', None)
+        if paper_list is None:
+            msg = '"paper_list" keyword argument is required'
+            raise ImproperlyConfigured(msg)
+        super(MassAuthorshipConfirmationForm, self).__init__(*args, **kwargs)
+        self.paper_list = list(paper_list)
+        fname_tpl = 'select_%d'
+        self.paper_fields = []
+        for item in paper_list:
+            fname = fname_tpl % item.pk
+            self.fields[fname] = forms.BooleanField(required=False)
+            self.paper_fields.append((item, fname))
+
+    def clean(self):
+        super(MassAuthorshipConfirmationForm, self).clean()
+        fname_tpl = 'select_%d'
+        self.selected_papers = [x for x in self.paper_list
+            if self.cleaned_data.get(fname_tpl % x.pk, False)]
+
+class AuthorshipConfirmationForm(BaseAuthorshipConfirmationForm):
+    def __init__(self, *args, **kwargs):
+        paper = kwargs.pop('instance', None)
+        if paper is None:
+            msg = '"instance" keyword argument is required'
+            raise ImproperlyConfigured(msg)
+        super(AuthorshipConfirmationForm, self).__init__(*args, **kwargs)
+        self.paper_list = [paper]
+        self.selected_papers = [paper]
+
+    def save(self):
+        super(AuthorshipConfirmationForm, self).save()
+        return self.paper_list[0]
 
     save.alters_data = True

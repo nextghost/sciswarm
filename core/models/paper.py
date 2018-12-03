@@ -110,6 +110,15 @@ class PaperManager(models.Manager):
     def filter_public(self, value=True):
         return self.filter(public=value)
 
+    def filter_by_author(self, author, confirmed=None):
+        reftab = self.model.query_model.paperauthorreference
+        query = (reftab.author_alias.target == author)
+        if confirmed:
+            query &= (reftab.confirmed == True)
+        elif confirmed is not None:
+            query &= (reftab.confirmed == False)
+        return self.filter(query).distinct()
+
 class Paper(models.Model):
     class Meta:
         ordering = ('name',)
@@ -289,6 +298,13 @@ class PaperAuthorReference(models.Model):
             cls = 'author rejected'
         return format_html('<span class="{cls}">{content}</span>', cls=cls,
             content=content)
+
+    def status(self):
+        if self.confirmed:
+            return _('Confirmed')
+        elif self.confirmed is None:
+            return _('Pending')
+        return _('Rejected')
 
 # Table for author names without any identifier usable for deferred linking
 class PaperAuthorName(models.Model):

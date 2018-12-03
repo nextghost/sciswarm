@@ -14,7 +14,8 @@ from .base import (BaseCreateView, BaseUpdateView, BaseListView,
     BaseModelFormsetView, BaseDeleteView, BaseUnlinkAliasView)
 from ..forms.paper import (PaperForm, PaperAliasForm, PaperAliasFormset,
     PaperAuthorNameFormset)
-from ..forms.user import PaperAuthorForm, UserAliasForm, UserAliasFormset
+from ..forms.user import (PaperAuthorForm, UserAliasForm, UserAliasFormset,
+    AuthorshipConfirmationForm)
 from ..utils.html import NavigationBar
 from ..utils.utils import list_map, logger, remove_duplicates
 from .. import models
@@ -61,11 +62,19 @@ class PaperDetailView(DetailView):
         ret['bibliography'] = obj.bibliography.all()
         ret['keyword_list'] = obj.paperkeyword_set.all()
         ret['alias_list'] = obj.paperalias_set.all()
-        edit_access = obj.is_owned_by(self.request.user)
-        ret['edit_access'] = edit_access
-        if edit_access:
-            links.append((_('Edit'), 'core:edit_paper', tuple(),
-                dict(pk=obj.pk)))
+        ret['edit_access'] = False
+        if self.request.user.is_authenticated:
+            edit_access = obj.is_owned_by(self.request.user)
+            ret['edit_access'] = edit_access
+            if edit_access:
+                links.append((_('Edit'), 'core:edit_paper', tuple(),
+                    dict(pk=obj.pk)))
+            uatab = models.UserAlias.query_model
+            query = (uatab.target == self.request.user)
+            if obj.authors.filter(query).exists():
+                links.append((_('Manage authorship'),
+                    'core:paper_authorship_confirmation', tuple(),
+                    dict(pk=obj.pk)))
         navbar = ''
         if links:
             navbar = NavigationBar(self.request, links)
@@ -352,3 +361,29 @@ class DeleteCitationView(BaseDeleteView):
 
     def get_success_url(self):
         return self.parent.get_absolute_url()
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
+class PaperAuthorshipConfirmationView(BaseUpdateView):
+    form_class = AuthorshipConfirmationForm
+    template_name = 'core/paper/authorship_confirmation.html'
+
+    def get_queryset(self):
+        return models.Paper.objects.filter_by_author(self.request.user)
+
+    def get_form_kwargs(self, *args, **kwargs):
+        ret = super(PaperAuthorshipConfirmationView, self).get_form_kwargs(
+            *args, **kwargs)
+        ret['user'] = self.request.user
+        return ret
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(PaperAuthorshipConfirmationView, self).get_context_data(
+            *args, **kwargs)
+        reftab = models.PaperAuthorReference.query_model
+        obj = ret['object']
+        query = ((reftab.author_alias.target == self.request.user) &
+            (reftab.paper == obj))
+        qs = models.PaperAuthorReference.objects.filter(query)
+        ret['alias_list'] = qs.select_related('author_alias')
+        return ret

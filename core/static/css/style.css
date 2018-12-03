@@ -17,8 +17,21 @@ body {
 	background-color: white;
 }
 
-th {
+thead td, th {
+	font-weight: bold;
+}
+
+td, th {
 	text-align: left;
+	padding: 5px;
+}
+
+table.list {
+	border-collapse: collapse;
+}
+
+table.list th, table.list td {
+	border: 1px solid #ccccff;
 }
 
 #header {

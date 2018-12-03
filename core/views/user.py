@@ -6,10 +6,11 @@ from django.http import Http404
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import DetailView
+from django.views.generic import DetailView, FormView
 from .base import BaseCreateView, BaseUnlinkAliasView
+from .utils import PageNavigator
 from ..utils.utils import logger
-from ..forms.user import UserAliasForm
+from ..forms.user import UserAliasForm, MassAuthorshipConfirmationForm
 from .. import models
 
 class UserDetailView(DetailView):
@@ -65,3 +66,36 @@ class UnlinkUserAliasView(BaseUnlinkAliasView):
     def get_success_url(self):
         kwargs = dict(username=self.request.user.username)
         return reverse('core:user_detail', kwargs=kwargs)
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
+class MassAuthorshipConfirmationView(FormView):
+    form_class = MassAuthorshipConfirmationForm
+    template_name = 'core/user/mass_authorship_confirmation.html'
+    success_url = reverse_lazy('core:mass_authorship_confirmation')
+
+    def get_form_kwargs(self, *args, **kwargs):
+        ret = super(MassAuthorshipConfirmationView,self).get_form_kwargs(*args,
+            **kwargs)
+        reftab = models.Paper.query_model.paperauthorreference
+        query = (reftab.confirmed.isnull() &
+            (reftab.author_alias.target==self.request.user))
+        qs = models.Paper.objects.filter(query).distinct().order_by('pk')
+        pagenav = PageNavigator(self.request, qs, 50)
+        page = pagenav.page
+        self.paginator = pagenav
+        self.object_list = page.object_list
+        ret['paper_list'] = page.object_list
+        ret['user'] = self.request.user
+        return ret
+
+    def form_valid(self, form):
+        form.save()
+        return super(MassAuthorshipConfirmationView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(MassAuthorshipConfirmationView, self).get_context_data(
+            *args, **kwargs)
+        ret['paginator'] = self.paginator
+        ret['object_list'] = self.object_list
+        return ret

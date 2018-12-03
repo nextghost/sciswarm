@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-28 12:00+0100\n"
+"POT-Creation-Date: 2018-12-03 15:37+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +71,8 @@ msgstr ""
 msgid "Invalid value"
 msgstr ""
 
-#: forms/base.py:119
+#: forms/base.py:119 templates/core/paper/delete_citation.html:11
+#: templates/core/paper/delete_paper_author.html:11
 msgid "Identifier:"
 msgstr ""
 
@@ -108,8 +109,20 @@ msgstr ""
 msgid "Database error, please try again later."
 msgstr ""
 
-#: forms/user.py:51
+#: forms/user.py:54
 msgid "This user has rejected authorship."
+msgstr ""
+
+#: forms/user.py:79
+msgid "Confirm"
+msgstr ""
+
+#: forms/user.py:80
+msgid "Reject"
+msgstr ""
+
+#: forms/user.py:90
+msgid "Please choose whether to accept or reject authorship."
 msgstr ""
 
 #: models/auth.py:19
@@ -186,11 +199,11 @@ msgstr ""
 msgid "Web URL"
 msgstr ""
 
-#: models/paper.py:69 models/paper.py:196
+#: models/paper.py:69 models/paper.py:205
 msgid "scheme"
 msgstr ""
 
-#: models/paper.py:71 models/paper.py:198
+#: models/paper.py:71 models/paper.py:207
 msgid "identifier"
 msgstr ""
 
@@ -198,126 +211,138 @@ msgstr ""
 msgid "user"
 msgstr ""
 
-#: models/paper.py:118
+#: models/paper.py:127
 msgid "title"
 msgstr ""
 
-#: models/paper.py:119
+#: models/paper.py:128
 msgid "abstract"
 msgstr ""
 
-#: models/paper.py:120
+#: models/paper.py:129
 msgid "theory development"
 msgstr ""
 
-#: models/paper.py:121
+#: models/paper.py:130
 msgid "Check this box if the paper expands prior theory."
 msgstr ""
 
-#: models/paper.py:123
+#: models/paper.py:132
 msgid "survey data"
 msgstr ""
 
-#: models/paper.py:124
+#: models/paper.py:133
 msgid "Check this box if the paper contains or analyzes survey data."
 msgstr ""
 
-#: models/paper.py:126
+#: models/paper.py:135
 msgid "observational data"
 msgstr ""
 
-#: models/paper.py:127
+#: models/paper.py:136
 msgid ""
 "Check this box if the paper contains or analyzes data from observation of "
 "natural phenomena."
 msgstr ""
 
-#: models/paper.py:129
+#: models/paper.py:138
 msgid "experimental data"
 msgstr ""
 
-#: models/paper.py:130
+#: models/paper.py:139
 msgid ""
 "Check this box if the paper contains or analyzes data from controlled "
 "experiments."
 msgstr ""
 
-#: models/paper.py:132
+#: models/paper.py:141
 msgid "metaanalysis"
 msgstr ""
 
-#: models/paper.py:133
+#: models/paper.py:142
 msgid ""
 "Check this box if the paper contains extensive metaanalysis or literature "
 "review (aside from the usual summary in introduction)."
 msgstr ""
 
-#: models/paper.py:135
+#: models/paper.py:144
 msgid "year published"
 msgstr ""
 
-#: models/paper.py:137
+#: models/paper.py:146
 msgid ""
 "Year when this paper was officially published, e.g. in a journal. Leave "
 "blank if publication date is pending."
 msgstr ""
 
-#: models/paper.py:138
+#: models/paper.py:147
 msgid "cite as"
 msgstr ""
 
-#: models/paper.py:139
+#: models/paper.py:148
 msgid "Preferred citation text."
 msgstr ""
 
-#: models/paper.py:140
+#: models/paper.py:149
 msgid "incomplete metadata"
 msgstr ""
 
-#: models/paper.py:141
+#: models/paper.py:150
 msgid ""
 "Check this box if some information about this paper is missing (e.g. omitted "
 "citations because the cited papers have no usable identifier)."
 msgstr ""
 
-#: models/paper.py:143
+#: models/paper.py:152
 msgid "date posted"
 msgstr ""
 
-#: models/paper.py:145
+#: models/paper.py:154
 msgid "posted by"
 msgstr ""
 
-#: models/paper.py:148
+#: models/paper.py:157
 msgid "last changed"
 msgstr ""
 
-#: models/paper.py:150
+#: models/paper.py:159
 msgid "changed by"
 msgstr ""
 
-#: models/paper.py:153
+#: models/paper.py:162
 msgid "public"
 msgstr ""
 
-#: models/paper.py:199 models/paper.py:236 models/paper.py:257
-#: models/paper.py:297
+#: models/paper.py:208 models/paper.py:245 models/paper.py:266
+#: models/paper.py:313
 msgid "paper"
 msgstr ""
 
-#: models/paper.py:235
+#: models/paper.py:244
 msgid "keyword"
 msgstr ""
 
-#: models/paper.py:259 models/paper.py:299
+#: models/paper.py:268 models/paper.py:315
 msgid "author"
 msgstr ""
 
-#: models/paper.py:261
+#: models/paper.py:270
 msgid "confirmed"
 msgstr ""
 
-#: models/paper.py:300
+#: models/paper.py:304
+msgid "Confirmed"
+msgstr ""
+
+#: models/paper.py:306
+msgid "Pending"
+msgstr ""
+
+#: models/paper.py:307
+msgid "Rejected"
+msgstr ""
+
+#: models/paper.py:316
 msgid "Additional authors with no unique identifier"
 msgstr ""
 
@@ -333,8 +358,8 @@ msgid "Do you really want to delete this identifier?"
 msgstr ""
 
 #: templates/common/unlink_alias.html:15
-#: templates/core/paper/delete_citation.html:16
-#: templates/core/paper/delete_paper_author.html:17
+#: templates/core/paper/delete_citation.html:18
+#: templates/core/paper/delete_paper_author.html:19
 #: templates/core/paper/delete_paper_author_name.html:13
 msgid "Delete"
 msgstr ""
@@ -351,7 +376,7 @@ msgid ""
 msgstr ""
 
 #: templates/core/account/delete_form.html:4
-#: templates/core/account/delete_form.html:7 views/account.py:177
+#: templates/core/account/delete_form.html:7 views/account.py:160
 msgid "Delete Account"
 msgstr ""
 
@@ -364,7 +389,7 @@ msgid ""
 msgstr ""
 
 #: templates/core/account/delete_form.html:18 views/account.py:53
-#: views/account.py:167
+#: views/account.py:150
 msgid "Delete account"
 msgstr ""
 
@@ -435,7 +460,7 @@ msgid "[Sciswarm] Password reset confirmation"
 msgstr ""
 
 #: templates/core/email/registered.html:6 templates/core/email/registered.txt:2
-#: views/account.py:139
+#: views/account.py:122
 msgid "Welcome to Sciswarm!"
 msgstr ""
 
@@ -475,7 +500,7 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: templates/core/layout.html:31 views/paper.py:25
+#: templates/core/layout.html:31 views/paper.py:26
 msgid "Latest papers"
 msgstr ""
 
@@ -483,7 +508,11 @@ msgstr ""
 msgid "New paper"
 msgstr ""
 
-#: templates/core/layout.html:34
+#: templates/core/layout.html:34 views/paper.py:75
+msgid "Manage authorship"
+msgstr ""
+
+#: templates/core/layout.html:35
 msgid "My profile"
 msgstr ""
 
@@ -516,6 +545,24 @@ msgid ""
 "only for you to register and confirm your authorship."
 msgstr ""
 
+#: templates/core/paper/authorship_confirmation.html:5
+#: templates/core/paper/authorship_confirmation.html:8
+msgid "Manage Paper Authorship"
+msgstr ""
+
+#: templates/core/paper/authorship_confirmation.html:10
+#, python-format
+msgid "Paper: %(paper_link)s"
+msgstr ""
+
+#: templates/core/paper/authorship_confirmation.html:14
+msgid "Identifier"
+msgstr ""
+
+#: templates/core/paper/authorship_confirmation.html:14
+msgid "Status"
+msgstr ""
+
 #: templates/core/paper/create_paper.html:15
 msgid "Authors"
 msgstr ""
@@ -534,7 +581,11 @@ msgstr ""
 msgid "Delete Citation"
 msgstr ""
 
-#: templates/core/paper/delete_citation.html:13
+#: templates/core/paper/delete_citation.html:12
+msgid "Paper:"
+msgstr ""
+
+#: templates/core/paper/delete_citation.html:15
 msgid "Do you really want to delete this citation?"
 msgstr ""
 
@@ -544,14 +595,14 @@ msgid "Delete Paper Author"
 msgstr ""
 
 #: templates/core/paper/delete_paper_author.html:12
+msgid "User:"
+msgstr ""
+
+#: templates/core/paper/delete_paper_author.html:13
 msgid "Status:"
 msgstr ""
 
-#: templates/core/paper/delete_paper_author.html:12
-msgid "Confirmed,Rejected,Pending"
-msgstr ""
-
-#: templates/core/paper/delete_paper_author.html:14
+#: templates/core/paper/delete_paper_author.html:16
 msgid "Do you really want to delete this author?"
 msgstr ""
 
@@ -635,6 +686,15 @@ msgstr ""
 msgid "No papers found."
 msgstr ""
 
+#: templates/core/user/mass_authorship_confirmation.html:5
+#: templates/core/user/mass_authorship_confirmation.html:8
+msgid "Manage Authorship"
+msgstr ""
+
+#: templates/core/user/mass_authorship_confirmation.html:24
+msgid "No papers awaiting authorship confirmation have been found."
+msgstr ""
+
 #: templates/registration/login.html:14
 msgid "Invalid username or password"
 msgstr ""
@@ -712,15 +772,15 @@ msgstr ""
 msgid "Lost password?"
 msgstr ""
 
-#: views/account.py:52 views/account.py:165
+#: views/account.py:52 views/account.py:148
 msgid "Edit profile"
 msgstr ""
 
-#: views/account.py:158
+#: views/account.py:141
 msgid "Update User Profile"
 msgstr ""
 
-#: views/account.py:166
+#: views/account.py:149
 msgid "Change password"
 msgstr ""
 
@@ -736,64 +796,64 @@ msgstr ""
 msgid "You do not have permission to edit this record."
 msgstr ""
 
-#: views/paper.py:50
+#: views/paper.py:51
 msgid "This paper is not available for legal reasons."
 msgstr ""
 
-#: views/paper.py:67
+#: views/paper.py:70
 msgid "Edit"
 msgstr ""
 
-#: views/paper.py:80
+#: views/paper.py:89
 msgid "Create Paper"
 msgstr ""
 
-#: views/paper.py:88
+#: views/paper.py:97
 msgid "Author:"
 msgstr ""
 
-#: views/paper.py:100 views/paper.py:311
+#: views/paper.py:109 views/paper.py:320
 msgid "Biblio entry:"
 msgstr ""
 
-#: views/paper.py:152
+#: views/paper.py:161
 msgid "Edit Paper"
 msgstr ""
 
-#: views/paper.py:157 views/paper.py:176 views/paper.py:206 views/paper.py:226
-#: views/paper.py:246 views/paper.py:278 views/paper.py:307 views/paper.py:343
+#: views/paper.py:166 views/paper.py:185 views/paper.py:215 views/paper.py:235
+#: views/paper.py:255 views/paper.py:287 views/paper.py:316 views/paper.py:352
 msgid "You are not one of the authors."
 msgstr ""
 
-#: views/paper.py:168
+#: views/paper.py:177
 msgid "Add Paper Author"
 msgstr ""
 
-#: views/paper.py:208
+#: views/paper.py:217
 msgid "Rejected authorship cannot be deleted."
 msgstr ""
 
-#: views/paper.py:240
+#: views/paper.py:249
 msgid "Add Paper Identifier"
 msgstr ""
 
-#: views/paper.py:271
+#: views/paper.py:280
 msgid "Delete Paper Identifier"
 msgstr ""
 
-#: views/paper.py:280 views/user.py:62
+#: views/paper.py:289 views/user.py:63
 msgid "This identifier is permanent."
 msgstr ""
 
-#: views/paper.py:297
+#: views/paper.py:306
 msgid "Add Citations"
 msgstr ""
 
-#: views/user.py:31
+#: views/user.py:32
 msgid "Add Personal Identifier"
 msgstr ""
 
-#: views/user.py:55
+#: views/user.py:56
 msgid "Delete Personal Identifier"
 msgstr ""
 

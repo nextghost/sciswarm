@@ -7,9 +7,11 @@
 {% block content %}
 <h1>{% trans 'Delete Paper Author' %}</h1>
 <div class="box">
-<div>{{ object|html }}</div>
-{% if object.author_alias.target is not None %}<div>{{ object.author_alias.target|object_link }}</div>{% endif %}
-<div>{% trans 'Status:' %} {{ object.confirmed|yesno:_('Confirmed,Rejected,Pending') }}</div>
+<table class="form">
+<tr><th>{% trans 'Identifier:' %}</th><td>{{ object|html }}</td></tr>
+{% if object.author_alias.target is not None %}<tr><th>{% trans 'User:' %}</th><td>{{ object.author_alias.target|object_link }}</td></tr>{% endif %}
+<tr><th>{% trans 'Status:' %}</th><td>{{ object.status }}</td></tr>
+</table>
 </div>
 <h2>{% trans 'Do you really want to delete this author?' %}</h2>
 <form method="post" action="?">

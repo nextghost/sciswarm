@@ -7,6 +7,7 @@ from django.http import QueryDict
 from django.template.defaultfilters import stringfilter
 from django.template import defaulttags
 from django.urls import reverse
+from django.utils import six
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 from ..utils import html

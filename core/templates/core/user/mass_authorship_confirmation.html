@@ -1,0 +1,28 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'Manage Authorship' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Manage Authorship' %}</h1>
+<div class="box">
+{% if form.paper_fields %}
+{% if form.non_field_errors %}
+<div class="error">{{ form.non_field_errors }}</div>
+{% endif %}
+<form method="post" action="#">
+{% csrf_token %}
+<table class="form">
+  {% for paper, fieldname in form.paper_fields %}
+  <tr><td>{{ paper|object_link }}</td><td>{{ form|getattr:fieldname }}</td></tr>
+  {% endfor %}
+  <tr><td colspan="2">{{ form.submit_buttons }}</td></tr>
+</table>
+</form>
+{% else %}
+<p>{% trans 'No papers awaiting authorship confirmation have been found.' %}</p>
+{% endif %}
+</div>
+{{ paginator }}
+{% endblock %}

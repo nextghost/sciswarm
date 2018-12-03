@@ -7,8 +7,10 @@
 {% block content %}
 <h1>{% trans 'Delete Citation' %}</h1>
 <div class="box">
-<div>{{ object|html }}</div>
-{% if object.target is not None %}<div>{{ object.target|object_link }}</div>{% endif %}
+<table class="form">
+<tr><th>{% trans 'Identifier:' %}</th><td>{{ object|html }}</td></tr>
+{% if object.target is not None %}<tr><th>{% trans 'Paper:' %}</th><td>{{ object.target|object_link }}</td></tr>{% endif %}
+</table>
 </div>
 <h2>{% trans 'Do you really want to delete this citation?' %}</h2>
 <form method="post" action="?">
