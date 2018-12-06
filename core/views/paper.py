@@ -27,23 +27,24 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView
 from .base import (BaseCreateView, BaseUpdateView, BaseListView,
-    BaseModelFormsetView, BaseDeleteView, BaseUnlinkAliasView)
-from ..forms.paper import (PaperForm, PaperAliasForm, PaperAliasFormset,
-    PaperAuthorNameFormset)
+    SearchListView, BaseModelFormsetView, BaseDeleteView, BaseUnlinkAliasView)
+from ..forms.paper import (PaperSearchForm, PaperForm, PaperAliasForm,
+    PaperAliasFormset, PaperAuthorNameFormset)
 from ..forms.user import (PaperAuthorForm, UserAliasForm, UserAliasFormset,
     AuthorshipConfirmationForm)
 from ..utils.html import NavigationBar
 from ..utils.utils import list_map, logger, remove_duplicates
 from .. import models
 
-class PaperListView(BaseListView):
+class PaperListView(SearchListView):
     queryset = models.Paper.objects.filter_public()
+    form_class = PaperSearchForm
     template_name = 'core/paper/paper_list.html'
     page_title = _('Latest papers')
 
     def get_context_data(self, *args, **kwargs):
         ret = super(PaperListView, self).get_context_data(*args, **kwargs)
-        obj_list = ret['object_list']
+        obj_list = list(ret['object_list'])
         refs = models.PaperAuthorReference.objects.filter_unrejected(obj_list)
         refs = refs.select_related('author_alias__target')
         ref_map = list_map(((x.paper_id, x) for x in refs))
@@ -54,6 +55,67 @@ class PaperListView(BaseListView):
         ret['object_list'] = [(x, ref_map.get(x.pk,[]), name_map.get(x.pk,[]))
             for x in obj_list]
         ret['page_title'] = self.page_title
+        ret['navbar'] = ''
+        return ret
+
+class CitedByPaperListView(PaperListView):
+    def get_base_queryset(self):
+        table = models.Paper.query_model
+        qs = models.Paper.objects.filter_public()
+        self.paper = get_object_or_404(qs, pk=self.kwargs['pk'])
+        query = (table.bibliography.target == self.paper)
+        return models.Paper.objects.filter_public().filter(query).distinct()
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(CitedByPaperListView, self).get_context_data(*args,
+            **kwargs)
+        ret['page_title'] = _('Papers Citing: %s') % self.paper.name
+        return ret
+
+class UserPostedPaperListView(PaperListView):
+    def get_base_queryset(self):
+        qs = models.User.objects
+        self.user = get_object_or_404(qs, username=self.kwargs['username'])
+        return self.user.posted_paper_set.filter_public()
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(UserPostedPaperListView, self).get_context_data(*args,
+            **kwargs)
+        ret['page_title'] = _('Papers Posted by %s') % self.user.full_name
+        return ret
+
+class UserAuthoredPaperListView(PaperListView):
+    def get_base_queryset(self):
+        qs = models.User.objects
+        self.user = get_object_or_404(qs, username=self.kwargs['username'])
+        reftab = models.Paper.query_model.paperauthorreference
+        # Show only confirmed papers
+        query = ((reftab.author_alias.target == self.user) &
+            (reftab.confirmed == True))
+        return models.Paper.objects.filter_public().filter(query).distinct()
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(UserAuthoredPaperListView, self).get_context_data(*args,
+            **kwargs)
+        ret['page_title'] = _('Papers by %s') % self.user.full_name
+        return ret
+
+@method_decorator(login_required, name='dispatch')
+class RejectedAuthorshipPaperListView(PaperListView):
+    page_title = _('Papers You Have Rejected')
+
+    def get_base_queryset(self):
+        reftab = models.Paper.query_model.paperauthorreference
+        query = ((reftab.author_alias.target == self.request.user) &
+            (reftab.confirmed == False))
+        return models.Paper.objects.filter_public().filter(query).distinct()
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(RejectedAuthorshipPaperListView, self).get_context_data(
+            *args, **kwargs)
+        links = [(_('Manage authorship'), 'core:mass_authorship_confirmation',
+            tuple(), dict())]
+        ret['navbar'] = NavigationBar(self.request, links)
         return ret
 
 class PaperDetailView(DetailView):
@@ -71,7 +133,10 @@ class PaperDetailView(DetailView):
     def get_context_data(self, *args, **kwargs):
         ret = super(PaperDetailView, self).get_context_data(*args, **kwargs)
         obj = ret['object']
-        links = []
+        links = [
+            (_('Cited by'), 'core:cited_by_paper_list', tuple(),
+                dict(pk=obj.pk)),
+        ]
         qs = models.PaperAuthorReference.objects.filter_unrejected(obj)
         ret['author_list'] = qs.select_related('author_alias__target')
         ret['author_names'] = obj.paperauthorname_set.all()

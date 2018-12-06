@@ -235,9 +235,24 @@ class NumericMixin(OrderedMixin):
     def __rmod__(self, other):
         return NumericExpression(Expression.MOD, make_expr(other), self)
 
-# FIXME: Add methods
 class StringMixin(OrderedMixin):
-    pass
+    def like(self, pattern):
+        return LikeExpression(self, pattern, False)
+
+    def ilike(self, pattern):
+        return LikeExpression(self, pattern, True)
+
+    def contains(self, value):
+        return ContainsExpression(self, value, False)
+
+    def icontains(self, value):
+        return ContainsExpression(self, value, True)
+
+    def startswith(self, value):
+        return StartsWithExpression(self, value, False)
+
+    def istartswith(self, value):
+        return StartsWithExpression(self, value, True)
 
 class ConstExpression(Expression):
     def __init__(self, value):
@@ -258,6 +273,14 @@ class NumericExpression(NumericMixin, Expression):
 class StringExpression(StringMixin, Expression):
     pass
 
+class SubqueryExpression(Expression):
+    def __init__(self, query):
+        self._query = query
+
+    def as_sql(self, compiler, connection):
+        comp2 = self._query.get_compiler(connection=connection)
+        return comp2.as_sql()
+
 class BelongsExpression(BooleanExpression):
     def __init__(self, lhs, rhs):
         self._lhs = lhs
@@ -276,11 +299,40 @@ class BelongsExpression(BooleanExpression):
             query = self._rhs
             if len(query.fields) + len(query.falias) > 1:
                 raise ValueError('"IN" subquery must return only 1 column')
-            rhs, params = compiler.compile(self._lhs)
+            comp2 = self._rhs.get_compiler(connection=connection)
+            rhs, params = comp2.as_sql()
             ret_params.extend(params)
         else:
             raise ValueError('Invalid argument for "IN" expression')
         return template.format(lhs=lhs, rhs=rhs), ret_params
+
+class LikeExpression(BooleanExpression):
+    def __init__(self, lhs, pattern, ignore_case=False):
+        self._lhs = lhs
+        self._pattern = pattern
+        self._ignore_case = ignore_case
+
+    def process_pattern(self, compiler, connection):
+        return self._pattern
+
+    def as_sql(self, compiler, connection):
+        if self._ignore_case:
+            template = '(UPPER({lhs}) LIKE UPPER(%s))'
+        else:
+            template = '({lhs} LIKE %s)'
+        lhs, ret_params = compiler.compile(self._lhs)
+        ret_params.append(self.process_pattern(compiler, connection))
+        return template.format(lhs=lhs), ret_params
+
+class ContainsExpression(LikeExpression):
+    def process_pattern(self, compiler, connection):
+        pattern = connection.ops.prep_for_like_query(self._pattern)
+        return '%{0}%'.format(pattern)
+
+class StartsWithExpression(LikeExpression):
+    def process_pattern(self, compiler, connection):
+        pattern = connection.ops.prep_for_like_query(self._pattern)
+        return '{0}%'.format(pattern)
 
 class DateTimeExtractExpression(NumericExpression):
     def __init__(self, component, field):
@@ -355,6 +407,9 @@ def clean_sum(expr):
 def count(expr, distinct=False):
     return NumericExpression(CountOp(distinct), make_expr(expr))
 
+def all(query):
+    return Expression(FunctionOp('ALL'), SubqueryExpression(query))
+
 # Note: PostgreSQL ignores NULL values in GREATEST() and LEAST()
 # MySQL returns NULL if any argument is NULL.
 def greatest(*exprs):
@@ -382,6 +437,12 @@ def minute(field):
 
 def second(field):
     return DateTimeExtractExpression('second', field)
+
+def upper(expr):
+    return StringExpression(FunctionOp('UPPER'), expr)
+
+def lower(expr):
+    return StringExpression(FunctionOp('LOWER'), expr)
 
 # Tables and Joins
 

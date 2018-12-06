@@ -14,15 +14,132 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from django import forms
 from django.core.exceptions import ImproperlyConfigured
 from django.forms import fields, modelformset_factory, widgets, ValidationError
 from django.utils.translation import ugettext_lazy as _
-from .base import ModelForm, BaseAliasForm
+from .base import Form, ModelForm, BaseAliasForm
 from ..models import const
+from ..utils import sql
 from ..utils.transaction import lock_record
-from ..utils.validators import validate_paper_alias
+from ..utils.utils import fold_and, fold_or
+from ..utils.validators import validate_paper_alias, validate_person_alias
 from .. import models
 import re
+
+class PaperSearchForm(Form):
+    title = forms.CharField(label=_('Title'), required=False)
+    year_published = forms.IntegerField(label=_('Year published'),
+        required=False)
+    author = forms.CharField(label=_('Author'), required=False,
+        help_text=_('Author name or identifier.'))
+    identifier = forms.CharField(label=_('Identifier'), required=False)
+    keywords = forms.CharField(label=_('Keywords'), required=False,
+        help_text=_('Comma-separated list of keywords.'))
+
+    def __init__(self, *args, **kwargs):
+        queryset = kwargs.pop('queryset', None)
+        if queryset is None:
+            msg = '"queryset" keyword argument is required'
+            raise ImproperlyConfigured(msg)
+        super(PaperSearchForm, self).__init__(*args, **kwargs)
+        self.queryset = queryset
+        self.fields['year_published'].widget.attrs['size'] = 6
+
+    def clean(self):
+        papertab = sql.Table(models.Paper)
+        join = papertab
+        cond_list = []
+
+        # Paper title
+        title = self.cleaned_data.get('title')
+        if title:
+            cond_list.append(papertab.name.icontains(title))
+
+        # Year published
+        year_published = self.cleaned_data.get('year_published')
+        if year_published is not None:
+            cond_list.append(papertab.year_published == year_published)
+
+        # Author name/identifier
+        author = self.cleaned_data.get('author')
+        if author:
+            reftab = sql.Table(models.PaperAuthorReference)
+            # aliastab: author identifier referenced by the paper
+            # (may be unlinked)
+            aliastab = sql.Table(models.UserAlias)
+            # extaliastab: all identifiers of the linked author whether or not
+            # they're referenced by the paper itself
+            extaliastab = sql.Table(models.UserAlias)
+            cond = (reftab.author_alias_id == aliastab.pk)
+            subjoin = reftab.inner_join(aliastab, cond)
+            cond = (aliastab.target_id == extaliastab.target_id)
+            subjoin = subjoin.left_join(extaliastab, cond)
+
+            if ':' in author:
+                # Scheme prefix in input, search only identifiers
+                try:
+                    scheme, identifier = validate_person_alias('', author)
+                    cond = ((papertab.pk == reftab.paper_id) &
+                        (((aliastab.scheme == scheme) &
+                        (aliastab.identifier == identifier)) |
+                        ((extaliastab.scheme == scheme) &
+                        (extaliastab.identifier == identifier))))
+                    join = join.inner_join(subjoin, cond)
+                except ValidationError as err:
+                    self.add_error('author', err)
+            else:
+                usertab = sql.Table(models.User)
+                nametab = sql.Table(models.PaperAuthorName)
+                cond = (aliastab.target_id == usertab.pk)
+                subjoin = subjoin.left_join(usertab, cond)
+
+                # Search author aliases and linked users
+                tokens = author.split()
+                tmplist = [(usertab.first_name.icontains(x) |
+                    usertab.last_name.icontains(x)) for x in tokens]
+                tmplist.append(aliastab.identifier == author)
+                tmplist.append(extaliastab.identifier == author)
+                cond = (papertab.pk == reftab.paper_id)
+                join = join.left_join(subjoin, cond & fold_or(tmplist))
+
+                # Search plain author names
+                tmplist = [nametab.author_name.icontains(x) for x in tokens]
+                tmplist.append(papertab.pk == nametab.paper_id)
+                join = join.left_join(nametab, fold_and(tmplist))
+                cond_list.append(aliastab.pk.notnull() | nametab.pk.notnull())
+
+        # Paper identifier
+        identifier = self.cleaned_data.get('identifier')
+        if identifier:
+            aliastab = sql.Table(models.PaperAlias)
+            cond = (papertab.pk == aliastab.target_id)
+            if ':' in identifier:
+                try:
+                    scheme, identifier = validate_paper_alias('', identifier)
+                    cond &= (aliastab.scheme == scheme)
+                except ValidationError as err:
+                    self.add_error('identifier', err)
+            if not self.has_error('identifier'):
+                cond &= (aliastab.identifier == identifier)
+                join = join.inner_join(aliastab, cond)
+
+        # Paper keywords (multiple)
+        keywords = self.cleaned_data.get('keywords')
+        if keywords:
+            kw_list = [x.strip() for x in keywords.split(',')]
+            for kw in kw_list:
+                if not kw:
+                    continue
+                kwtab = sql.Table(models.PaperKeyword)
+                cond = ((papertab.pk == kwtab.paper_id) &
+                    (sql.upper(kwtab.keyword) == kw.upper()))
+                join = join.inner_join(kwtab, cond)
+
+        # Filter queryset
+        sub = join.select(papertab.pk, where=fold_and(cond_list))
+        query = models.Paper.query_model.pk.belongs(sub)
+        self.queryset = self.queryset.filter(query)
 
 class PaperForm(ModelForm):
     class Meta:

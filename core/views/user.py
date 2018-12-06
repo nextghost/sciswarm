@@ -25,6 +25,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView
 from .base import BaseCreateView, BaseUnlinkAliasView
 from .utils import PageNavigator
+from ..utils.html import NavigationBar
 from ..utils.utils import logger
 from ..forms.user import UserAliasForm, MassAuthorshipConfirmationForm
 from .. import models
@@ -41,6 +42,13 @@ class UserDetailView(DetailView):
         # Security precaution
         obj.password = ''
         ret['alias_list'] = obj.useralias_set.select_related('target')
+        links = [
+            (_('Posted papers'), 'core:user_posted_paper_list', tuple(),
+                dict(username=obj.username)),
+            (_('Authored papers'), 'core:user_authored_paper_list', tuple(),
+                dict(username=obj.username)),
+        ]
+        ret['navbar'] = NavigationBar(self.request, links)
         # TODO: Show latest events from this user
         return ret
 
@@ -116,4 +124,7 @@ class MassAuthorshipConfirmationView(FormView):
             *args, **kwargs)
         ret['paginator'] = self.paginator
         ret['object_list'] = self.object_list
+        links = [(_('Rejected papers'), 'core:rejected_authorship_paper_list',
+            tuple(), dict())]
+        ret['navbar'] = NavigationBar(self.request, links)
         return ret

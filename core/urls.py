@@ -33,6 +33,9 @@ account_patterns = [
     url(r'^manage_authorship/?\Z',
         user.MassAuthorshipConfirmationView.as_view(),
         name='mass_authorship_confirmation'),
+    url(r'^rejected_papers/?\Z',
+        paper.RejectedAuthorshipPaperListView.as_view(),
+        name='rejected_authorship_paper_list'),
     url(r'^change_password/?\Z', account.password_change,
         name='password_change'),
     url(r'^reset_password/?\Z', account.password_reset, name='password_reset'),
@@ -47,6 +50,12 @@ account_patterns = [
 ]
 
 user_patterns = [
+    url(r'^(?P<username>[^/]+)/papers/?\Z',
+        paper.UserAuthoredPaperListView.as_view(),
+        name='user_authored_paper_list'),
+    url(r'^(?P<username>[^/]+)/posted_papers/?\Z',
+        paper.UserPostedPaperListView.as_view(),
+        name='user_posted_paper_list'),
     url(r'^(?P<username>[^/]+)/?\Z', user.UserDetailView.as_view(),
         name='user_detail'),
 ]
@@ -60,6 +69,8 @@ paper_patterns = [
     url(r'^delete_author_name/(?P<pk>[0-9]+)/?\Z',
         paper.DeletePaperAuthorNameView.as_view(),
         name='delete_paper_author_name'),
+    url(r'^(?P<pk>[0-9]+)/cited_by/?\Z', paper.CitedByPaperListView.as_view(),
+        name='cited_by_paper_list'),
     url(r'^(?P<pk>[0-9]+)/edit/?\Z', paper.UpdatePaperView.as_view(),
         name='edit_paper'),
     url(r'^(?P<pk>[0-9]+)/add_author/?\Z',

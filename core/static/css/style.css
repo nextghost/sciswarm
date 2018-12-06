@@ -26,12 +26,40 @@ td, th {
 	padding: 5px;
 }
 
-table.list {
+table {
 	border-collapse: collapse;
+	margin-bottom: 1em;
+}
+
+table.form {
+	width: 100%;
+}
+
+table.form th {
+	max-width: 5em;
 }
 
 table.list th, table.list td {
 	border: 1px solid #ccccff;
+}
+
+table.search th, table.search td {
+	border: 1px solid #ccccff;
+}
+
+input[type="text"], input[type="number"] {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	max-width: 30em;
+	width: 100%;
+}
+
+select, input {
+	margin-right: 1ex;
+}
+
+textarea {
+	width: 100%;
 }
 
 #header {
@@ -99,6 +127,10 @@ table.list th, table.list td {
 	padding-right: 1em;
 	padding-top: 5px;
 	padding-bottom: 5px;
+}
+
+.navbar {
+	margin-bottom: 1em;
 }
 
 .errorlist, .error {

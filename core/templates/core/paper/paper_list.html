@@ -6,11 +6,18 @@
 
 {% block content %}
 <h1>{{ page_title }}</h1>
+{{ navbar }}
+<form action="?" method="get">
+<table class="search">
+<thead><tr><td>{{ form.title.label }}</td><td>{{ form.year_published.label }}</td><td>{{ form.author.label }}</td><td>{{ form.identifier.label }}</td><td>{{ form.keywords.label }}</td><td>&nbsp;</td></tr></thead>
+<tbody><tr><td>{{ form.title }}</td><td>{{ form.year_published }}</td><td>{{ form.author }}</td><td>{{ form.identifier }}</td><td>{{ form.keywords }}</td><td><input type="submit" value="{% trans 'Search' %}"</td></tr></tbody>
+</table>
+</form>
 <div class="box">
 {% for object, author_list, author_names in object_list %}
 <div class="list_item">
 <div class="title">{{ object|object_link }}</div>
-{% if author_list or author_names %}<div>{% for item in author_list %}{{ item.target_link }}{% if author_names or not forloop.last %}, {% endif %}{% endfor %}{% for item in author_names %}{{ item }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>{% endif %}
+{% if author_list or author_names %}<div>{% for item in author_list %}{{ item.target_link }}{% if author_names or not forloop.last %}; {% endif %}{% endfor %}{% for item in author_names %}{{ item }}{% if not forloop.last %}; {% endif %}{% endfor %}</div>{% endif %}
 </div>
 {% empty %}
 <div>{% trans 'No papers found.' %}</div>

@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.db import models, transaction, IntegrityError
+from django.http import QueryDict
 from django.urls import reverse
 from django.utils.html import format_html, mark_safe
 from django.utils.translation import ugettext_lazy as _
@@ -263,6 +264,13 @@ class PaperKeyword(models.Model):
 
     def __str__(self):
         return self.keyword
+
+    def __html__(self):
+        args = QueryDict(mutable=True)
+        args['keywords'] = self.keyword
+        tpl = '<a href="{url}">{title}</a>'
+        url = reverse('core:paper_list') + '?' + args.urlencode()
+        return format_html(tpl, url=url, title=self.keyword)
 
 class PaperAuthorReferenceManager(models.Manager):
     def filter_unrejected(self, paper=None):

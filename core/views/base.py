@@ -62,6 +62,9 @@ class SearchListView(BaseListView):
     form_class = None
     prefix = None
 
+    def get_base_queryset(self):
+        return super(SearchListView, self).get_queryset()
+
     def get_initial(self):
         return self.initial.copy()
 
@@ -74,7 +77,7 @@ class SearchListView(BaseListView):
         return self.form_class
 
     def get_form_kwargs(self):
-        qs = super(SearchListView, self).get_queryset()
+        qs = self.get_base_queryset()
         kwargs = dict(initial=self.get_initial(), prefix=self.get_prefix(),
             data=self.request.GET or None, queryset=qs)
         return kwargs
@@ -89,7 +92,7 @@ class SearchListView(BaseListView):
         if self.form.is_valid():
             qs = self.form.queryset
         if qs is None:
-            qs = super(SearchListView, self).get_queryset()
+            qs = self.get_base_queryset()
         return qs
 
     def get(self, *args, **kwargs):
