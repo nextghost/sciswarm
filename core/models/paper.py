@@ -260,7 +260,7 @@ class PaperKeyword(models.Model):
         ordering = ('keyword',)
     keyword = models.CharField(_('keyword'), max_length=32, db_index=True)
     paper = models.ForeignKey(Paper, verbose_name=_('paper'),
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE, editable=False)
 
     def __str__(self):
         return self.keyword
@@ -335,9 +335,25 @@ class PaperAuthorName(models.Model):
     class Meta:
         ordering = ('paper', 'author_name')
     paper = models.ForeignKey(Paper, verbose_name=_('paper'),
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE, editable=False)
     author_name = models.CharField(_('author'), max_length=128, db_index=True,
         help_text=_('Additional authors with no unique identifier'))
 
     def __str__(self):
         return self.author_name
+
+class PaperSupplementalLink(models.Model):
+    class Meta:
+        ordering = ('paper', 'name')
+        unique_together = (('name', 'paper'), ('url', 'paper'))
+    paper = models.ForeignKey(Paper, verbose_name=_('paper'),
+        on_delete=models.CASCADE, editable=False)
+    name = models.CharField(_('title'), max_length=128)
+    url = models.URLField(_('URL'), max_length=512)
+
+    def __str__(self):
+        return self.name
+
+    def __html__(self):
+        from ..utils.html import render_link
+        return render_link(self.url, self.name)

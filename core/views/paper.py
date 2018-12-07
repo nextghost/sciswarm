@@ -29,7 +29,7 @@ from django.views.generic import DetailView
 from .base import (BaseCreateView, BaseUpdateView, BaseListView,
     SearchListView, BaseModelFormsetView, BaseDeleteView, BaseUnlinkAliasView)
 from ..forms.paper import (PaperSearchForm, PaperForm, PaperAliasForm,
-    PaperAliasFormset, PaperAuthorNameFormset)
+    PaperAliasFormset, PaperAuthorNameFormset, PaperSupplementalLinkForm)
 from ..forms.user import (PaperAuthorForm, UserAliasForm, UserAliasFormset,
     AuthorshipConfirmationForm)
 from ..utils.html import NavigationBar
@@ -143,6 +143,7 @@ class PaperDetailView(DetailView):
         ret['bibliography'] = obj.bibliography.all()
         ret['keyword_list'] = obj.paperkeyword_set.all()
         ret['alias_list'] = obj.paperalias_set.all()
+        ret['suplink_list'] = obj.papersupplementallink_set.all()
         ret['edit_access'] = False
         if self.request.user.is_authenticated:
             edit_access = obj.is_owned_by(self.request.user)
@@ -388,7 +389,6 @@ class AddCitationsFormView(BaseModelFormsetView):
     extra_forms = 20
 
     def get_form_kwargs(self):
-        logger.info('AddCitationsFormView.get_form_kwargs()')
         qs = models.Paper.objects
         if self.request.method == 'POST':
             qs = qs.select_for_update()
@@ -402,21 +402,17 @@ class AddCitationsFormView(BaseModelFormsetView):
         return ret
 
     def form_valid(self, formset):
-        logger.info('AddCitationsFormView.form_valid()')
         paper = self.parent
         for form in formset:
             form.instance.paper = paper
         ret = super(AddCitationsFormView, self).form_valid(formset)
-        logger.info('object_list: %s' % str(self.object_list))
         clean_list = remove_duplicates(self.object_list, paper.bibliography)
-        logger.info('clean_list: %s' % str(clean_list))
         paper.bibliography.add(*clean_list)
         paper.changed_by = self.request.user
         paper.save(update_fields=['last_changed', 'changed_by'])
         return ret
 
     def get_success_url(self):
-        logger.info('AddCitationsFormView.get_success_url()')
         return self.parent.get_absolute_url()
 
 @method_decorator(login_required, name='dispatch')
@@ -468,3 +464,51 @@ class PaperAuthorshipConfirmationView(BaseUpdateView):
         qs = models.PaperAuthorReference.objects.filter(query)
         ret['alias_list'] = qs.select_related('author_alias')
         return ret
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
+class AddSupplementalLinkFormView(BaseCreateView):
+    form_class = PaperSupplementalLinkForm
+    page_title = _('Add Supplemental Link')
+
+    def get_initial(self):
+        paper = get_object_or_404(models.Paper.objects, pk=self.kwargs['pk'])
+        if not paper.is_owned_by(self.request.user):
+            raise PermissionDenied(_('You are not one of the authors.'))
+        self.parent = paper
+        ret = super(AddSupplementalLinkFormView, self).get_initial()
+        ret['paper'] = paper
+        return ret
+
+    def form_valid(self, form):
+        ret = super(AddSupplementalLinkFormView, self).form_valid(form)
+        self.parent.changed_by = self.request.user
+        self.parent.save(update_fields=['last_changed', 'changed_by'])
+        return ret
+
+    def get_success_url(self):
+        return self.parent.get_absolute_url()
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
+class DeleteSupplementalLinkView(BaseDeleteView):
+    queryset = models.PaperSupplementalLink.objects.select_related('paper')
+    template_name = 'core/paper/delete_paper_supplemental_link.html'
+
+    def get_object(self, *args, **kwargs):
+        qs = self.get_queryset()
+        if self.request.method == 'POST':
+            qs = qs.select_for_update()
+        ret = get_object_or_404(qs, pk=self.kwargs['pk'])
+        if not ret.paper.is_owned_by(self.request.user):
+            raise PermissionDenied(_('You are not one of the authors.'))
+        return ret
+
+    def perform_delete(self):
+        super(DeleteSupplementalLinkView, self).perform_delete()
+        paper = self.object.paper
+        paper.changed_by = self.request.user
+        paper.save(update_fields=['last_changed', 'changed_by'])
+
+    def get_success_url(self):
+        return self.object.paper.get_absolute_url()

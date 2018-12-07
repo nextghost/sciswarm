@@ -239,3 +239,37 @@ class PaperAuthorNameForm(ModelForm):
 
 PaperAuthorNameFormset = modelformset_factory(models.PaperAuthorName,
     form=PaperAuthorNameForm)
+
+class PaperSupplementalLinkForm(ModelForm):
+    class Meta:
+        model = models.PaperSupplementalLink
+        fields = ('name', 'url')
+
+    def __init__(self, *args, **kwargs):
+        super(PaperSupplementalLinkForm, self).__init__(*args, **kwargs)
+        if self.instance.pk is None:
+            if not self.initial.get('paper'):
+                raise ImproperlyConfigured('"paper" initial value is required')
+            self.instance.paper = self.initial['paper']
+
+    def clean(self):
+        if self.instance.pk is None:
+            paper = self.initial['paper']
+        else:
+            paper = self.instance.paper
+        lock_record(paper)
+
+        table = models.PaperSupplementalLink.query_model
+        name = self.cleaned_data.get('name')
+        url = self.cleaned_data.get('url')
+        query1 = (table.name == name)
+        query2 = (table.url == url)
+        if self.instance.pk is not None:
+            query1 &= (table.pk != self.instance.pk)
+            query2 &= (table.pk != self.instance.pk)
+        if paper.papersupplementallink_set.filter(query1).exists():
+            msg = _('This paper already has a link with this name.')
+            self.add_error('name', ValidationError(msg, 'unique'))
+        if paper.papersupplementallink_set.filter(query2).exists():
+            msg = _('This paper already has this link.')
+            self.add_error('url', ValidationError(msg, 'unique'))

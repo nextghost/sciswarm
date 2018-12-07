@@ -1,0 +1,19 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'Delete Citation' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Delete Supplemental Link' %}</h1>
+<div class="box">
+<table class="form">
+<tr><th>{% trans 'Link:' %}</th><td>{{ object|html }}</td></tr>
+</table>
+</div>
+<h2>{% trans 'Do you really want to delete this link?' %}</h2>
+<form method="post" action="?">
+{% csrf_token %}
+<p><input type="submit" value="{% trans 'Delete' %}"/></p>
+</form>
+{% endblock %}

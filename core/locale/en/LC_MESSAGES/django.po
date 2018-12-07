@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-06 18:53+0100\n"
+"POT-Creation-Date: 2018-12-07 20:26+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -107,7 +107,7 @@ msgstr ""
 msgid "Identifier"
 msgstr ""
 
-#: forms/paper.py:37 forms/paper.py:151
+#: forms/paper.py:37 forms/paper.py:152
 msgid "Keywords"
 msgstr ""
 
@@ -115,21 +115,29 @@ msgstr ""
 msgid "Comma-separated list of keywords."
 msgstr ""
 
-#: forms/paper.py:152
+#: forms/paper.py:153
 msgid "List of keywords separated by commas or newlines."
 msgstr ""
 
-#: forms/paper.py:159
+#: forms/paper.py:160
 msgid "I am an author"
 msgstr ""
 
-#: forms/paper.py:172
+#: forms/paper.py:173
 #, python-format
 msgid "Some keywords are longer than %(limit_value)s characters."
 msgstr ""
 
-#: forms/paper.py:181
+#: forms/paper.py:182
 msgid "Database error, please try again later."
+msgstr ""
+
+#: forms/paper.py:272
+msgid "This paper already has a link with this name."
+msgstr ""
+
+#: forms/paper.py:275
+msgid "This paper already has this link."
 msgstr ""
 
 #: forms/user.py:70
@@ -234,7 +242,7 @@ msgstr ""
 msgid "user"
 msgstr ""
 
-#: models/paper.py:144
+#: models/paper.py:144 models/paper.py:351
 msgid "title"
 msgstr ""
 
@@ -337,7 +345,7 @@ msgid "public"
 msgstr ""
 
 #: models/paper.py:225 models/paper.py:262 models/paper.py:290
-#: models/paper.py:337
+#: models/paper.py:337 models/paper.py:349
 msgid "paper"
 msgstr ""
 
@@ -369,6 +377,10 @@ msgstr ""
 msgid "Additional authors with no unique identifier"
 msgstr ""
 
+#: models/paper.py:352
+msgid "URL"
+msgstr ""
+
 #: templates/common/edit.html:14 templates/common/formset.html:16
 #: templates/core/account/profile_form.html:15
 #: templates/core/paper/create_paper.html:38
@@ -384,6 +396,7 @@ msgstr ""
 #: templates/core/paper/delete_citation.html:18
 #: templates/core/paper/delete_paper_author.html:19
 #: templates/core/paper/delete_paper_author_name.html:13
+#: templates/core/paper/delete_paper_supplemental_link.html:17
 msgid "Delete"
 msgstr ""
 
@@ -531,7 +544,7 @@ msgstr ""
 msgid "New paper"
 msgstr ""
 
-#: templates/core/layout.html:34 views/paper.py:116 views/paper.py:156
+#: templates/core/layout.html:34 views/paper.py:116 views/paper.py:157
 msgid "Manage authorship"
 msgstr ""
 
@@ -591,12 +604,13 @@ msgid "Paper Identifiers"
 msgstr ""
 
 #: templates/core/paper/create_paper.html:32
-#: templates/core/paper/paper_detail.html:34
+#: templates/core/paper/paper_detail.html:46
 msgid "Bibliography"
 msgstr ""
 
 #: templates/core/paper/delete_citation.html:5
 #: templates/core/paper/delete_citation.html:8
+#: templates/core/paper/delete_paper_supplemental_link.html:5
 msgid "Delete Citation"
 msgstr ""
 
@@ -634,20 +648,34 @@ msgstr ""
 msgid "Do you really want to delete this author name?"
 msgstr ""
 
+#: templates/core/paper/delete_paper_supplemental_link.html:8
+msgid "Delete Supplemental Link"
+msgstr ""
+
+#: templates/core/paper/delete_paper_supplemental_link.html:11
+msgid "Link:"
+msgstr ""
+
+#: templates/core/paper/delete_paper_supplemental_link.html:14
+msgid "Do you really want to delete this link?"
+msgstr ""
+
 #: templates/core/paper/paper_detail.html:13
 msgid "Authors:"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:13
 #: templates/core/paper/paper_detail.html:29
-#: templates/core/paper/paper_detail.html:37
+#: templates/core/paper/paper_detail.html:38
+#: templates/core/paper/paper_detail.html:49
 #: templates/core/user/user_detail.html:18
 msgid "(delete)"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:13
 #: templates/core/paper/paper_detail.html:26
-#: templates/core/paper/paper_detail.html:34
+#: templates/core/paper/paper_detail.html:35
+#: templates/core/paper/paper_detail.html:46
 #: templates/core/user/user_detail.html:15
 msgid "(add)"
 msgstr ""
@@ -697,7 +725,15 @@ msgstr ""
 msgid "Identifiers"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:41
+#: templates/core/paper/paper_detail.html:35
+msgid "Supplemental Links"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:42
+msgid "No links have been entered."
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:53
 msgid "No citations have been entered."
 msgstr ""
 
@@ -846,53 +882,58 @@ msgstr ""
 msgid "Cited by"
 msgstr ""
 
-#: views/paper.py:151
+#: views/paper.py:152
 msgid "Edit"
 msgstr ""
 
-#: views/paper.py:170
+#: views/paper.py:172
 msgid "Create Paper"
 msgstr ""
 
-#: views/paper.py:178
+#: views/paper.py:180
 msgid "Author:"
 msgstr ""
 
-#: views/paper.py:190 views/paper.py:401
+#: views/paper.py:192 views/paper.py:402
 msgid "Biblio entry:"
 msgstr ""
 
-#: views/paper.py:242
+#: views/paper.py:244
 msgid "Edit Paper"
 msgstr ""
 
-#: views/paper.py:247 views/paper.py:266 views/paper.py:296 views/paper.py:316
-#: views/paper.py:336 views/paper.py:368 views/paper.py:397 views/paper.py:433
+#: views/paper.py:249 views/paper.py:268 views/paper.py:298 views/paper.py:318
+#: views/paper.py:338 views/paper.py:370 views/paper.py:398 views/paper.py:430
+#: views/paper.py:478 views/paper.py:505
 msgid "You are not one of the authors."
 msgstr ""
 
-#: views/paper.py:258
+#: views/paper.py:260
 msgid "Add Paper Author"
 msgstr ""
 
-#: views/paper.py:298
+#: views/paper.py:300
 msgid "Rejected authorship cannot be deleted."
 msgstr ""
 
-#: views/paper.py:330
+#: views/paper.py:332
 msgid "Add Paper Identifier"
 msgstr ""
 
-#: views/paper.py:361
+#: views/paper.py:363
 msgid "Delete Paper Identifier"
 msgstr ""
 
-#: views/paper.py:370 views/user.py:89
+#: views/paper.py:372 views/user.py:89
 msgid "This identifier is permanent."
 msgstr ""
 
-#: views/paper.py:387
+#: views/paper.py:389
 msgid "Add Citations"
+msgstr ""
+
+#: views/paper.py:473
+msgid "Add Supplemental Link"
 msgstr ""
 
 #: views/user.py:46

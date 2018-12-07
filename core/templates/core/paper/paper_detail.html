@@ -31,6 +31,18 @@
 </ul>
 </div>
 
+{% if suplink_list or edit_access %}
+<h2>{% trans 'Supplemental Links' %}{% if edit_access %} <a href="{% url 'core:add_paper_supplemental_link' pk=object.pk %}"><img src="{% static 'img/create.png' %}" alt="{% trans '(add)' %}"/></a>{% endif %}</h2>
+<div class="box">
+{% if suplink_list %}<ul>
+{% for item in suplink_list %}<li>{{ item|html }}{% if edit_access %} <a href="{% url 'core:delete_paper_supplemental_link' pk=item.pk %}"><img src="{% static 'img/delete.png' %}" alt="{% trans '(delete)'%}"/></a>{% endif %}</li>
+{% endfor %}
+</ul>
+{% else %}
+{% trans 'No links have been entered.' %}{% endif %}
+</div>
+{% endif %}
+
 <h2>{% trans 'Bibliography' %}{% if edit_access %} <a href="{% url 'core:add_paper_citations' pk=object.pk %}"><img src="{% static 'img/create.png' %}" alt="{% trans '(add)' %}"/></a>{% endif %}</h2>
 <div class="box">
 {% if bibliography %}<ol>
