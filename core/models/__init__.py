@@ -15,5 +15,5 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .auth import User, BruteBlock, BruteLog
-from .paper import (UserAlias, Paper, PaperAlias, PaperKeyword,
+from .paper import (Person, PersonAlias, Paper, PaperAlias, PaperKeyword,
     PaperAuthorReference, PaperAuthorName, PaperSupplementalLink)

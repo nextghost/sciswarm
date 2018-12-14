@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 def lock_record(record, related=None):
-    model = type(record)
+    model = record.__class__
     qs = model._default_manager.select_for_update().filter(pk=record.pk)
     if related:
         qs = qs.select_related(*related)

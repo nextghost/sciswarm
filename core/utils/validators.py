@@ -21,7 +21,7 @@ from ..models import const
 from .. import models
 import re
 
-def sciswarm_user_id_validator(value):
+def sciswarm_person_id_validator(value):
     if not value.startswith('u/'):
         raise ValidationError(_('Invalid Sciswarm user identifier.'),'invalid')
     ident = value[2:]
@@ -43,7 +43,7 @@ def sciswarm_paper_id_validator(value):
 
 def sciswarm_id_validator(value):
     if value.startswith('u/'):
-        return sciswarm_user_id_validator(value)
+        return sciswarm_person_id_validator(value)
     elif value.startswith('p/'):
         return sciswarm_paper_id_validator(value)
     else:
@@ -98,7 +98,7 @@ _person_alias_validator_map = {
     const.person_alias_schemes.XMPP: validators.validate_email,
     const.person_alias_schemes.TWITTER:
         validators.RegexValidator(r'^@[a-zA-Z0-9_]{1,15}$'),
-    const.person_alias_schemes.SCISWARM: sciswarm_user_id_validator,
+    const.person_alias_schemes.SCISWARM: sciswarm_person_id_validator,
     const.person_alias_schemes.URL: validators.URLValidator(),
 }
 

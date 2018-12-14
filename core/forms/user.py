@@ -26,18 +26,19 @@ from ..utils.transaction import lock_record
 from ..utils.validators import validate_person_alias
 from .. import models
 
-class UserAliasForm(BaseAliasForm):
+class PersonAliasForm(BaseAliasForm):
     class Meta:
-        model = models.UserAlias
+        model = models.PersonAlias
         fields = ('scheme', 'identifier')
 
     def validate_alias(self, scheme, identifier):
         return validate_person_alias(scheme, identifier)
 
-UserAliasFormset = modelformset_factory(models.UserAlias, form=UserAliasForm)
+PersonAliasFormset = modelformset_factory(models.PersonAlias,
+    form=PersonAliasForm)
 
 # This form must be processed and saved under transaction
-class PaperAuthorForm(UserAliasForm):
+class PaperAuthorForm(PersonAliasForm):
     def __init__(self, *args, **kwargs):
         paper = kwargs.pop('paper', None)
         if paper is None:
@@ -53,13 +54,13 @@ class PaperAuthorForm(UserAliasForm):
         if not (self.has_error('scheme') or self.has_error('identifier')):
             scheme = self.cleaned_data.get('scheme')
             identifier = self.cleaned_data.get('identifier')
-            aliastab = models.UserAlias.query_model
+            aliastab = models.PersonAlias.query_model
             reftab = models.PaperAuthorReference.query_model
             refobjs = models.PaperAuthorReference.objects
 
             query = ((aliastab.scheme == scheme) &
                 (aliastab.identifier == identifier))
-            alias = models.UserAlias.objects.filter(query).first()
+            alias = models.PersonAlias.objects.filter(query).first()
 
             if alias is not None and alias.target_id is not None:
                 # Check for previous authorship rejection
@@ -73,7 +74,7 @@ class PaperAuthorForm(UserAliasForm):
 
     def save(self):
         ret = super(PaperAuthorForm, self).save()
-        query = (models.UserAlias.query_model.pk == ret.pk)
+        query = (models.PersonAlias.query_model.pk == ret.pk)
         if not self.parent.authors.filter(query).exists():
             models.PaperAuthorReference.objects.create(paper=self.parent,
                 author_alias=ret, confirmed=None)
@@ -84,11 +85,11 @@ class PaperAuthorForm(UserAliasForm):
 # This form must be processed and saved under transaction
 class BaseAuthorshipConfirmationForm(Form):
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        if user is None:
-            raise ImproperlyConfigured('"user" keyword argument is required')
+        person = kwargs.pop('person', None)
+        if person is None:
+            raise ImproperlyConfigured('"person" keyword argument is required')
         super(BaseAuthorshipConfirmationForm, self).__init__(*args, **kwargs)
-        self.user = user
+        self.person = person
         self.selected_papers = []
 
     def get_buttons(self):
@@ -115,7 +116,7 @@ class BaseAuthorshipConfirmationForm(Form):
             return
         table = models.PaperAuthorReference.query_model
         query = (table.paper.belongs(self.selected_papers) &
-            (table.author_alias.target == self.user))
+            (table.author_alias.target == self.person))
         qs = models.PaperAuthorReference.objects.filter(query)
         if '_confirm_authorship' in self.data:
             qs.update(confirmed=True)

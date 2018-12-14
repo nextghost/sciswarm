@@ -56,7 +56,8 @@ def twitter_link(scheme, identifier):
 
 def sciswarm_link(scheme, identifier):
     if identifier.startswith('u/'):
-        url = reverse('core:user_detail', kwargs=dict(username=identifier[2:]))
+        kwargs = dict(username=identifier[2:])
+        url = reverse('core:person_detail', kwargs=kwargs)
     elif identifier.startswith('p/'):
         url = reverse('core:paper_detail', kwargs=dict(pk=identifier[2:]))
     else:

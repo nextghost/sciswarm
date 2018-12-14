@@ -67,10 +67,10 @@ class PaperSearchForm(Form):
             reftab = sql.Table(models.PaperAuthorReference)
             # aliastab: author identifier referenced by the paper
             # (may be unlinked)
-            aliastab = sql.Table(models.UserAlias)
+            aliastab = sql.Table(models.PersonAlias)
             # extaliastab: all identifiers of the linked author whether or not
             # they're referenced by the paper itself
-            extaliastab = sql.Table(models.UserAlias)
+            extaliastab = sql.Table(models.PersonAlias)
             cond = (reftab.author_alias_id == aliastab.pk)
             subjoin = reftab.inner_join(aliastab, cond)
             cond = (aliastab.target_id == extaliastab.target_id)
@@ -89,15 +89,15 @@ class PaperSearchForm(Form):
                 except ValidationError as err:
                     self.add_error('author', err)
             else:
-                usertab = sql.Table(models.User)
+                persontab = sql.Table(models.Person)
                 nametab = sql.Table(models.PaperAuthorName)
-                cond = (aliastab.target_id == usertab.pk)
-                subjoin = subjoin.left_join(usertab, cond)
+                cond = (aliastab.target_id == persontab.pk)
+                subjoin = subjoin.left_join(persontab, cond)
 
                 # Search author aliases and linked users
                 tokens = author.split()
-                tmplist = [(usertab.first_name.icontains(x) |
-                    usertab.last_name.icontains(x)) for x in tokens]
+                tmplist = [(persontab.first_name.icontains(x) |
+                    persontab.last_name.icontains(x)) for x in tokens]
                 tmplist.append(aliastab.identifier == author)
                 tmplist.append(extaliastab.identifier == author)
                 cond = (papertab.pk == reftab.paper_id)
@@ -189,8 +189,8 @@ class PaperForm(ModelForm):
         author = None
         new_paper = self.instance.pk is None
         if new_paper and self.cleaned_data.get('own_paper'):
-            alias_tab = models.UserAlias.query_model
-            alias_objs = models.UserAlias.objects
+            alias_tab = models.PersonAlias.query_model
+            alias_objs = models.PersonAlias.objects
             query = (alias_tab.target == self.instance.posted_by)
             query2 = (alias_tab.scheme == const.person_alias_schemes.SCISWARM)
             author = alias_objs.filter(query & query2).order_by('pk').first()

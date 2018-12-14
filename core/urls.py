@@ -26,10 +26,10 @@ account_patterns = [
     url(r'^registered/?\Z', account.registration_complete, name='registered'),
     url(r'^edit_profile/?\Z', account.ProfileUpdateView.as_view(),
         name='edit_profile'),
-    url(r'^add_identifier/?\Z', user.LinkUserAliasView.as_view(),
-        name='add_user_identifier'),
+    url(r'^add_identifier/?\Z', user.LinkPersonAliasView.as_view(),
+        name='add_person_identifier'),
     url(r'^delete_identifier/(?P<pk>[0-9]+)/?\Z',
-        user.UnlinkUserAliasView.as_view(), name='unlink_user_identifier'),
+        user.UnlinkPersonAliasView.as_view(), name='unlink_person_identifier'),
     url(r'^manage_authorship/?\Z',
         user.MassAuthorshipConfirmationView.as_view(),
         name='mass_authorship_confirmation'),
@@ -49,15 +49,15 @@ account_patterns = [
         name='delete_account'),
 ]
 
-user_patterns = [
+person_patterns = [
     url(r'^(?P<username>[^/]+)/papers/?\Z',
-        paper.UserAuthoredPaperListView.as_view(),
-        name='user_authored_paper_list'),
+        paper.PersonAuthoredPaperListView.as_view(),
+        name='person_authored_paper_list'),
     url(r'^(?P<username>[^/]+)/posted_papers/?\Z',
-        paper.UserPostedPaperListView.as_view(),
-        name='user_posted_paper_list'),
-    url(r'^(?P<username>[^/]+)/?\Z', user.UserDetailView.as_view(),
-        name='user_detail'),
+        paper.PersonPostedPaperListView.as_view(),
+        name='person_posted_paper_list'),
+    url(r'^(?P<username>[^/]+)/?\Z', user.PersonDetailView.as_view(),
+        name='person_detail'),
 ]
 
 paper_patterns = [
@@ -97,7 +97,7 @@ paper_patterns = [
 urlpatterns = [
     url(r'^\Z', main.homepage, name='homepage'),
     url(r'^p/?\Z', paper.PaperListView.as_view(), name='paper_list'),
-    url(r'^u/', include(user_patterns)),
+    url(r'^u/', include(person_patterns)),
     url(r'^p/', include(paper_patterns)),
     url(r'^account/', include(account_patterns)),
 ]

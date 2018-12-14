@@ -16,6 +16,7 @@
 
 from django.conf import settings
 from django.contrib.auth import forms as auth
+from django.core.exceptions import ImproperlyConfigured
 from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone, translation
@@ -23,6 +24,7 @@ from django import forms
 from .base import HelpTextMixin, ModelForm
 from .. import models
 from ..models import const
+from ..utils.transaction import lock_record
 from ..utils.utils import generate_token
 import datetime
 import re
@@ -59,19 +61,26 @@ class RegistrationForm(HelpTextMixin, auth.UserCreationForm):
         error_messages = {
             'username': {'invalid': _('This username is not allowed. Username may contain only lowercase English letters, numbers, and @/./+/-/_ characters.')}
         }
+    title_before = models.Person._meta.get_field('title_before').formfield()
+    title_after = models.Person._meta.get_field('title_after').formfield()
+    bio = models.Person._meta.get_field('bio').formfield()
     language = forms.ChoiceField(label=_('Language'),
         choices=settings.LANGUAGES)
 
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
         self.initial.setdefault('language', translation.get_language())
+        flist = ['title_before', 'title_after', 'bio']
+        for fname in flist:
+            tmp = models.Person._meta.get_field(fname).validators
+            self.fields[fname].validators = tmp
 
     def clean(self):
         super(RegistrationForm, self).clean()
         email = self.cleaned_data.get('email')
         username = self.cleaned_data.get('username')
         if email is not None:
-            aliasobj = models.UserAlias.objects
+            aliasobj = models.PersonAlias.objects
             scheme = const.person_alias_schemes.EMAIL
             if not aliasobj.check_alias_available(scheme, email):
                 msg = _('This e-mail address is already taken.')
@@ -82,24 +91,45 @@ class RegistrationForm(HelpTextMixin, auth.UserCreationForm):
             err = ValidationError(msg, 'invalid')
             self.add_error('username', err)
 
-    def save(self, commit=True):
+    def save(self):
         self.instance.verification_key = generate_token(32)
-        ret = super(RegistrationForm, self).save(commit)
+        ret = super(RegistrationForm, self).save(False)
+        flist = ['username', 'title_before', 'first_name', 'last_name',
+            'title_after', 'bio']
+        person_data = dict(((k, self.cleaned_data[k]) for k in flist))
+        person = models.Person.objects.create(**person_data)
+        self.instance.person = person
+        self.instance.save()
         scheme = const.person_alias_schemes.EMAIL
-        models.UserAlias.objects.link_alias(scheme, ret.email, ret)
+        models.PersonAlias.objects.link_alias(scheme, ret.email, person)
         scheme = const.person_alias_schemes.SCISWARM
-        models.UserAlias.objects.link_alias(scheme, 'u/' + ret.username, ret)
+        models.PersonAlias.objects.link_alias(scheme,'u/'+ret.username, person)
         return ret
 
+# This form must be processed and saved under transaction
 class UserProfileUpdateForm(ModelForm):
     class Meta:
         model = models.User
         fields = ['password_check', 'email', 'title_before', 'first_name',
             'last_name', 'title_after', 'language', 'bio']
+    title_before = models.Person._meta.get_field('title_before').formfield()
+    title_after = models.Person._meta.get_field('title_after').formfield()
+    bio = models.Person._meta.get_field('bio').formfield()
     language = forms.ChoiceField(label=_('Language'),
         choices=settings.LANGUAGES)
     password_check = forms.CharField(label=_('Password'),
         widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileUpdateForm, self).__init__(*args, **kwargs)
+        if self.instance.pk is None:
+            msg = 'Creating new users through profile update form is not allowed'
+            raise ImproperlyConfigured(msg)
+        flist = ['title_before', 'title_after', 'bio']
+        for fname in flist:
+            tmp = models.Person._meta.get_field(fname).validators
+            self.fields[fname].validators = tmp
+            self.initial.setdefault(fname, getattr(self.instance.person,fname))
 
     def clean_password_check(self):
         pwd = self.cleaned_data.get('password_check', '')
@@ -108,20 +138,31 @@ class UserProfileUpdateForm(ModelForm):
         return pwd
 
     def clean(self):
+        tmp = lock_record(self.instance, ['person'])
+        if tmp is None:
+            msg = _('Database error, please try again later.')
+            raise ValidationError(msg, 'lock')
+        self.instance = tmp
+        person = tmp.person
         email = self.cleaned_data.get('email')
         if email is not None and 'email' in self.changed_data:
-            aliasobj = models.UserAlias.objects
+            aliasobj = models.PersonAlias.objects
             scheme = const.person_alias_schemes.EMAIL
-            if not aliasobj.check_alias_available(scheme,email, self.instance):
+            if not aliasobj.check_alias_available(scheme, email, person):
                 msg = _('This e-mail address is already taken.')
                 err = ValidationError(msg, 'unique')
                 self.add_error('email', err)
 
-    def save(self, commit=True):
-        ret = super(UserProfileUpdateForm, self).save(commit)
+    def save(self):
+        ret = super(UserProfileUpdateForm, self).save()
+        flist = ['title_before', 'first_name', 'last_name', 'title_after',
+            'bio']
+        for fname in flist:
+            setattr(ret.person, fname, self.cleaned_data[fname])
+        ret.person.save()
         if 'email' in self.changed_data:
             scheme = const.person_alias_schemes.EMAIL
-            models.UserAlias.objects.link_alias(scheme, ret.email, ret)
+            models.PersonAlias.objects.link_alias(scheme,ret.email, ret.person)
         return ret
 
 class DeleteAccountForm(ModelForm):

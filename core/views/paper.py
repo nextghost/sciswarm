@@ -30,20 +30,20 @@ from .base import (BaseCreateView, BaseUpdateView, BaseListView,
     SearchListView, BaseModelFormsetView, BaseDeleteView, BaseUnlinkAliasView)
 from ..forms.paper import (PaperSearchForm, PaperForm, PaperAliasForm,
     PaperAliasFormset, PaperAuthorNameFormset, PaperSupplementalLinkForm)
-from ..forms.user import (PaperAuthorForm, UserAliasForm, UserAliasFormset,
+from ..forms.user import (PaperAuthorForm, PersonAliasForm, PersonAliasFormset,
     AuthorshipConfirmationForm)
 from ..utils.html import NavigationBar
 from ..utils.utils import list_map, logger, remove_duplicates
 from .. import models
 
-class PaperListView(SearchListView):
+class BasePaperListView(SearchListView):
     queryset = models.Paper.objects.filter_public()
     form_class = PaperSearchForm
     template_name = 'core/paper/paper_list.html'
     page_title = _('Latest papers')
 
     def get_context_data(self, *args, **kwargs):
-        ret = super(PaperListView, self).get_context_data(*args, **kwargs)
+        ret = super(BasePaperListView, self).get_context_data(*args, **kwargs)
         obj_list = list(ret['object_list'])
         refs = models.PaperAuthorReference.objects.filter_unrejected(obj_list)
         refs = refs.select_related('author_alias__target')
@@ -58,7 +58,10 @@ class PaperListView(SearchListView):
         ret['navbar'] = ''
         return ret
 
-class CitedByPaperListView(PaperListView):
+class PaperListView(BasePaperListView):
+    ordering = ('-date_posted',)
+
+class CitedByPaperListView(BasePaperListView):
     def get_base_queryset(self):
         table = models.Paper.query_model
         qs = models.Paper.objects.filter_public()
@@ -72,41 +75,43 @@ class CitedByPaperListView(PaperListView):
         ret['page_title'] = _('Papers Citing: %s') % self.paper.name
         return ret
 
-class UserPostedPaperListView(PaperListView):
+class PersonPostedPaperListView(BasePaperListView):
     def get_base_queryset(self):
-        qs = models.User.objects
-        self.user = get_object_or_404(qs, username=self.kwargs['username'])
-        return self.user.posted_paper_set.filter_public()
+        qs = models.Person.objects.filter_active()
+        qs = qs.filter_username(self.kwargs['username'])
+        self.person = get_object_or_404(qs)
+        return self.person.posted_paper_set.filter_public()
 
     def get_context_data(self, *args, **kwargs):
-        ret = super(UserPostedPaperListView, self).get_context_data(*args,
+        ret = super(PersonPostedPaperListView, self).get_context_data(*args,
             **kwargs)
-        ret['page_title'] = _('Papers Posted by %s') % self.user.full_name
+        ret['page_title'] = _('Papers Posted by %s') % self.person.full_name
         return ret
 
-class UserAuthoredPaperListView(PaperListView):
+class PersonAuthoredPaperListView(BasePaperListView):
     def get_base_queryset(self):
-        qs = models.User.objects
-        self.user = get_object_or_404(qs, username=self.kwargs['username'])
+        qs = models.Person.objects.filter_active()
+        qs = qs.filter_username(self.kwargs['username'])
+        self.person = get_object_or_404(qs)
         reftab = models.Paper.query_model.paperauthorreference
         # Show only confirmed papers
-        query = ((reftab.author_alias.target == self.user) &
+        query = ((reftab.author_alias.target == self.person) &
             (reftab.confirmed == True))
         return models.Paper.objects.filter_public().filter(query).distinct()
 
     def get_context_data(self, *args, **kwargs):
-        ret = super(UserAuthoredPaperListView, self).get_context_data(*args,
+        ret = super(PersonAuthoredPaperListView, self).get_context_data(*args,
             **kwargs)
-        ret['page_title'] = _('Papers by %s') % self.user.full_name
+        ret['page_title'] = _('Papers by %s') % self.person.full_name
         return ret
 
 @method_decorator(login_required, name='dispatch')
-class RejectedAuthorshipPaperListView(PaperListView):
+class RejectedAuthorshipPaperListView(BasePaperListView):
     page_title = _('Papers You Have Rejected')
 
     def get_base_queryset(self):
         reftab = models.Paper.query_model.paperauthorreference
-        query = ((reftab.author_alias.target == self.request.user) &
+        query = ((reftab.author_alias.target.pk==self.request.user.person_id) &
             (reftab.confirmed == False))
         return models.Paper.objects.filter_public().filter(query).distinct()
 
@@ -151,8 +156,8 @@ class PaperDetailView(DetailView):
             if edit_access:
                 links.append((_('Edit'), 'core:edit_paper', tuple(),
                     dict(pk=obj.pk)))
-            uatab = models.UserAlias.query_model
-            query = (uatab.target == self.request.user)
+            uatab = models.PersonAlias.query_model
+            query = (uatab.target.pk == self.request.user.person_id)
             if obj.authors.filter(query).exists():
                 links.append((_('Manage authorship'),
                     'core:paper_authorship_confirmation', tuple(),
@@ -174,8 +179,8 @@ class CreatePaperView(BaseCreateView):
         ret = super(CreatePaperView, self).get_form(*args, **kwargs)
         data = self.request.POST or None
         subforms = dict()
-        subforms['authors'] = UserAliasFormset(data, prefix='authors',
-            queryset=models.UserAlias.objects.none(),
+        subforms['authors'] = PersonAliasFormset(data, prefix='authors',
+            queryset=models.PersonAlias.objects.none(),
             form_kwargs=dict(label=_('Author:'), allow_sciswarm=True))
         subforms['authors'].extra = 5
         subforms['author_names'] = PaperAuthorNameFormset(data,
@@ -203,8 +208,8 @@ class CreatePaperView(BaseCreateView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        form.instance.posted_by = self.request.user
-        form.instance.changed_by = self.request.user
+        form.instance.posted_by = self.request.user.person
+        form.instance.changed_by = self.request.user.person
         try:
             with atomic():
                 ret = super(CreatePaperView, self).form_valid(form)
@@ -249,7 +254,7 @@ class UpdatePaperView(BaseUpdateView):
         return ret
 
     def form_valid(self, form):
-        form.instance.changed_by = self.request.user
+        form.instance.changed_by = self.request.user.person
         return super(UpdatePaperView, self).form_valid(form)
 
 @method_decorator(login_required, name='dispatch')
@@ -272,7 +277,7 @@ class AddPaperAuthorView(BaseCreateView):
 
     def form_valid(self, form):
         ret = super(AddPaperAuthorView, self).form_valid(form)
-        self.parent.changed_by = self.request.user
+        self.parent.changed_by = self.request.user.person
         self.parent.save(update_fields=['last_changed', 'changed_by'])
         return ret
 
@@ -301,12 +306,14 @@ class DeletePaperAuthorView(BaseDeleteView):
 
     def perform_delete(self):
         super(DeletePaperAuthorView, self).perform_delete()
-        self.object.paper.changed_by = self.request.user
+        self.object.paper.changed_by = self.request.user.person
         self.object.paper.save(update_fields=['last_changed', 'changed_by'])
 
     def get_success_url(self):
         return self.object.paper.get_absolute_url()
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
 class DeletePaperAuthorNameView(BaseDeleteView):
     queryset = models.PaperAuthorName.objects.select_related('paper__posted_by')
     template_name = 'core/paper/delete_paper_author_name.html'
@@ -319,7 +326,7 @@ class DeletePaperAuthorNameView(BaseDeleteView):
 
     def perform_delete(self):
         super(DeletePaperAuthorNameView, self).perform_delete()
-        self.object.paper.changed_by = self.request.user
+        self.object.paper.changed_by = self.request.user.person
         self.object.paper.save(update_fields=['last_changed', 'changed_by'])
 
     def get_success_url(self):
@@ -345,7 +352,7 @@ class LinkPaperAliasView(BaseCreateView):
         try:
             with atomic():
                 ret = super(LinkPaperAliasView, self).form_valid(form)
-                self.parent.changed_by = self.request.user
+                self.parent.changed_by = self.request.user.person
                 self.parent.save(update_fields=['last_changed', 'changed_by'])
                 return ret
         except IntegrityError:
@@ -374,7 +381,7 @@ class UnlinkPaperAliasView(BaseUnlinkAliasView):
 
     def perform_delete(self):
         super(UnlinkPaperAliasView, self).perform_delete()
-        self.object.target.changed_by = self.request.user
+        self.object.target.changed_by = self.request.user.person
         self.object.target.save(update_fields=['last_changed', 'changed_by'])
 
     def get_success_url(self):
@@ -408,7 +415,7 @@ class AddCitationsFormView(BaseModelFormsetView):
         ret = super(AddCitationsFormView, self).form_valid(formset)
         clean_list = remove_duplicates(self.object_list, paper.bibliography)
         paper.bibliography.add(*clean_list)
-        paper.changed_by = self.request.user
+        paper.changed_by = self.request.user.person
         paper.save(update_fields=['last_changed', 'changed_by'])
         return ret
 
@@ -433,7 +440,7 @@ class DeleteCitationView(BaseDeleteView):
 
     def perform_delete(self):
         self.parent.bibliography.remove(self.object)
-        self.parent.changed_by = self.request.user
+        self.parent.changed_by = self.request.user.person
         self.parent.save(update_fields=['last_changed', 'changed_by'])
 
     def get_success_url(self):
@@ -446,12 +453,12 @@ class PaperAuthorshipConfirmationView(BaseUpdateView):
     template_name = 'core/paper/authorship_confirmation.html'
 
     def get_queryset(self):
-        return models.Paper.objects.filter_by_author(self.request.user)
+        return models.Paper.objects.filter_by_author(self.request.user.person)
 
     def get_form_kwargs(self, *args, **kwargs):
         ret = super(PaperAuthorshipConfirmationView, self).get_form_kwargs(
             *args, **kwargs)
-        ret['user'] = self.request.user
+        ret['person'] = self.request.user.person
         return ret
 
     def get_context_data(self, *args, **kwargs):
@@ -459,7 +466,7 @@ class PaperAuthorshipConfirmationView(BaseUpdateView):
             *args, **kwargs)
         reftab = models.PaperAuthorReference.query_model
         obj = ret['object']
-        query = ((reftab.author_alias.target == self.request.user) &
+        query = ((reftab.author_alias.target == self.request.user.person) &
             (reftab.paper == obj))
         qs = models.PaperAuthorReference.objects.filter(query)
         ret['alias_list'] = qs.select_related('author_alias')
@@ -482,7 +489,7 @@ class AddSupplementalLinkFormView(BaseCreateView):
 
     def form_valid(self, form):
         ret = super(AddSupplementalLinkFormView, self).form_valid(form)
-        self.parent.changed_by = self.request.user
+        self.parent.changed_by = self.request.user.person
         self.parent.save(update_fields=['last_changed', 'changed_by'])
         return ret
 
@@ -507,7 +514,7 @@ class DeleteSupplementalLinkView(BaseDeleteView):
     def perform_delete(self):
         super(DeleteSupplementalLinkView, self).perform_delete()
         paper = self.object.paper
-        paper.changed_by = self.request.user
+        paper.changed_by = self.request.user.person
         paper.save(update_fields=['last_changed', 'changed_by'])
 
     def get_success_url(self):

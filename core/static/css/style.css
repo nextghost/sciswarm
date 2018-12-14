@@ -47,7 +47,7 @@ table.search th, table.search td {
 	border: 1px solid #ccccff;
 }
 
-input[type="text"], input[type="number"], input[type="url"] {
+input[type="text"], input[type="number"], input[type="url"], input[type="password"], input[type="email"] {
 	padding-top: 8px;
 	padding-bottom: 8px;
 	max-width: 30em;

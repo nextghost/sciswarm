@@ -22,6 +22,72 @@ from django.utils.translation import ugettext_lazy as _
 from ..utils import html
 from . import auth, const
 
+class PersonQuerySet(models.QuerySet):
+    def filter_active(self):
+        subq = auth.User.objects.filter_active().values_list('person_id')
+        query = self.model.query_model.pk.belongs(subq)
+        return self.filter(query).distinct()
+
+    def filter_alias(self, scheme, alias):
+        aliastab = self.model.query_model.personalias
+        query = ((aliastab.scheme == scheme) &
+            (aliastab.identifier == alias))
+        return self.filter(query)
+
+    def filter_username(self, username):
+        scheme = const.person_alias_schemes.SCISWARM
+        return self.filter_alias(scheme, 'u/'+username)
+
+class Person(models.Model):
+    class Meta:
+        ordering = ('last_name', 'first_name')
+    objects = PersonQuerySet.as_manager()
+
+    # Copy of auth.User.username. User accounts will not be replicated
+    # through the future federation protocol so this value will be the global
+    # unique identifier of this object (together with server ID)
+    username = models.CharField(_('username'), max_length=150, unique=True,
+        editable=False)
+    title_before = models.CharField(_('titles before name'), max_length=64,
+        blank=True)
+    first_name = models.CharField(_('first name'), max_length=30, blank=True)
+    last_name = models.CharField(_('last name'), max_length=30, blank=True)
+    title_after = models.CharField(_('titles after name'), max_length=64,
+        blank=True)
+    bio = models.TextField(_('about you'), max_length=1024, blank=True)
+
+    def __str__(self):
+        # This applies only to bots
+        if (not self.first_name) or not self.last_name:
+            return self.first_name or self.last_name
+        args = dict(first_name=self.first_name, last_name=self.last_name)
+        return _('{last_name}, {first_name}').format(**args)
+
+    @property
+    def name(self):
+        return str(self)
+
+    @property
+    def full_name(self):
+        args = dict(first_name=self.first_name, last_name=self.last_name,
+            title_before=self.title_before, title_after=self.title_after)
+        tokens = []
+        if self.title_before:
+            tokens.append('{title_before}')
+        if self.first_name:
+            tokens.append('{first_name}')
+        if self.last_name:
+            tokens.append('{last_name}')
+        if self.title_after:
+            tokens[-1] += ','
+            tokens.append('{title_after}')
+        tpl = ' '.join(tokens)
+        return tpl.format(**args)
+
+    def get_absolute_url(self):
+        kwargs = dict(username=self.username)
+        return reverse('core:person_detail', kwargs=kwargs)
+
 class AliasManager(models.Manager):
     def check_alias_available(self, scheme, identifier, target=None):
         table = self.model.query_model
@@ -77,7 +143,7 @@ class AliasManager(models.Manager):
         except IntegrityError:
             return link_existing()
 
-class UserAlias(models.Model):
+class PersonAlias(models.Model):
     class Meta:
         unique_together = (('scheme', 'identifier'),)
         ordering = ('scheme', 'identifier')
@@ -86,7 +152,7 @@ class UserAlias(models.Model):
     scheme = models.CharField(_('scheme'), max_length=16, blank=True,
         choices=const.person_alias_schemes.items())
     identifier = models.CharField(_('identifier'), max_length=150)
-    target = models.ForeignKey(auth.User, verbose_name=_('user'), null=True,
+    target = models.ForeignKey(Person, verbose_name=_('user'), null=True,
         on_delete=models.SET_NULL)
 
     def __str__(self):
@@ -114,8 +180,13 @@ class UserAlias(models.Model):
     def is_deletable(self):
         if self.scheme == const.person_alias_schemes.SCISWARM:
             return False
+        elif self.target is None:
+            return False
         elif self.scheme == const.person_alias_schemes.EMAIL:
-            return self.identifier != self.target.email
+            qs = auth.User.objects.filter_by_person(self.target)
+            for user in qs:
+                if self.identifier == user.email:
+                    return False
         return True
 
     def unlink(self):
@@ -168,16 +239,17 @@ class Paper(models.Model):
         db_index=True, default=True)
     date_posted = models.DateTimeField(_('date posted'), auto_now_add=True,
         db_index=True, editable=False)
-    posted_by = models.ForeignKey(auth.User, verbose_name=_('posted by'),
+    posted_by = models.ForeignKey(Person, verbose_name=_('posted by'),
         null=True, on_delete=models.SET_NULL, editable=False,
         related_name='posted_paper_set')
     last_changed = models.DateTimeField(_('last changed'), auto_now=True,
         db_index=True, editable=False)
-    changed_by = models.ForeignKey(auth.User, verbose_name=_('changed by'),
+    changed_by = models.ForeignKey(Person, verbose_name=_('changed by'),
         null=True, on_delete=models.SET_NULL, editable=False, related_name='+')
     # Public flag marks that the paper was taken down due to copyright claim
     public = models.BooleanField(_('public'), default=True)
-    authors = models.ManyToManyField(UserAlias, through='PaperAuthorReference')
+    authors = models.ManyToManyField(PersonAlias,
+        through='PaperAuthorReference')
     bibliography = models.ManyToManyField('PaperAlias')
 
     def __str__(self):
@@ -201,17 +273,19 @@ class Paper(models.Model):
     # If there are no linked authors, the paper will be provisionally owned
     # by whoever posted it.
     def is_owned_by(self, user):
+        if not isinstance(user, auth.User):
+            return False
         if user.is_superuser:
             return True
-        uatab = UserAlias.query_model
+        uatab = PersonAlias.query_model
         artab = uatab.paperauthorreference
         query = ((uatab.target.notnull()) & (artab.paper == self) &
             ((artab.confirmed == True) | (artab.confirmed.isnull())))
-        qs = UserAlias.objects.filter(query).select_related('target')
+        qs = PersonAlias.objects.filter(query).select_related('target')
         author_list = [x.target for x in qs]
-        if user in author_list:
+        if user.person in author_list:
             return True
-        return (not author_list) and user == self.posted_by
+        return (not author_list) and user.person == self.posted_by
 
 class PaperAlias(models.Model):
     class Meta:
@@ -289,7 +363,7 @@ class PaperAuthorReference(models.Model):
 
     paper = models.ForeignKey(Paper, verbose_name=_('paper'),
         on_delete=models.CASCADE)
-    author_alias = models.ForeignKey(UserAlias, verbose_name=_('author'),
+    author_alias = models.ForeignKey(PersonAlias, verbose_name=_('author'),
         on_delete=models.CASCADE)
     confirmed = models.NullBooleanField(_('confirmed'), db_index=True)
 
