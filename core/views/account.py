@@ -169,6 +169,12 @@ class ProfileUpdateView(BaseUpdateView):
         context['navbar'] = NavigationBar(self.request, nav_links)
         return context
 
+    def form_valid(self, form):
+        ret = super(ProfileUpdateView, self).form_valid(form)
+        lang = form.cleaned_data['language']
+        self.request.session[translation.LANGUAGE_SESSION_KEY] = lang
+        return ret
+
 # Decorators applied in parent class
 class DeleteAccountView(ProfileUpdateView):
     template_name = 'core/account/delete_form.html'
