@@ -18,9 +18,9 @@
 <tr><th>{% trans 'Officially published:' %}</th><td>{{ object.year_published|default_if_none:_('No')|unlocalize }}</td></tr>
 <tr><th>{% trans 'Cite as:' %}</th><td>{{ object.cite_as }}</td></tr>
 <tr><th>{% trans 'Posted:' %}</th><td>{{ object.date_posted }}</td></tr>
-<tr><th>{% trans 'Posted by:' %}</th><td>{{ object.posted_by|object_link }}</td></tr>
+<tr><th>{% trans 'Posted by:' %}</th><td>{{ object.posted_by|object_link:_('Deleted user') }}</td></tr>
 <tr><th>{% trans 'Last changed:' %}</th><td>{{ object.last_changed }}</td></tr>
-{% if edit_access %}<tr><th>{% trans 'Changed by:' %}</th><td>{{ object.changed_by|object_link }}</td></tr>{% endif %}
+{% if edit_access %}<tr><th>{% trans 'Changed by:' %}</th><td>{{ object.changed_by|object_link:_('Deleted user') }}</td></tr>{% endif %}
 </table>
 
 <h2>{% trans 'Identifiers' %}{% if edit_access %} <a href="{% url 'core:add_paper_identifier' pk=object.pk %}"><img src="{% static 'img/create.png' %}" alt="{% trans '(add)' %}"/></a>{% endif %}</h2>

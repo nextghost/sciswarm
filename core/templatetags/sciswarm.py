@@ -65,10 +65,12 @@ def rmod(left, right):
     return right % left
 
 @register.filter
-def object_link(obj):
-    if (not hasattr(obj, 'name')) or not hasattr(obj, 'get_absolute_url'):
+def object_link(obj, blank=None):
+    if obj is None and blank is not None:
+        return blank
+    if not hasattr(obj, 'get_absolute_url'):
         raise template.TemplateSyntaxError('Cannot build link for this object')
-    kwargs = dict(name=obj.name, url=obj.get_absolute_url())
+    kwargs = dict(name=str(obj), url=obj.get_absolute_url())
     return format_html('<a href="{url}">{name}</a>', **kwargs)
 
 @register.filter(name='html')
