@@ -56,3 +56,15 @@ paper_alias_schemes = ConstEnum(
     ('URL', 'http', _('Web URL')),
     ('OTHER', '', _('Other')),
 )
+
+paper_quality_ratings = ConstEnum(
+    ('BAD', -1, _('Questionable')),
+    ('MIXED', 0, _('Mixed')),
+    ('GOOD', 1, _('Rigorous')),
+)
+
+paper_importance_ratings = ConstEnum(
+    ('LOW', 0, _('Waste of time')),
+    ('MEDIUM', 1, _('Average')),
+    ('HIGH', 2, _('Revolutionary')),
+)

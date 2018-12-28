@@ -156,6 +156,16 @@ class AuthorshipConfirmationForm(BaseAuthorshipConfirmationForm):
         self.paper_list = [paper]
         self.selected_papers = [paper]
 
+    def clean(self):
+        super(AuthorshipConfirmationForm, self).clean()
+        paper = self.paper_list[0]
+        revtab = models.PaperReview.query_model
+        query = ((revtab.deleted == False) & (revtab.posted_by == self.person))
+        qs = paper.paperreview_set.filter(query)
+        if '_confirm_authorship' in self.data and qs.exists():
+            msg = _('You cannot accept authorship of a paper which you have reviewed. You must delete the review first.')
+            raise ValidationError(msg, 'selfpromo')
+
     def save(self):
         super(AuthorshipConfirmationForm, self).save()
         return self.paper_list[0]

@@ -28,6 +28,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView
 from .base import (BaseCreateView, BaseUpdateView, BaseListView,
     SearchListView, BaseModelFormsetView, BaseDeleteView, BaseUnlinkAliasView)
+from .utils import paper_navbar
 from ..forms.paper import (PaperSearchForm, PaperForm, PaperAliasForm,
     PaperAliasFormset, PaperAuthorNameFormset, PaperSupplementalLinkForm)
 from ..forms.user import (PaperAuthorForm, PersonAliasForm, PersonAliasFormset,
@@ -73,6 +74,7 @@ class CitedByPaperListView(BasePaperListView):
         ret = super(CitedByPaperListView, self).get_context_data(*args,
             **kwargs)
         ret['page_title'] = _('Papers Citing: %s') % self.paper.name
+        ret['navbar'] = paper_navbar(self.request, self.paper)
         return ret
 
 class PersonPostedPaperListView(BasePaperListView):
@@ -138,10 +140,6 @@ class PaperDetailView(DetailView):
     def get_context_data(self, *args, **kwargs):
         ret = super(PaperDetailView, self).get_context_data(*args, **kwargs)
         obj = ret['object']
-        links = [
-            (_('Cited by'), 'core:cited_by_paper_list', tuple(),
-                dict(pk=obj.pk)),
-        ]
         qs = models.PaperAuthorReference.objects.filter_unrejected(obj)
         ret['author_list'] = qs.select_related('author_alias__target')
         ret['author_names'] = obj.paperauthorname_set.all()
@@ -149,24 +147,8 @@ class PaperDetailView(DetailView):
         ret['keyword_list'] = obj.paperkeyword_set.all()
         ret['alias_list'] = obj.paperalias_set.all()
         ret['suplink_list'] = obj.papersupplementallink_set.all()
-        ret['edit_access'] = False
-        if self.request.user.is_authenticated:
-            edit_access = obj.is_owned_by(self.request.user)
-            ret['edit_access'] = edit_access
-            if edit_access:
-                links.append((_('Edit'), 'core:edit_paper', tuple(),
-                    dict(pk=obj.pk)))
-            uatab = models.PersonAlias.query_model
-            query = (uatab.target.pk == self.request.user.person_id)
-            if obj.authors.filter(query).exists():
-                links.append((_('Manage authorship'),
-                    'core:paper_authorship_confirmation', tuple(),
-                    dict(pk=obj.pk)))
-        navbar = ''
-        if links:
-            navbar = NavigationBar(self.request, links)
-        ret['navbar'] = navbar
-        # FIXME: show papers citing this one?
+        ret['edit_access'] = obj.is_owned_by(self.request.user)
+        ret['navbar'] = paper_navbar(self.request, obj)
         return ret
 
 @method_decorator(login_required, name='dispatch')

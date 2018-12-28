@@ -16,7 +16,7 @@
 
 from django.conf.urls import include, url
 from django.contrib.auth import views as auth
-from .views import account, main, paper, user
+from .views import account, comment, main, paper, user
 
 account_patterns = [
     url(r'^login/?\Z', account.login, name='login'),
@@ -74,6 +74,10 @@ paper_patterns = [
         name='delete_paper_supplemental_link'),
     url(r'^(?P<pk>[0-9]+)/cited_by/?\Z', paper.CitedByPaperListView.as_view(),
         name='cited_by_paper_list'),
+    url(r'^(?P<pk>[0-9]+)/reviews/?\Z', comment.PaperReviewListView.as_view(),
+        name='paperreview_list'),
+    url(r'^(?P<pk>[0-9]+)/add_review/?\Z',
+        comment.CreatePaperReviewView.as_view(), name='create_paperreview'),
     url(r'^(?P<pk>[0-9]+)/edit/?\Z', paper.UpdatePaperView.as_view(),
         name='edit_paper'),
     url(r'^(?P<pk>[0-9]+)/add_author/?\Z',
@@ -94,10 +98,32 @@ paper_patterns = [
         name='paper_detail'),
 ]
 
+review_patterns = [
+    url(r'^reply/(?P<pk>[0-9]+)/?\Z',
+        comment.CreatePaperReviewResponseSubView.as_view(),
+        name='create_paperreviewresponse_sub'),
+    url(r'^edit_reply/(?P<pk>[0-9]+)/?\Z',
+        comment.UpdatePaperReviewResponseView.as_view(),
+        name='edit_paperreviewresponse'),
+    url(r'^delete_reply/(?P<pk>[0-9]+)/?\Z',
+        comment.DeletePaperReviewResponseView.as_view(),
+        name='delete_paperreviewresponse'),
+    url(r'^(?P<pk>[0-9]+)/reply/?\Z',
+        comment.CreatePaperReviewResponseMainView.as_view(),
+        name='create_paperreviewresponse_main'),
+    url(r'^(?P<pk>[0-9]+)/edit/?\Z', comment.UpdatePaperReviewView.as_view(),
+        name='edit_paperreview'),
+    url(r'^(?P<pk>[0-9]+)/delete/?\Z', comment.DeletePaperReviewView.as_view(),
+        name='delete_paperreview'),
+    url(r'^(?P<pk>[0-9]+)/?\Z', comment.PaperReviewDetailView.as_view(),
+        name='paperreview_detail'),
+]
+
 urlpatterns = [
     url(r'^\Z', main.homepage, name='homepage'),
     url(r'^p/?\Z', paper.PaperListView.as_view(), name='paper_list'),
     url(r'^u/', include(person_patterns)),
     url(r'^p/', include(paper_patterns)),
+    url(r'^r/', include(review_patterns)),
     url(r'^account/', include(account_patterns)),
 ]

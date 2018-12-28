@@ -1,0 +1,18 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'Delete Paper Review' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Delete Message' %}</h1>
+<div class="box">
+<div>{{ object.posted_by|object_link:_('Deleted user') }} {{ object.date_posted }}</div>
+<div>{{ object.message|linebreaks }}</div>
+</div>
+<h2>{% trans 'Do you really want to delete this message?' %}</h2>
+<form method="post" action="?">
+{% csrf_token %}
+<p><input type="submit" value="{% trans 'Delete' %}"/></p>
+</form>
+{% endblock %}

@@ -269,6 +269,13 @@ class Paper(models.Model):
     def get_absolute_url(self):
         return reverse('core:paper_detail', kwargs=dict(pk=self.pk))
 
+    def author_list(self):
+        artab = PersonAlias.query_model.paperauthorreference
+        query = (((artab.confirmed == True) | artab.confirmed.isnull()) &
+            (artab.paper == self))
+        qs = PersonAlias.objects.filter(query).select_related('target')
+        return list(qs)
+
     # A paper is owned by all authors who didn't reject authorship.
     # If there are no linked authors, the paper will be provisionally owned
     # by whoever posted it.
@@ -277,15 +284,17 @@ class Paper(models.Model):
             return False
         if user.is_superuser:
             return True
-        uatab = PersonAlias.query_model
-        artab = uatab.paperauthorreference
-        query = ((uatab.target.notnull()) & (artab.paper == self) &
-            ((artab.confirmed == True) | (artab.confirmed.isnull())))
-        qs = PersonAlias.objects.filter(query).select_related('target')
-        author_list = [x.target for x in qs]
+        author_list = [x.target for x in self.author_list()
+            if x.target is not None]
         if user.person in author_list:
             return True
         return (not author_list) and user.person == self.posted_by
+
+    def is_author(self, user):
+        if not isinstance(user, auth.User):
+            return False
+        author_list = [x.target for x in self.author_list() if x.target]
+        return user.person in author_list
 
 class PaperAlias(models.Model):
     class Meta:

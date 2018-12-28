@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-18 17:26+0100\n"
+"POT-Creation-Date: 2018-12-28 19:54+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -66,7 +66,7 @@ msgstr ""
 msgid "Wrong password."
 msgstr ""
 
-#: forms/auth.py:143 forms/paper.py:181
+#: forms/auth.py:143 forms/comment.py:49 forms/comment.py:83 forms/paper.py:181
 msgid "Database error, please try again later."
 msgstr ""
 
@@ -89,6 +89,18 @@ msgstr ""
 
 #: forms/base.py:200 forms/base.py:215
 msgid "This identifier is already in use."
+msgstr ""
+
+#: forms/comment.py:43
+msgid "Details"
+msgstr ""
+
+#: forms/comment.py:52 views/comment.py:92
+msgid "You cannot review your own paper."
+msgstr ""
+
+#: forms/comment.py:57 views/comment.py:96
+msgid "You cannot review a paper more than once."
 msgstr ""
 
 #: forms/paper.py:31
@@ -156,6 +168,12 @@ msgstr ""
 msgid "Please choose whether to accept or reject authorship."
 msgstr ""
 
+#: forms/user.py:166
+msgid ""
+"You cannot accept authorship of a paper which you have reviewed. You must "
+"delete the review first."
+msgstr ""
+
 #: models/auth.py:39
 msgid "system language"
 msgstr ""
@@ -175,6 +193,55 @@ msgstr ""
 #: models/auth.py:52
 #, python-brace-format
 msgid "{first_name} {last_name}"
+msgstr ""
+
+#: models/comment.py:32 models/paper.py:240
+msgid "date posted"
+msgstr ""
+
+#: models/comment.py:34
+msgid "date changed"
+msgstr ""
+
+#: models/comment.py:36 models/paper.py:242
+msgid "posted by"
+msgstr ""
+
+#: models/comment.py:38
+msgid "message"
+msgstr ""
+
+#: models/comment.py:52 models/paper.py:308 models/paper.py:345
+#: models/paper.py:373 models/paper.py:420 models/paper.py:432
+msgid "paper"
+msgstr ""
+
+#: models/comment.py:54
+msgid "methodology"
+msgstr ""
+
+#: models/comment.py:56
+msgid ""
+"Quality of methodology. If about half of the conclusions are invalid due to "
+"methodology errors, choose \"Mixed\"."
+msgstr ""
+
+#: models/comment.py:57
+msgid "importance"
+msgstr ""
+
+#: models/comment.py:59
+msgid ""
+"How much attention this paper deserves, not just for its conclusions but "
+"also for new methodologies or any other revolutionary scientific ideas."
+msgstr ""
+
+#: models/comment.py:60
+msgid "deleted"
+msgstr ""
+
+#: models/comment.py:77
+msgid "review"
 msgstr ""
 
 #: models/const.py:42
@@ -222,6 +289,30 @@ msgstr ""
 msgid "Web URL"
 msgstr ""
 
+#: models/const.py:61
+msgid "Questionable"
+msgstr ""
+
+#: models/const.py:62
+msgid "Mixed"
+msgstr ""
+
+#: models/const.py:63
+msgid "Rigorous"
+msgstr ""
+
+#: models/const.py:67
+msgid "Waste of time"
+msgstr ""
+
+#: models/const.py:68
+msgid "Average"
+msgstr ""
+
+#: models/const.py:69
+msgid "Revolutionary"
+msgstr ""
+
 #: models/paper.py:49
 msgid "username"
 msgstr ""
@@ -251,11 +342,11 @@ msgstr ""
 msgid "{last_name}, {first_name}"
 msgstr ""
 
-#: models/paper.py:152 models/paper.py:296
+#: models/paper.py:152 models/paper.py:305
 msgid "scheme"
 msgstr ""
 
-#: models/paper.py:154 models/paper.py:298
+#: models/paper.py:154 models/paper.py:307
 msgid "identifier"
 msgstr ""
 
@@ -263,7 +354,7 @@ msgstr ""
 msgid "user"
 msgstr ""
 
-#: models/paper.py:215 models/paper.py:425
+#: models/paper.py:215 models/paper.py:434
 msgid "title"
 msgstr ""
 
@@ -345,14 +436,6 @@ msgid ""
 "citations because the cited papers have no usable identifier)."
 msgstr ""
 
-#: models/paper.py:240
-msgid "date posted"
-msgstr ""
-
-#: models/paper.py:242
-msgid "posted by"
-msgstr ""
-
 #: models/paper.py:245
 msgid "last changed"
 msgstr ""
@@ -365,45 +448,42 @@ msgstr ""
 msgid "public"
 msgstr ""
 
-#: models/paper.py:299 models/paper.py:336 models/paper.py:364
-#: models/paper.py:411 models/paper.py:423
-msgid "paper"
-msgstr ""
-
-#: models/paper.py:335
+#: models/paper.py:344
 msgid "keyword"
 msgstr ""
 
-#: models/paper.py:366 models/paper.py:413
+#: models/paper.py:375 models/paper.py:422
 msgid "author"
 msgstr ""
 
-#: models/paper.py:368
+#: models/paper.py:377
 msgid "confirmed"
 msgstr ""
 
-#: models/paper.py:402
+#: models/paper.py:411
 msgid "Confirmed"
 msgstr ""
 
-#: models/paper.py:404
+#: models/paper.py:413
 msgid "Pending"
 msgstr ""
 
-#: models/paper.py:405
+#: models/paper.py:414
 msgid "Rejected"
 msgstr ""
 
-#: models/paper.py:414
+#: models/paper.py:423
 msgid "Additional authors with no unique identifier"
 msgstr ""
 
-#: models/paper.py:426
+#: models/paper.py:435
 msgid "URL"
 msgstr ""
 
 #: templates/common/edit.html:14 templates/common/formset.html:16
 #: templates/core/account/profile_form.html:15
+#: templates/core/comment/paperreview_form.html:16
+#: templates/core/comment/paperreviewresponse_form.html:22
 #: templates/core/paper/create_paper.html:38
 #: templates/registration/password_change_form.html:16
 msgid "Save"
@@ -414,6 +494,8 @@ msgid "Do you really want to delete this identifier?"
 msgstr ""
 
 #: templates/common/unlink_alias.html:15
+#: templates/core/comment/delete_paperreview.html:17
+#: templates/core/comment/delete_paperreviewresponse.html:16
 #: templates/core/paper/delete_citation.html:18
 #: templates/core/paper/delete_paper_author.html:19
 #: templates/core/paper/delete_paper_author_name.html:13
@@ -491,6 +573,83 @@ msgid ""
 "login attempts. Please try again later."
 msgstr ""
 
+#: templates/core/comment/delete_paperreview.html:5
+#: templates/core/comment/delete_paperreview.html:8
+#: templates/core/comment/delete_paperreviewresponse.html:5
+msgid "Delete Paper Review"
+msgstr ""
+
+#: templates/core/comment/delete_paperreview.html:10
+#: templates/core/comment/delete_paperreviewresponse.html:10
+#: templates/core/comment/paperreview_detail.html:11
+#: templates/core/comment/paperreview_detail.html:18
+#: templates/core/comment/paperreview_list.html:13
+#: templates/core/comment/paperreviewresponse_form.html:11
+#: templates/core/paper/paper_detail.html:21
+#: templates/core/paper/paper_detail.html:23
+msgid "Deleted user"
+msgstr ""
+
+#: templates/core/comment/delete_paperreview.html:11
+#: templates/core/comment/paperreview_detail.html:12
+#: templates/core/comment/paperreview_list.html:14
+#, python-format
+msgid "Methodology: %(methodology)s; Importance: %(importance)s"
+msgstr ""
+
+#: templates/core/comment/delete_paperreview.html:14
+msgid ""
+"Do you really want to delete this review? You will not be allowed to write "
+"another one."
+msgstr ""
+
+#: templates/core/comment/delete_paperreviewresponse.html:8
+msgid "Delete Message"
+msgstr ""
+
+#: templates/core/comment/delete_paperreviewresponse.html:13
+msgid "Do you really want to delete this message?"
+msgstr ""
+
+#: templates/core/comment/paperreview_detail.html:5
+#: templates/core/comment/paperreview_detail.html:8
+msgid "Paper Review And Replies"
+msgstr ""
+
+#: templates/core/comment/paperreview_detail.html:11
+#: templates/core/comment/paperreview_detail.html:18
+#: templates/core/comment/paperreview_list.html:13
+msgid "(Edit)"
+msgstr ""
+
+#: templates/core/comment/paperreview_detail.html:11
+#: templates/core/comment/paperreview_detail.html:18
+#: templates/core/comment/paperreview_list.html:13
+msgid "(Delete)"
+msgstr ""
+
+#: templates/core/comment/paperreview_detail.html:11
+#: templates/core/comment/paperreview_detail.html:18
+#: templates/core/comment/paperreview_list.html:13
+msgid "(Reply)"
+msgstr ""
+
+#: templates/core/comment/paperreview_form.html:13
+#: templates/core/paper/delete_citation.html:12
+msgid "Paper:"
+msgstr ""
+
+#: templates/core/comment/paperreview_list.html:16
+#, python-format
+msgid "%(counter)s response"
+msgid_plural "%(counter)s responses"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/core/comment/paperreview_list.html:19
+msgid "No reviews found."
+msgstr ""
+
 #: templates/core/email/password_reset.html:6
 msgid "Password Reset Confirmation"
 msgstr ""
@@ -557,7 +716,7 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: templates/core/layout.html:31 views/paper.py:43
+#: templates/core/layout.html:31 views/paper.py:44
 msgid "Latest papers"
 msgstr ""
 
@@ -565,7 +724,7 @@ msgstr ""
 msgid "New paper"
 msgstr ""
 
-#: templates/core/layout.html:34 views/paper.py:121 views/paper.py:162
+#: templates/core/layout.html:34 views/paper.py:123 views/utils.py:95
 msgid "Manage authorship"
 msgstr ""
 
@@ -633,10 +792,6 @@ msgstr ""
 #: templates/core/paper/delete_citation.html:8
 #: templates/core/paper/delete_paper_supplemental_link.html:5
 msgid "Delete Citation"
-msgstr ""
-
-#: templates/core/paper/delete_citation.html:12
-msgid "Paper:"
 msgstr ""
 
 #: templates/core/paper/delete_citation.html:15
@@ -731,11 +886,6 @@ msgstr ""
 
 #: templates/core/paper/paper_detail.html:21
 msgid "Posted by:"
-msgstr ""
-
-#: templates/core/paper/paper_detail.html:21
-#: templates/core/paper/paper_detail.html:23
-msgid "Deleted user"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:22
@@ -881,84 +1031,117 @@ msgstr ""
 msgid "You do not have permission to edit this record."
 msgstr ""
 
-#: views/paper.py:75
+#: views/comment.py:48
+#, python-format
+msgid "Paper Reviews: %s"
+msgstr ""
+
+#: views/comment.py:85
+msgid "Review Paper"
+msgstr ""
+
+#: views/comment.py:125
+msgid "Edit Paper Review"
+msgstr ""
+
+#: views/comment.py:130
+msgid "You cannot edit somebody else's review."
+msgstr ""
+
+#: views/comment.py:147
+msgid "You cannot delete somebody else's review."
+msgstr ""
+
+#: views/comment.py:164
+msgid "Respond to Paper Review"
+msgstr ""
+
+#: views/comment.py:180
+msgid "You cannot reply to this review."
+msgstr ""
+
+#: views/comment.py:216
+msgid "Edit Response"
+msgstr ""
+
+#: views/comment.py:222
+msgid "You cannot edit somebody else's comment."
+msgstr ""
+
+#: views/comment.py:245
+msgid "You cannot delete somebody else's comment."
+msgstr ""
+
+#: views/paper.py:76
 #, python-format
 msgid "Papers Citing: %s"
 msgstr ""
 
-#: views/paper.py:88
+#: views/paper.py:90
 #, python-format
 msgid "Papers Posted by %s"
 msgstr ""
 
-#: views/paper.py:105
+#: views/paper.py:107
 #, python-format
 msgid "Papers by %s"
 msgstr ""
 
-#: views/paper.py:110
+#: views/paper.py:112
 msgid "Papers You Have Rejected"
 msgstr ""
 
-#: views/paper.py:134
+#: views/paper.py:136
 msgid "This paper is not available for legal reasons."
 msgstr ""
 
-#: views/paper.py:142
-msgid "Cited by"
-msgstr ""
-
-#: views/paper.py:157
-msgid "Edit"
-msgstr ""
-
-#: views/paper.py:176
+#: views/paper.py:159
 msgid "Create Paper"
 msgstr ""
 
-#: views/paper.py:184
+#: views/paper.py:167
 msgid "Author:"
 msgstr ""
 
-#: views/paper.py:196 views/paper.py:408
+#: views/paper.py:179 views/paper.py:391
 msgid "Biblio entry:"
 msgstr ""
 
-#: views/paper.py:248
+#: views/paper.py:231
 msgid "Edit Paper"
 msgstr ""
 
-#: views/paper.py:253 views/paper.py:272 views/paper.py:302 views/paper.py:324
-#: views/paper.py:344 views/paper.py:376 views/paper.py:404 views/paper.py:436
-#: views/paper.py:484 views/paper.py:511
+#: views/paper.py:236 views/paper.py:255 views/paper.py:285 views/paper.py:307
+#: views/paper.py:327 views/paper.py:359 views/paper.py:387 views/paper.py:419
+#: views/paper.py:467 views/paper.py:494
 msgid "You are not one of the authors."
 msgstr ""
 
-#: views/paper.py:264
+#: views/paper.py:247
 msgid "Add Paper Author"
 msgstr ""
 
-#: views/paper.py:304
+#: views/paper.py:287
 msgid "Rejected authorship cannot be deleted."
 msgstr ""
 
-#: views/paper.py:338
+#: views/paper.py:321
 msgid "Add Paper Identifier"
 msgstr ""
 
-#: views/paper.py:369
+#: views/paper.py:352
 msgid "Delete Paper Identifier"
 msgstr ""
 
-#: views/paper.py:378 views/user.py:97
+#: views/paper.py:361 views/user.py:97
 msgid "This identifier is permanent."
 msgstr ""
 
-#: views/paper.py:395
+#: views/paper.py:378
 msgid "Add Citations"
 msgstr ""
 
-#: views/paper.py:479
+#: views/paper.py:462
 msgid "Add Supplemental Link"
 msgstr ""
 
@@ -982,68 +1165,88 @@ msgstr ""
 msgid "Rejected papers"
 msgstr ""
 
-#: views/utils.py:31
+#: views/utils.py:32
 #, python-brace-format
 msgid "Error {0}"
 msgstr ""
 
-#: views/utils.py:39
+#: views/utils.py:40
 msgid "Invalid request"
 msgstr ""
 
-#: views/utils.py:43
+#: views/utils.py:44
 msgid "Permission denied"
 msgstr ""
 
-#: views/utils.py:47
+#: views/utils.py:48
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: views/utils.py:51
+#: views/utils.py:52
 msgid "The requested page does not exist."
 msgstr ""
 
-#: views/utils.py:58
+#: views/utils.py:59
 #, python-brace-format
 msgid "Accessing this page using the {0} method is not allowed."
 msgstr ""
 
-#: views/utils.py:66
+#: views/utils.py:67
 msgid ""
 "Unexpected error occurred while processing your request. We will fix the "
 "problem soon."
 msgstr ""
 
-#: views/utils.py:70
+#: views/utils.py:71
 msgid "Cannot Edit Record"
 msgstr ""
 
-#: views/utils.py:72
+#: views/utils.py:73
 msgid "You cannot edit this record."
 msgstr ""
 
-#: views/utils.py:94
+#: views/utils.py:79
+msgid "Paper detail"
+msgstr ""
+
+#: views/utils.py:80
+msgid "Reviews"
+msgstr ""
+
+#: views/utils.py:81
+msgid "Cited by"
+msgstr ""
+
+#: views/utils.py:86
+msgid "Edit"
+msgstr ""
+
+#: views/utils.py:90
+msgid "Add review"
+msgstr ""
+
+#: views/utils.py:118
 msgctxt "navigation"
 msgid "First"
 msgstr ""
 
-#: views/utils.py:100
+#: views/utils.py:124
 msgctxt "navigation"
 msgid "Previous"
 msgstr ""
 
-#: views/utils.py:103
+#: views/utils.py:127
 #, python-format
 msgctxt "navigation"
 msgid "%(page)s of %(total)s"
 msgstr ""
 
-#: views/utils.py:108
+#: views/utils.py:132
 msgctxt "navigation"
 msgid "Next"
 msgstr ""
 
-#: views/utils.py:112
+#: views/utils.py:136
 msgctxt "navigation"
 msgid "Last"
 msgstr ""

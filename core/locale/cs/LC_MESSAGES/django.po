@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-18 17:26+0100\n"
+"POT-Creation-Date: 2018-12-28 19:54+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: Czech <doucha@swarmtech.cz>\n"
@@ -79,7 +79,7 @@ msgstr "Heslo"
 msgid "Wrong password."
 msgstr "Špatné heslo."
 
-#: forms/auth.py:143 forms/paper.py:181
+#: forms/auth.py:143 forms/comment.py:49 forms/comment.py:83 forms/paper.py:181
 msgid "Database error, please try again later."
 msgstr "Chyba databáze, zkuste to prosím později."
 
@@ -103,6 +103,18 @@ msgstr "Tento typ identifikátoru není povolen."
 #: forms/base.py:200 forms/base.py:215
 msgid "This identifier is already in use."
 msgstr "Tento identifikátor už je zaregistrovaný."
+
+#: forms/comment.py:43
+msgid "Details"
+msgstr "Podrobnosti"
+
+#: forms/comment.py:52 views/comment.py:92
+msgid "You cannot review your own paper."
+msgstr "Nemůžete recenzovat své vlastní články."
+
+#: forms/comment.py:57 views/comment.py:96
+msgid "You cannot review a paper more than once."
+msgstr "Nemůžete napsat více než jednu recezni ke stejnému článku."
 
 #: forms/paper.py:31
 msgid "Title"
@@ -169,6 +181,14 @@ msgstr "Odmítnout"
 msgid "Please choose whether to accept or reject authorship."
 msgstr "Prosím vyberte, jestli chcete autorství potvrdit, nebo odmítnout."
 
+#: forms/user.py:166
+msgid ""
+"You cannot accept authorship of a paper which you have reviewed. You must "
+"delete the review first."
+msgstr ""
+"Nemůžete přijmout autorství článku, který jste recenzovali. Nejprve smažte "
+"recenzi."
+
 #: models/auth.py:39
 msgid "system language"
 msgstr "jazyk systému"
@@ -189,6 +209,59 @@ msgstr "osoba"
 #, python-brace-format
 msgid "{first_name} {last_name}"
 msgstr "{first_name} {last_name}"
+
+#: models/comment.py:32 models/paper.py:240
+msgid "date posted"
+msgstr "datum vložení"
+
+#: models/comment.py:34
+msgid "date changed"
+msgstr "poslední změna"
+
+#: models/comment.py:36 models/paper.py:242
+msgid "posted by"
+msgstr "vložil(a)"
+
+#: models/comment.py:38
+msgid "message"
+msgstr "zpráva"
+
+#: models/comment.py:52 models/paper.py:308 models/paper.py:345
+#: models/paper.py:373 models/paper.py:420 models/paper.py:432
+msgid "paper"
+msgstr "článek"
+
+#: models/comment.py:54
+msgid "methodology"
+msgstr "metodika"
+
+#: models/comment.py:56
+msgid ""
+"Quality of methodology. If about half of the conclusions are invalid due to "
+"methodology errors, choose \"Mixed\"."
+msgstr ""
+"Kvalita metodiky. Pokud je přibližně polovina výsledků neplatná kvůli chybám "
+"v metodice, zvolte \"Něco mezi\"."
+
+#: models/comment.py:57
+msgid "importance"
+msgstr "důležitost"
+
+#: models/comment.py:59
+msgid ""
+"How much attention this paper deserves, not just for its conclusions but "
+"also for new methodologies or any other revolutionary scientific ideas."
+msgstr ""
+"Kolik pozornosti si tento článek zaslouží, nejen kvůli závěrům, ale i kvůli "
+"novým metodikám nebo jiným revolučním věděckým myšlenkám."
+
+#: models/comment.py:60
+msgid "deleted"
+msgstr "smazáno"
+
+#: models/comment.py:77
+msgid "review"
+msgstr "recenze"
 
 #: models/const.py:42
 msgid "E-mail"
@@ -235,6 +308,30 @@ msgstr "arXiv"
 msgid "Web URL"
 msgstr "Webové URL"
 
+#: models/const.py:61
+msgid "Questionable"
+msgstr "Pochybná"
+
+#: models/const.py:62
+msgid "Mixed"
+msgstr "Něco mezi"
+
+#: models/const.py:63
+msgid "Rigorous"
+msgstr "Pečlivá"
+
+#: models/const.py:67
+msgid "Waste of time"
+msgstr "Ztráta času"
+
+#: models/const.py:68
+msgid "Average"
+msgstr "Průměr"
+
+#: models/const.py:69
+msgid "Revolutionary"
+msgstr "Převratná"
+
 #: models/paper.py:49
 msgid "username"
 msgstr "uživatelské jméno"
@@ -264,11 +361,11 @@ msgstr "o vás"
 msgid "{last_name}, {first_name}"
 msgstr "{last_name}, {first_name}"
 
-#: models/paper.py:152 models/paper.py:296
+#: models/paper.py:152 models/paper.py:305
 msgid "scheme"
 msgstr "schéma"
 
-#: models/paper.py:154 models/paper.py:298
+#: models/paper.py:154 models/paper.py:307
 msgid "identifier"
 msgstr "identifikátor"
 
@@ -276,7 +373,7 @@ msgstr "identifikátor"
 msgid "user"
 msgstr "uživatel"
 
-#: models/paper.py:215 models/paper.py:425
+#: models/paper.py:215 models/paper.py:434
 msgid "title"
 msgstr "název"
 
@@ -369,14 +466,6 @@ msgstr ""
 "Zaškrtněte toto pole, pokud některé informace o článku chybí (např. "
 "vynechané citace článků, které zatím nemají žádný použitelný identifikátor)."
 
-#: models/paper.py:240
-msgid "date posted"
-msgstr "datum vložení"
-
-#: models/paper.py:242
-msgid "posted by"
-msgstr "vložil(a)"
-
 #: models/paper.py:245
 msgid "last changed"
 msgstr "poslední změna"
@@ -389,45 +478,42 @@ msgstr "změnil(a)"
 msgid "public"
 msgstr "veřejný"
 
-#: models/paper.py:299 models/paper.py:336 models/paper.py:364
-#: models/paper.py:411 models/paper.py:423
-msgid "paper"
-msgstr "článek"
-
-#: models/paper.py:335
+#: models/paper.py:344
 msgid "keyword"
 msgstr "klíčové slovo"
 
-#: models/paper.py:366 models/paper.py:413
+#: models/paper.py:375 models/paper.py:422
 msgid "author"
 msgstr "autor"
 
-#: models/paper.py:368
+#: models/paper.py:377
 msgid "confirmed"
 msgstr "potvrzeno"
 
-#: models/paper.py:402
+#: models/paper.py:411
 msgid "Confirmed"
 msgstr "Potvrzeno"
 
-#: models/paper.py:404
+#: models/paper.py:413
 msgid "Pending"
 msgstr "Nepotvrzeno"
 
-#: models/paper.py:405
+#: models/paper.py:414
 msgid "Rejected"
 msgstr "Odmítnuto"
 
-#: models/paper.py:414
+#: models/paper.py:423
 msgid "Additional authors with no unique identifier"
 msgstr "Další autoři, kteří nemají žádný unikátní identifikátor"
 
-#: models/paper.py:426
+#: models/paper.py:435
 msgid "URL"
 msgstr "URL"
 
 #: templates/common/edit.html:14 templates/common/formset.html:16
 #: templates/core/account/profile_form.html:15
+#: templates/core/comment/paperreview_form.html:16
+#: templates/core/comment/paperreviewresponse_form.html:22
 #: templates/core/paper/create_paper.html:38
 #: templates/registration/password_change_form.html:16
 msgid "Save"
@@ -438,6 +524,8 @@ msgid "Do you really want to delete this identifier?"
 msgstr "Opravdu chcete smazat tento identifikátor?"
 
 #: templates/common/unlink_alias.html:15
+#: templates/core/comment/delete_paperreview.html:17
+#: templates/core/comment/delete_paperreviewresponse.html:16
 #: templates/core/paper/delete_citation.html:18
 #: templates/core/paper/delete_paper_author.html:19
 #: templates/core/paper/delete_paper_author_name.html:13
@@ -530,6 +618,84 @@ msgstr ""
 "Vaše IP adresa byla dočasně zablokována z důvodu velkého počtu neúspěšných "
 "pokusů o přihlášení. Zkuste to prosím později."
 
+#: templates/core/comment/delete_paperreview.html:5
+#: templates/core/comment/delete_paperreview.html:8
+#: templates/core/comment/delete_paperreviewresponse.html:5
+msgid "Delete Paper Review"
+msgstr "Smazat recenzi článku"
+
+#: templates/core/comment/delete_paperreview.html:10
+#: templates/core/comment/delete_paperreviewresponse.html:10
+#: templates/core/comment/paperreview_detail.html:11
+#: templates/core/comment/paperreview_detail.html:18
+#: templates/core/comment/paperreview_list.html:13
+#: templates/core/comment/paperreviewresponse_form.html:11
+#: templates/core/paper/paper_detail.html:21
+#: templates/core/paper/paper_detail.html:23
+msgid "Deleted user"
+msgstr "Smazaný uživatel"
+
+#: templates/core/comment/delete_paperreview.html:11
+#: templates/core/comment/paperreview_detail.html:12
+#: templates/core/comment/paperreview_list.html:14
+#, python-format
+msgid "Methodology: %(methodology)s; Importance: %(importance)s"
+msgstr "Metodika: %(methodology)s; Důležitost: %(importance)s"
+
+#: templates/core/comment/delete_paperreview.html:14
+msgid ""
+"Do you really want to delete this review? You will not be allowed to write "
+"another one."
+msgstr "Opravdu chcete smazat tuto recenzi? Další už nebudete moci napsat."
+
+#: templates/core/comment/delete_paperreviewresponse.html:8
+msgid "Delete Message"
+msgstr "Smazat zprávu"
+
+#: templates/core/comment/delete_paperreviewresponse.html:13
+msgid "Do you really want to delete this message?"
+msgstr "Opravdu chcete smazat tuto zprávu?"
+
+#: templates/core/comment/paperreview_detail.html:5
+#: templates/core/comment/paperreview_detail.html:8
+msgid "Paper Review And Replies"
+msgstr "Recenze článku s odpověďmi"
+
+#: templates/core/comment/paperreview_detail.html:11
+#: templates/core/comment/paperreview_detail.html:18
+#: templates/core/comment/paperreview_list.html:13
+msgid "(Edit)"
+msgstr "(Upravit)"
+
+#: templates/core/comment/paperreview_detail.html:11
+#: templates/core/comment/paperreview_detail.html:18
+#: templates/core/comment/paperreview_list.html:13
+msgid "(Delete)"
+msgstr "(Smazat)"
+
+#: templates/core/comment/paperreview_detail.html:11
+#: templates/core/comment/paperreview_detail.html:18
+#: templates/core/comment/paperreview_list.html:13
+msgid "(Reply)"
+msgstr "(Odpovědět)"
+
+#: templates/core/comment/paperreview_form.html:13
+#: templates/core/paper/delete_citation.html:12
+msgid "Paper:"
+msgstr "Článek:"
+
+#: templates/core/comment/paperreview_list.html:16
+#, python-format
+msgid "%(counter)s response"
+msgid_plural "%(counter)s responses"
+msgstr[0] "%(counter)s odpověď"
+msgstr[1] "%(counter)s odpovědi"
+msgstr[2] "%(counter)s odpovědí"
+
+#: templates/core/comment/paperreview_list.html:19
+msgid "No reviews found."
+msgstr "Nenalezeny žádné recenze."
+
 #: templates/core/email/password_reset.html:6
 msgid "Password Reset Confirmation"
 msgstr "Potvrzení resetu hesla"
@@ -609,7 +775,7 @@ msgstr "Přihlásit"
 msgid "Home"
 msgstr "Hlavní stránka"
 
-#: templates/core/layout.html:31 views/paper.py:43
+#: templates/core/layout.html:31 views/paper.py:44
 msgid "Latest papers"
 msgstr "Nejnovější články"
 
@@ -617,7 +783,7 @@ msgstr "Nejnovější články"
 msgid "New paper"
 msgstr "Nový článek"
 
-#: templates/core/layout.html:34 views/paper.py:121 views/paper.py:162
+#: templates/core/layout.html:34 views/paper.py:123 views/utils.py:95
 msgid "Manage authorship"
 msgstr "Správa autorství"
 
@@ -701,10 +867,6 @@ msgstr "Literatura"
 #: templates/core/paper/delete_paper_supplemental_link.html:5
 msgid "Delete Citation"
 msgstr "Smazat citaci"
-
-#: templates/core/paper/delete_citation.html:12
-msgid "Paper:"
-msgstr "Článek:"
 
 #: templates/core/paper/delete_citation.html:15
 msgid "Do you really want to delete this citation?"
@@ -799,11 +961,6 @@ msgstr "Vloženo:"
 #: templates/core/paper/paper_detail.html:21
 msgid "Posted by:"
 msgstr "Vložil(a):"
-
-#: templates/core/paper/paper_detail.html:21
-#: templates/core/paper/paper_detail.html:23
-msgid "Deleted user"
-msgstr "Smazaný uživatel"
 
 #: templates/core/paper/paper_detail.html:22
 msgid "Last changed:"
@@ -952,84 +1109,117 @@ msgstr "Upravit záznam"
 msgid "You do not have permission to edit this record."
 msgstr "Nemáte oprávnění upravit tento záznam."
 
-#: views/paper.py:75
+#: views/comment.py:48
+#, python-format
+msgid "Paper Reviews: %s"
+msgstr "Recenze článku: %s"
+
+#: views/comment.py:85
+msgid "Review Paper"
+msgstr "Napsat recenzi"
+
+#: views/comment.py:125
+msgid "Edit Paper Review"
+msgstr "Upravit recenzi"
+
+#: views/comment.py:130
+msgid "You cannot edit somebody else's review."
+msgstr "Nemůžete upravit cizí recenzi."
+
+#: views/comment.py:147
+msgid "You cannot delete somebody else's review."
+msgstr "Nemůžete smazat cizí recenzi."
+
+#: views/comment.py:164
+msgid "Respond to Paper Review"
+msgstr "Odpovědět na recenzi"
+
+#: views/comment.py:180
+msgid "You cannot reply to this review."
+msgstr "Na tuto recenzi nemůžete odpovědět."
+
+#: views/comment.py:216
+msgid "Edit Response"
+msgstr "Upravit odpověď"
+
+#: views/comment.py:222
+msgid "You cannot edit somebody else's comment."
+msgstr "Nemůžete upravit cizí odpověď."
+
+#: views/comment.py:245
+msgid "You cannot delete somebody else's comment."
+msgstr "Nemůžete smazat cizí odpověď."
+
+#: views/paper.py:76
 #, python-format
 msgid "Papers Citing: %s"
 msgstr "Články citující: %s"
 
-#: views/paper.py:88
+#: views/paper.py:90
 #, python-format
 msgid "Papers Posted by %s"
 msgstr "Články vložené uživatelem %s"
 
-#: views/paper.py:105
+#: views/paper.py:107
 #, python-format
 msgid "Papers by %s"
 msgstr "Články uživatele %s"
 
-#: views/paper.py:110
+#: views/paper.py:112
 msgid "Papers You Have Rejected"
 msgstr "Vámi odmítnuté články"
 
-#: views/paper.py:134
+#: views/paper.py:136
 msgid "This paper is not available for legal reasons."
 msgstr "Tento článek je z právních důvodů nedostupný."
 
-#: views/paper.py:142
-msgid "Cited by"
-msgstr "Citující články"
-
-#: views/paper.py:157
-msgid "Edit"
-msgstr "Upravit"
-
-#: views/paper.py:176
+#: views/paper.py:159
 msgid "Create Paper"
 msgstr "Vložit článek"
 
-#: views/paper.py:184
+#: views/paper.py:167
 msgid "Author:"
 msgstr "Autor:"
 
-#: views/paper.py:196 views/paper.py:408
+#: views/paper.py:179 views/paper.py:391
 msgid "Biblio entry:"
 msgstr "Citace:"
 
-#: views/paper.py:248
+#: views/paper.py:231
 msgid "Edit Paper"
 msgstr "Upravit článek"
 
-#: views/paper.py:253 views/paper.py:272 views/paper.py:302 views/paper.py:324
-#: views/paper.py:344 views/paper.py:376 views/paper.py:404 views/paper.py:436
-#: views/paper.py:484 views/paper.py:511
+#: views/paper.py:236 views/paper.py:255 views/paper.py:285 views/paper.py:307
+#: views/paper.py:327 views/paper.py:359 views/paper.py:387 views/paper.py:419
+#: views/paper.py:467 views/paper.py:494
 msgid "You are not one of the authors."
 msgstr "Nejste jedním z autorů."
 
-#: views/paper.py:264
+#: views/paper.py:247
 msgid "Add Paper Author"
 msgstr "Přidat autora článku"
 
-#: views/paper.py:304
+#: views/paper.py:287
 msgid "Rejected authorship cannot be deleted."
 msgstr "Odmítnuté autorství nelze smazat."
 
-#: views/paper.py:338
+#: views/paper.py:321
 msgid "Add Paper Identifier"
 msgstr "Přidat identifikátor článku"
 
-#: views/paper.py:369
+#: views/paper.py:352
 msgid "Delete Paper Identifier"
 msgstr "Smazat identifikátor článku"
 
-#: views/paper.py:378 views/user.py:97
+#: views/paper.py:361 views/user.py:97
 msgid "This identifier is permanent."
 msgstr "Tento identifikátor je trvalý."
 
-#: views/paper.py:395
+#: views/paper.py:378
 msgid "Add Citations"
 msgstr "Přidat citace"
 
-#: views/paper.py:479
+#: views/paper.py:462
 msgid "Add Supplemental Link"
 msgstr "Přidat doplňující odkaz"
 
@@ -1053,33 +1243,33 @@ msgstr "Smazat osobní identifikátor"
 msgid "Rejected papers"
 msgstr "Vámi odmítnuté články"
 
-#: views/utils.py:31
+#: views/utils.py:32
 #, python-brace-format
 msgid "Error {0}"
 msgstr "Chyba {0}"
 
-#: views/utils.py:39
+#: views/utils.py:40
 msgid "Invalid request"
 msgstr "Neplatný požadavek"
 
-#: views/utils.py:43
+#: views/utils.py:44
 msgid "Permission denied"
 msgstr "Přístup zamítnut"
 
-#: views/utils.py:47
+#: views/utils.py:48
 msgid "You do not have permission to access this page."
 msgstr "Nemáte oprávnění navštívit tuto stránku."
 
-#: views/utils.py:51
+#: views/utils.py:52
 msgid "The requested page does not exist."
 msgstr "Požadovaná stránka neexistuje."
 
-#: views/utils.py:58
+#: views/utils.py:59
 #, python-brace-format
 msgid "Accessing this page using the {0} method is not allowed."
 msgstr "Přístup k této stránce pomocí HTTP metody {0} není povolen."
 
-#: views/utils.py:66
+#: views/utils.py:67
 msgid ""
 "Unexpected error occurred while processing your request. We will fix the "
 "problem soon."
@@ -1087,36 +1277,56 @@ msgstr ""
 "Během zpracování požadavku došlo k neočekávané chybě. Problém brzy "
 "odstraníme."
 
-#: views/utils.py:70
+#: views/utils.py:71
 msgid "Cannot Edit Record"
 msgstr "Nelze upravit záznam"
 
-#: views/utils.py:72
+#: views/utils.py:73
 msgid "You cannot edit this record."
 msgstr "Tento záznam nemůžete upravit."
 
-#: views/utils.py:94
+#: views/utils.py:79
+msgid "Paper detail"
+msgstr "Podrobnosti článku"
+
+#: views/utils.py:80
+msgid "Reviews"
+msgstr "Recenze"
+
+#: views/utils.py:81
+msgid "Cited by"
+msgstr "Citující články"
+
+#: views/utils.py:86
+msgid "Edit"
+msgstr "Upravit"
+
+#: views/utils.py:90
+msgid "Add review"
+msgstr "Napsat recenzi"
+
+#: views/utils.py:118
 msgctxt "navigation"
 msgid "First"
 msgstr "První"
 
-#: views/utils.py:100
+#: views/utils.py:124
 msgctxt "navigation"
 msgid "Previous"
 msgstr "Předchozí"
 
-#: views/utils.py:103
+#: views/utils.py:127
 #, python-format
 msgctxt "navigation"
 msgid "%(page)s of %(total)s"
 msgstr "%(page)s z %(total)s"
 
-#: views/utils.py:108
+#: views/utils.py:132
 msgctxt "navigation"
 msgid "Next"
 msgstr "Další"
 
-#: views/utils.py:112
+#: views/utils.py:136
 msgctxt "navigation"
 msgid "Last"
 msgstr "Poslední"

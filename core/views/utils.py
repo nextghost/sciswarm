@@ -23,6 +23,7 @@ from django.utils.html import format_html, mark_safe
 from django.utils.http import urlencode
 from django.utils.translation import pgettext, ugettext as _
 from ..utils.html import NavigationBar
+from .. import models
 
 def error_page(request, status, message, title=None):
     template = 'core/utils/error.html'
@@ -71,6 +72,30 @@ def editing_forbidden_error(request, message=None):
     if not message:
         message = _('You cannot edit this record.')
     return error_page(request, 403, message, title)
+
+def paper_navbar(request, paper):
+    kwargs = dict(pk=paper.pk)
+    links = [
+        (_('Paper detail'), 'core:paper_detail', tuple(), kwargs),
+        (_('Reviews'), 'core:paperreview_list', tuple(), kwargs),
+        (_('Cited by'), 'core:cited_by_paper_list', tuple(), kwargs),
+    ]
+    if request.user.is_authenticated:
+        edit_access = paper.is_owned_by(request.user)
+        if edit_access:
+            links.append((_('Edit'), 'core:edit_paper', tuple(), kwargs))
+        revtab = models.PaperReview.query_model
+        query = (revtab.posted_by == request.user.person)
+        qs = paper.paperreview_set.filter(query)
+        if not (paper.is_author(request.user) or qs.exists()):
+            links.append((_('Add review'), 'core:create_paperreview', tuple(),
+                kwargs))
+        uatab = models.PersonAlias.query_model
+        query = (uatab.target.pk == request.user.person_id)
+        if paper.authors.filter(query).exists():
+            links.append((_('Manage authorship'),
+                'core:paper_authorship_confirmation', tuple(), kwargs))
+    return NavigationBar(request, links)
 
 class PageNavigator(object):
     def __init__(self, request, object_list, per_page=25, arg_name=None):
