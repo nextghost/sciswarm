@@ -143,8 +143,15 @@ class MassAuthorshipConfirmationForm(BaseAuthorshipConfirmationForm):
     def clean(self):
         super(MassAuthorshipConfirmationForm, self).clean()
         fname_tpl = 'select_%d'
-        self.selected_papers = [x for x in self.paper_list
-            if self.cleaned_data.get(fname_tpl % x.pk, False)]
+        papermap = dict(((x.pk, x) for x in self.paper_list
+            if self.cleaned_data.get(fname_tpl % x.pk, False)))
+        table = models.Paper.query_model
+        query = (table.pk.belongs(list(papermap.keys())) &
+            (table.paperreview.posted_by == self.person))
+        qs = models.Paper.objects.filter(query)
+        for item in qs:
+            del papermap[item.pk]
+        self.selected_papers = list(papermap.values())
 
 class AuthorshipConfirmationForm(BaseAuthorshipConfirmationForm):
     def __init__(self, *args, **kwargs):

@@ -111,9 +111,13 @@ class MassAuthorshipConfirmationView(FormView):
     def get_form_kwargs(self, *args, **kwargs):
         ret = super(MassAuthorshipConfirmationView,self).get_form_kwargs(*args,
             **kwargs)
-        reftab = models.Paper.query_model.paperauthorreference
-        query = (reftab.confirmed.isnull() &
-            (reftab.author_alias.target == self.request.user.person))
+        papertab = models.Paper.query_model
+        reftab = papertab.paperauthorreference
+        person = self.request.user.person
+        subqs = models.PaperReview.objects.filter_by_author(person)
+        subqs = subqs.values_list('paper_id')
+        query = (~papertab.pk.belongs(subqs) & reftab.confirmed.isnull() &
+            (reftab.author_alias.target == person))
         qs = models.Paper.objects.filter(query).distinct().order_by('pk')
         pagenav = PageNavigator(self.request, qs, 50)
         page = pagenav.page
