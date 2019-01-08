@@ -114,8 +114,9 @@ class MassAuthorshipConfirmationView(FormView):
         papertab = models.Paper.query_model
         reftab = papertab.paperauthorreference
         person = self.request.user.person
+        query = (models.PaperReview.query_model.deleted == False)
         subqs = models.PaperReview.objects.filter_by_author(person)
-        subqs = subqs.values_list('paper_id')
+        subqs = subqs.filter(query).values_list('paper_id')
         query = (~papertab.pk.belongs(subqs) & reftab.confirmed.isnull() &
             (reftab.author_alias.target == person))
         qs = models.Paper.objects.filter(query).distinct().order_by('pk')

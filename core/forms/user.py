@@ -147,7 +147,8 @@ class MassAuthorshipConfirmationForm(BaseAuthorshipConfirmationForm):
             if self.cleaned_data.get(fname_tpl % x.pk, False)))
         table = models.Paper.query_model
         query = (table.pk.belongs(list(papermap.keys())) &
-            (table.paperreview.posted_by == self.person))
+            (table.paperreview.posted_by == self.person) &
+            (table.paperreview.deleted == False))
         qs = models.Paper.objects.filter(query)
         for item in qs:
             del papermap[item.pk]

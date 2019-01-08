@@ -71,6 +71,9 @@ class UserTestCase(TransactionTestCase):
             importance=const.paper_importance_ratings.MEDIUM)
         models.PaperReview.objects.create(posted_by=person2, paper=paper1,
             **review_defaults)
+        # Deleted review must not affect authorship acceptance
+        models.PaperReview.objects.create(posted_by=person2, paper=paper5,
+            deleted=True, **review_defaults)
         models.PaperReview.objects.create(posted_by=person3, paper=paper1,
             **review_defaults)
         models.PaperReview.objects.create(posted_by=person3, paper=paper3,
