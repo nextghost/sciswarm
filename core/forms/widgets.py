@@ -1,5 +1,5 @@
 # This file is part of Sciswarm, a scientific social network
-# Copyright (C) 2018 Martin Doucha
+# Copyright (C) 2018-2019 Martin Doucha
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
