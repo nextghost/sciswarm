@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import core.models.auth
+import core.models.fields
 import django.contrib.auth.validators
 from django.db import migrations, models
 import django.db.models.deletion
@@ -88,7 +89,7 @@ class Migration(migrations.Migration):
             name='PaperAlias',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('scheme', models.CharField(blank=True, choices=[('doi', 'DOI'), ('isbn', 'ISBN'), ('arxiv', 'arXiv'), ('swarm', 'Sciswarm'), ('http', 'Web URL'), ('', 'Other')], max_length=16, verbose_name='scheme')),
+                ('scheme', core.models.fields.OpenChoiceField(blank=True, choices=[('doi', 'DOI'), ('isbn', 'ISBN'), ('arxiv', 'arXiv'), ('swarm', 'Sciswarm'), ('http', 'Web URL'), ('', 'Other')], max_length=16, verbose_name='scheme')),
                 ('identifier', models.CharField(max_length=256, verbose_name='identifier')),
                 ('target', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='core.Paper', verbose_name='paper')),
             ],
@@ -159,7 +160,7 @@ class Migration(migrations.Migration):
             name='PersonAlias',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('scheme', models.CharField(blank=True, choices=[('mailto', 'E-mail'), ('orcid', 'ORCID iD'), ('xmpp', 'XMPP'), ('twitter', 'Twitter'), ('swarm', 'Sciswarm'), ('http', 'Personal website'), ('', 'Other')], max_length=16, verbose_name='scheme')),
+                ('scheme', core.models.fields.OpenChoiceField(blank=True, choices=[('mailto', 'E-mail'), ('orcid', 'ORCID iD'), ('xmpp', 'XMPP'), ('twitter', 'Twitter'), ('swarm', 'Sciswarm'), ('http', 'Personal website'), ('', 'Other')], max_length=16, verbose_name='scheme')),
                 ('identifier', models.CharField(max_length=150, verbose_name='identifier')),
                 ('target', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='core.Person', verbose_name='user')),
             ],

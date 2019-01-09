@@ -34,6 +34,22 @@ class PersonAliasForm(BaseAliasForm):
     def validate_alias(self, scheme, identifier):
         return validate_person_alias(scheme, identifier)
 
+    def save(self):
+        ret = super(PersonAliasForm, self).save()
+        if ret.target is not None:
+            revtab = models.PaperReview.query_model
+            partab = models.PaperAuthorReference.query_model
+            query = (revtab.deleted == False)
+            subq = ret.target.paperreview_set.filter(query)
+            subq = subq.values_list('paper_id')
+            query = ((partab.author_alias == ret) &
+                partab.paper.pk.belongs(subq))
+            qs = models.PaperAuthorReference.objects.filter(query)
+            qs.update(confirmed=False)
+        return ret
+
+    save.alters_data = True
+
 PersonAliasFormset = modelformset_factory(models.PersonAlias,
     form=PersonAliasForm)
 

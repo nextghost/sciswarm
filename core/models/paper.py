@@ -20,7 +20,7 @@ from django.urls import reverse
 from django.utils.html import format_html, mark_safe
 from django.utils.translation import ugettext_lazy as _
 from ..utils import html
-from . import auth, const
+from . import auth, const, fields
 
 class PersonQuerySet(models.QuerySet):
     def filter_active(self):
@@ -149,7 +149,7 @@ class PersonAlias(models.Model):
         ordering = ('scheme', 'identifier')
     objects = AliasManager()
 
-    scheme = models.CharField(_('scheme'), max_length=16, blank=True,
+    scheme = fields.OpenChoiceField(_('scheme'), max_length=16, blank=True,
         choices=const.person_alias_schemes.items())
     identifier = models.CharField(_('identifier'), max_length=150)
     target = models.ForeignKey(Person, verbose_name=_('user'), null=True,
@@ -164,10 +164,10 @@ class PersonAlias(models.Model):
         return ': '.join((str(prefix), self.identifier))
 
     def __html__(self):
-        link = html.alias_link(self.scheme, self.identifier)
         prefix = const.person_alias_schemes.get(self.scheme)
         if prefix is None:
-            return link
+            return str(self)
+        link = html.alias_link(self.scheme, self.identifier)
         return format_html('{prefix}: {link}', prefix=prefix, link=link)
 
     # Render link to self.target when possible, otherwise self.__html__()
@@ -302,7 +302,7 @@ class PaperAlias(models.Model):
         ordering = ('scheme', 'identifier')
     objects = AliasManager()
 
-    scheme = models.CharField(_('scheme'), max_length=16, blank=True,
+    scheme = fields.OpenChoiceField(_('scheme'), max_length=16, blank=True,
         choices=const.paper_alias_schemes.items())
     identifier = models.CharField(_('identifier'), max_length=256)
     target = models.ForeignKey(Paper, verbose_name=_('paper'), null=True,
@@ -317,10 +317,10 @@ class PaperAlias(models.Model):
         return ': '.join((str(prefix), self.identifier))
 
     def __html__(self):
-        link = html.alias_link(self.scheme, self.identifier)
         prefix = const.paper_alias_schemes.get(self.scheme)
         if prefix is None:
-            return link
+            return str(self)
+        link = html.alias_link(self.scheme, self.identifier)
         return format_html('{prefix}: {link}', prefix=prefix, link=link)
 
     # Render link to self.target when possible, otherwise self.__html__()
