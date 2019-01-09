@@ -225,6 +225,7 @@ class UserTestCase(TransactionTestCase):
     def test_authorship_acceptance(self):
         # Prepare test data
         partab = models.PaperAuthorReference.query_model
+        parobj = models.PaperAuthorReference.objects
         sciswarm_scheme = const.person_alias_schemes.SCISWARM
         person_defaults = dict(title_before='', title_after='', bio='')
         user_defaults = dict(password='*', language='en', is_active=True,
@@ -288,8 +289,7 @@ class UserTestCase(TransactionTestCase):
             models.PaperAlias.objects.create(scheme=sciswarm_scheme,
                 identifier='p/' + str(paper.pk), target=paper)
             for alias in alias_list:
-                models.PaperAuthorReference.objects.create(paper=paper,
-                    author_alias=alias, confirmed=None)
+                parobj.create(paper=paper, author_alias=alias, confirmed=None)
         models.PaperAlias.objects.create(scheme=sciswarm_scheme,
             identifier='p/' + str(paper6.pk), target=paper6)
 
@@ -298,6 +298,7 @@ class UserTestCase(TransactionTestCase):
         # Test data: (user, accept/reject, (selected papers),
         # (expected confirmation status after test))
         test_data = [
+            (user1, True, tuple(), (None, None, None, None, None)),
             (user1, True, (paper1, paper2), (True, True, None, None, None)),
             (user1, False, (paper4, paper5), (True, True, None, False, False)),
             (user2, True, (paper1, paper3, paper5, paper6),
@@ -324,7 +325,7 @@ class UserTestCase(TransactionTestCase):
             self.assertRedirects(response, url, fetch_redirect_response=False)
             exp_map = dict(zip((x.pk for x in paper_list), exp_status))
             query = (partab.author_alias.target == user.person)
-            qs = models.PaperAuthorReference.objects.filter(query)
+            qs = parobj.filter(query)
             tmp = [(x.pk, x.confirmed) for x in qs]
             for item in qs:
                 self.assertIs(item.confirmed, exp_map[item.paper_id])
@@ -352,8 +353,47 @@ class UserTestCase(TransactionTestCase):
             self.assertRedirects(response, url, fetch_redirect_response=False)
             query = ((partab.author_alias.target == user.person) &
                 (partab.paper == paper))
-            item = models.PaperAuthorReference.objects.get(query)
+            item = parobj.get(query)
             self.assertIs(item.confirmed, accept)
+
+        # Test form error checks
+        confirmed_query = (partab.confirmed == True)
+        rejected_query = (partab.confirmed == False)
+        par_count = parobj.count()
+        confirmed_count = parobj.filter(confirmed_query).count()
+        rejected_count = parobj.filter(rejected_query).count()
+
+        url = reverse('core:mass_authorship_confirmation')
+        post_data = {fname_tpl % paper4.pk: True}
+        c.force_login(user2)
+        response = c.post(url, post_data)
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+        self.assertTrue(form.has_error(NON_FIELD_ERRORS, 'no_action'))
+        query = ((partab.author_alias.target == user2.person) &
+            (partab.paper == paper4))
+        testitem = parobj.get(query)
+        self.assertIs(testitem.confirmed, None)
+        self.assertEqual(parobj.count(), par_count)
+        self.assertEqual(parobj.filter(confirmed_query).count(),
+            confirmed_count)
+        self.assertEqual(parobj.filter(rejected_query).count(), rejected_count)
+
+        kwargs = dict(pk=paper4.pk)
+        url = reverse('core:paper_authorship_confirmation', kwargs=kwargs)
+        post_data = dict()
+        response = c.post(url, post_data)
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+        self.assertTrue(form.has_error(NON_FIELD_ERRORS, 'no_action'))
+        query = ((partab.author_alias.target == user2.person) &
+            (partab.paper == paper4))
+        testitem = parobj.get(query)
+        self.assertIs(testitem.confirmed, None)
+        self.assertEqual(parobj.count(), par_count)
+        self.assertEqual(parobj.filter(confirmed_query).count(),
+            confirmed_count)
+        self.assertEqual(parobj.filter(rejected_query).count(), rejected_count)
 
         test_data = [
             (user2, True, paper1),
@@ -365,7 +405,7 @@ class UserTestCase(TransactionTestCase):
         for user, accept, paper in test_data:
             query = ((partab.author_alias.target == user.person) &
                 (partab.paper == paper))
-            testitem = models.PaperAuthorReference.objects.get(query)
+            testitem = parobj.get(query)
             kwargs = dict(pk=paper.pk)
             url = reverse('core:paper_authorship_confirmation', kwargs=kwargs)
             action = '_confirm_authorship' if accept else '_reject_authorship'
@@ -378,7 +418,7 @@ class UserTestCase(TransactionTestCase):
             self.assertTrue(form.has_error(NON_FIELD_ERRORS, 'selfpromo'))
             query = ((partab.author_alias.target == user.person) &
                 (partab.paper == paper))
-            tmp = models.PaperAuthorReference.objects.get(query)
+            tmp = parobj.get(query)
             self.assertIs(testitem.confirmed, tmp.confirmed)
 
         # Test attempt to confirm/reject non-existent authorship
