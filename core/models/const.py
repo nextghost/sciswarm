@@ -68,3 +68,11 @@ paper_importance_ratings = ConstEnum(
     ('MEDIUM', 1, _('Average')),
     ('HIGH', 2, _('Revolutionary')),
 )
+
+user_feed_events = ConstEnum(
+    ('PAPER_POSTED', 0, _('{person} has posted a new paper: {paper}')),
+    ('AUTHORSHIP_CONFIRMED', 1,
+        _('{person} has confirmed authorship of {paper}')),
+    ('PAPER_REVIEW', 2, _('{person} has posted a review of {paper}')),
+    ('PAPER_RECOMMENDATION', 3, _('{person} recommends paper: {paper}')),
+)

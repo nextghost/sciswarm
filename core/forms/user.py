@@ -34,7 +34,10 @@ class PersonAliasForm(BaseAliasForm):
     def validate_alias(self, scheme, identifier):
         return validate_person_alias(scheme, identifier)
 
-    def save(self):
+    def save(self, commit=True):
+        if not commit:
+            msg = 'Deferred instance saving not supported.'
+            raise ImproperlyConfigured(msg)
         ret = super(PersonAliasForm, self).save()
         if ret.target is not None:
             revtab = models.PaperReview.query_model
@@ -131,13 +134,33 @@ class BaseAuthorshipConfirmationForm(Form):
         if not self.selected_papers:
             return
         table = models.PaperAuthorReference.query_model
+        evtab = models.FeedEvent.query_model
+        event_type = const.user_feed_events.AUTHORSHIP_CONFIRMED
         query = (table.paper.belongs(self.selected_papers) &
             (table.author_alias.target == self.person))
         qs = models.PaperAuthorReference.objects.filter(query)
         if '_confirm_authorship' in self.data:
             qs.update(confirmed=True)
+            papertab = models.Paper.query_model
+            partab = papertab.paperauthorreference
+            query = (evtab.event_type == event_type)
+            subq = self.person.feedevent_set.filter(query)
+            subq = subq.values_list('paper_id')
+            query = (papertab.pk.belongs([x.pk for x in self.selected_papers])&
+                (partab.author_alias.target == self.person) &
+                (partab.confirmed == True) & ~papertab.pk.belongs(subq))
+            qs = models.Paper.objects.filter(query)
+            create_list = [models.FeedEvent(person=self.person, paper=x,
+                event_type=event_type) for x in qs]
+            models.FeedEvent.objects.bulk_create(create_list)
         elif '_reject_authorship' in self.data:
             qs.update(confirmed=False)
+            partab = evtab.paper.paperauthorreference
+            query = (evtab.paper.belongs(self.selected_papers) &
+                (partab.author_alias.target == self.person) &
+                (partab.confirmed == False) & (evtab.person == self.person)&
+                (evtab.event_type == event_type))
+            models.FeedEvent.objects.filter(query).delete()
 
     save.alters_data = True
 

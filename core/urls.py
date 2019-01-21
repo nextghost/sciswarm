@@ -16,7 +16,7 @@
 
 from django.conf.urls import include, url
 from django.contrib.auth import views as auth
-from .views import account, comment, main, paper, user
+from .views import account, comment, event, main, paper, user
 
 account_patterns = [
     url(r'^login/?\Z', account.login, name='login'),
@@ -50,6 +50,8 @@ account_patterns = [
 ]
 
 person_patterns = [
+    url(r'^(?P<username>[^/]+)/feed/?\Z', event.PersonEventFeed.as_view(),
+        name='person_event_feed'),
     url(r'^(?P<username>[^/]+)/papers/?\Z',
         paper.PersonAuthoredPaperListView.as_view(),
         name='person_authored_paper_list'),

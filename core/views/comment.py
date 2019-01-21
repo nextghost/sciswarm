@@ -136,6 +136,7 @@ class UpdatePaperReviewView(BaseUpdateView):
         return reverse('core:paperreview_list', kwargs=kwargs)
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
 class DeletePaperReviewView(BaseDeleteView):
     queryset = models.PaperReview.objects.filter_public().select_related(
         'paper', 'posted_by')
@@ -149,8 +150,13 @@ class DeletePaperReviewView(BaseDeleteView):
         return ret
 
     def perform_delete(self):
+        table = models.FeedEvent.query_model
         self.object.deleted = True
         self.object.save(update_fields=['deleted', 'date_changed'])
+        query = ((table.person == self.object.posted_by) &
+            (table.paper == self.object.paper) &
+            (event_type == const.user_feed_events.PAPER_REVIEW))
+        models.FeedEvent.objects.filter(query).delete()
 
     def get_success_url(self):
         kwargs = dict(pk=self.object.paper.pk)

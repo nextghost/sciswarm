@@ -225,8 +225,10 @@ class UserTestCase(TransactionTestCase):
     def test_authorship_acceptance(self):
         # Prepare test data
         partab = models.PaperAuthorReference.query_model
+        evtab = models.FeedEvent.query_model
         parobj = models.PaperAuthorReference.objects
         sciswarm_scheme = const.person_alias_schemes.SCISWARM
+        event_type = const.user_feed_events.AUTHORSHIP_CONFIRMED
         person_defaults = dict(title_before='', title_after='', bio='')
         user_defaults = dict(password='*', language='en', is_active=True,
             is_superuser=False)
@@ -324,11 +326,18 @@ class UserTestCase(TransactionTestCase):
             response = c.post(url, post_data)
             self.assertRedirects(response, url, fetch_redirect_response=False)
             exp_map = dict(zip((x.pk for x in paper_list), exp_status))
+            confirmed_set = set((k for k,v in exp_map.items() if v))
             query = (partab.author_alias.target == user.person)
             qs = parobj.filter(query)
             tmp = [(x.pk, x.confirmed) for x in qs]
             for item in qs:
                 self.assertIs(item.confirmed, exp_map[item.paper_id])
+            qs = user.person.feedevent_set.all()
+            tmp = set((x.paper_id for x in qs))
+            self.assertEqual(tmp, confirmed_set)
+            self.assertEqual(qs.count(), len(confirmed_set))
+            for item in qs:
+                self.assertEqual(item.event_type, event_type)
 
         test_data = [
             (user1, False, paper3),
@@ -355,6 +364,9 @@ class UserTestCase(TransactionTestCase):
                 (partab.paper == paper))
             item = parobj.get(query)
             self.assertIs(item.confirmed, accept)
+            query = (evtab.paper == paper)
+            qs = user.person.feedevent_set.filter(query)
+            self.assertEqual(qs.exists(), accept)
 
         # Test form error checks
         confirmed_query = (partab.confirmed == True)
@@ -362,6 +374,7 @@ class UserTestCase(TransactionTestCase):
         par_count = parobj.count()
         confirmed_count = parobj.filter(confirmed_query).count()
         rejected_count = parobj.filter(rejected_query).count()
+        event_count = models.FeedEvent.objects.count()
 
         url = reverse('core:mass_authorship_confirmation')
         post_data = {fname_tpl % paper4.pk: True}
@@ -378,6 +391,7 @@ class UserTestCase(TransactionTestCase):
         self.assertEqual(parobj.filter(confirmed_query).count(),
             confirmed_count)
         self.assertEqual(parobj.filter(rejected_query).count(), rejected_count)
+        self.assertEqual(models.FeedEvent.objects.count(), event_count)
 
         kwargs = dict(pk=paper4.pk)
         url = reverse('core:paper_authorship_confirmation', kwargs=kwargs)
@@ -394,6 +408,7 @@ class UserTestCase(TransactionTestCase):
         self.assertEqual(parobj.filter(confirmed_query).count(),
             confirmed_count)
         self.assertEqual(parobj.filter(rejected_query).count(), rejected_count)
+        self.assertEqual(models.FeedEvent.objects.count(), event_count)
 
         test_data = [
             (user2, True, paper1),
@@ -440,3 +455,4 @@ class UserTestCase(TransactionTestCase):
             self.assertEquals(response.status_code, 404)
 
         self.assertFalse(paper6.paperauthorreference_set.exists())
+        self.assertEqual(models.FeedEvent.objects.count(), event_count)

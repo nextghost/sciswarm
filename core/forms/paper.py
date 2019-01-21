@@ -215,6 +215,8 @@ class PaperForm(ModelForm):
         if new_paper:
             scheme = const.paper_alias_schemes.SCISWARM
             models.PaperAlias.objects.link_alias(scheme, 'p/'+str(ret.pk), ret)
+            models.FeedEvent.objects.create(person=ret.posted_by, paper=ret,
+                event_type=const.user_feed_events.PAPER_POSTED)
         if author is not None:
             models.PaperAuthorReference.objects.create(paper=ret,
                 author_alias=author, confirmed=True)

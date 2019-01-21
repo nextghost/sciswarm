@@ -63,9 +63,21 @@ class Person(models.Model):
         args = dict(first_name=self.first_name, last_name=self.last_name)
         return _('{last_name}, {first_name}').format(**args)
 
+    def __html__(self):
+        url = self.get_absolute_url()
+        return html.render_link(url, self.plain_name)
+
     @property
     def name(self):
         return str(self)
+
+    @property
+    def plain_name(self):
+        # This applies only to bots
+        if (not self.first_name) or not self.last_name:
+            return self.first_name or self.last_name
+        args = dict(first_name=self.first_name, last_name=self.last_name)
+        return _('{first_name} {last_name}').format(**args)
 
     @property
     def full_name(self):

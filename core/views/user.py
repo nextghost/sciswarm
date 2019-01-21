@@ -48,6 +48,8 @@ class PersonDetailView(DetailView):
         for item in ret['alias_list']:
             item.is_deletable()
         links = [
+            (_('Feed'), 'core:person_event_feed', tuple(),
+                dict(username=self.kwargs['username'])),
             (_('Posted papers'), 'core:person_posted_paper_list', tuple(),
                 dict(username=self.kwargs['username'])),
             (_('Authored papers'), 'core:person_authored_paper_list', tuple(),

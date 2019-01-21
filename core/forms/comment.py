@@ -43,8 +43,18 @@ class PaperReviewForm(ModelForm):
         self.fields['message'].label = _('Details')
 
     def clean(self):
-        paper = lock_record(self.instance.paper)
-        if self.instance.pk is None:
+        if self.instance.pk is not None:
+            # Prevent race condition with deletion view
+            tmp = lock_record(self.instance, ['paper'])
+            if tmp is None:
+                msg = _('Database error, please try again later.')
+                raise ValidationError(msg, 'lock')
+            if tmp.deleted:
+                msg = _('This review has been deleted.')
+                raise ValidationError(msg, 'deleted')
+            self.instance = tmp
+        else:
+            paper = lock_record(self.instance.paper)
             if paper is None:
                 msg = _('Database error, please try again later.')
                 raise ValidationError(msg, 'lock')
@@ -56,6 +66,14 @@ class PaperReviewForm(ModelForm):
             if qs.filter_by_author(self.instance.posted_by).exists():
                 msg = _('You cannot review a paper more than once.')
                 raise ValidationError(msg, 'unique')
+
+    def save(self):
+        ret = super(PaperReviewForm, self).save()
+        models.FeedEvent.objects.create(person=ret.posted_by, paper=ret.paper,
+            event_type=const.user_feed_events.PAPER_REVIEW)
+        return ret
+
+    save.alters_data = True
 
 class PaperReviewResponseForm(ModelForm):
     class Meta:

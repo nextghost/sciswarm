@@ -18,3 +18,4 @@ from .auth import User, BruteBlock, BruteLog
 from .paper import (Person, PersonAlias, Paper, PaperAlias, PaperKeyword,
     PaperAuthorReference, PaperAuthorName, PaperSupplementalLink)
 from .comment import PaperReview, PaperReviewResponse
+from .event import FeedEvent
