@@ -8,6 +8,9 @@
 <h1>{% trans 'Manage Paper Authorship' %}</h1>
 <div class="box">
 <p>{% with paper_link=object|object_link %}{% blocktrans %}Paper: {{ paper_link }}{% endblocktrans %}{% endwith %}</p>
+{% if form.non_field_errors %}
+<div class="error">{{ form.non_field_errors }}</div>
+{% endif %}
 <form method="post" action="?">
 {% csrf_token %}
 <table class="list">
