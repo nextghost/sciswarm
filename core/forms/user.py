@@ -128,7 +128,7 @@ class BaseAuthorshipConfirmationForm(Form):
         # Lock papers where authorship is about to be confirmed/rejected
         pk_list = [x.pk for x in self.paper_list]
         query = models.Paper.query_model.pk.belongs(pk_list)
-        models.Paper.objects.filter(query).select_for_update().first()
+        bool(models.Paper.objects.filter(query).select_for_update())
 
     def save(self):
         if not self.selected_papers:
