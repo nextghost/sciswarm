@@ -149,7 +149,7 @@ class BaseAuthorshipConfirmationForm(Form):
             query = (papertab.pk.belongs([x.pk for x in self.selected_papers])&
                 (partab.author_alias.target == self.person) &
                 (partab.confirmed == True) & ~papertab.pk.belongs(subq))
-            qs = models.Paper.objects.filter(query)
+            qs = models.Paper.objects.filter(query).distinct()
             create_list = [models.FeedEvent(person=self.person, paper=x,
                 event_type=event_type) for x in qs]
             models.FeedEvent.objects.bulk_create(create_list)

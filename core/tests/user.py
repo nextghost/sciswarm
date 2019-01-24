@@ -400,6 +400,7 @@ class UserTestCase(TransactionTestCase):
         evtab = models.FeedEvent.query_model
         parobj = models.PaperAuthorReference.objects
         sciswarm_scheme = const.person_alias_schemes.SCISWARM
+        email_scheme = const.person_alias_schemes.EMAIL
         event_type = const.user_feed_events.AUTHORSHIP_CONFIRMED
         person_defaults = dict(title_before='', title_after='', bio='')
         user_defaults = dict(password='*', language='en', is_active=True,
@@ -423,6 +424,8 @@ class UserTestCase(TransactionTestCase):
             person=person3, **user_defaults)
         alias3 = models.PersonAlias.objects.create(scheme=sciswarm_scheme,
             identifier='u/' + person3.username, target=person3)
+        alias4 = models.PersonAlias.objects.create(scheme=email_scheme,
+            identifier='foo@example.com', target=person1)
 
         paper_defaults = dict(abstract='Abstract', contents_theory=True,
             contents_survey=False, contents_observation=False,
@@ -466,6 +469,7 @@ class UserTestCase(TransactionTestCase):
                 parobj.create(paper=paper, author_alias=alias, confirmed=None)
         models.PaperAlias.objects.create(scheme=sciswarm_scheme,
             identifier='p/' + str(paper6.pk), target=paper6)
+        parobj.create(paper=paper2, author_alias=alias4, confirmed=None)
 
         c = Client(HTTP_HOST='sciswarm.test')
 
@@ -512,18 +516,20 @@ class UserTestCase(TransactionTestCase):
                 self.assertEqual(item.event_type, event_type)
 
         test_data = [
-            (user1, False, paper3),
-            (user1, True, paper3),
-            (user1, False, paper1),
-            (user2, False, paper1),
-            (user2, True, paper2),
-            (user2, False, paper2),
-            (user3, False, paper1),
-            (user3, False, paper3),
+            (user1, False, paper3, 1),
+            (user1, True, paper3, 1),
+            (user1, False, paper1, 1),
+            (user1, False, paper2, 2),
+            (user1, True, paper2, 2),
+            (user2, False, paper1, 1),
+            (user2, True, paper2, 1),
+            (user2, False, paper2, 1),
+            (user3, False, paper1, 1),
+            (user3, False, paper3, 1),
         ]
 
         # Test successful authorship confirmation/rejection
-        for user, accept, paper in test_data:
+        for user, accept, paper, refcount in test_data:
             kwargs = dict(pk=paper.pk)
             url = reverse('core:paper_authorship_confirmation', kwargs=kwargs)
             action = '_confirm_authorship' if accept else '_reject_authorship'
@@ -534,8 +540,10 @@ class UserTestCase(TransactionTestCase):
             self.assertRedirects(response, url, fetch_redirect_response=False)
             query = ((partab.author_alias.target == user.person) &
                 (partab.paper == paper))
-            item = parobj.get(query)
-            self.assertIs(item.confirmed, accept)
+            qs = parobj.filter(query)
+            self.assertEqual(len(qs), refcount)
+            for item in qs:
+                self.assertIs(item.confirmed, accept)
             query = (evtab.paper == paper)
             qs = user.person.feedevent_set.filter(query)
             self.assertEqual(qs.exists(), accept)
