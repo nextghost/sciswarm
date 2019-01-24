@@ -33,6 +33,7 @@ from ..forms.paper import (PaperSearchForm, PaperForm, PaperAliasForm,
     PaperAliasFormset, PaperAuthorNameFormset, PaperSupplementalLinkForm)
 from ..forms.user import (PaperAuthorForm, PersonAliasForm, PersonAliasFormset,
     AuthorshipConfirmationForm)
+from ..models import const
 from ..utils.html import NavigationBar
 from ..utils.utils import list_map, logger, remove_duplicates
 from .. import models
@@ -288,8 +289,22 @@ class DeletePaperAuthorView(BaseDeleteView):
 
     def perform_delete(self):
         super(DeletePaperAuthorView, self).perform_delete()
-        self.object.paper.changed_by = self.request.user.person
-        self.object.paper.save(update_fields=['last_changed', 'changed_by'])
+        obj = self.object
+        obj.paper.changed_by = self.request.user.person
+        obj.paper.save(update_fields=['last_changed', 'changed_by'])
+
+        # Delete obsolete authorship confirmation events
+        if obj.author_alias.target is not None:
+            partab = models.PaperAuthorReference.query_model
+            query = ((partab.author_alias.target == obj.author_alias.target) &
+                (partab.confirmed == True))
+            qs = obj.paper.paperauthorreference_set.filter(query)
+            if not qs.exists():
+                evtab = models.FeedEvent.query_model
+                evtype = const.user_feed_events.AUTHORSHIP_CONFIRMED
+                query = ((evtab.person == obj.author_alias.target) &
+                    (evtab.paper == obj.paper) & (evtab.event_type == evtype))
+                models.FeedEvent.objects.filter(query).delete()
 
     def get_success_url(self):
         return self.object.paper.get_absolute_url()

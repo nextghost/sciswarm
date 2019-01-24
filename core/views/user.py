@@ -26,6 +26,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView
 from .base import BaseCreateView, BaseUnlinkAliasView
 from .utils import PageNavigator
+from ..models import const
 from ..utils.html import NavigationBar
 from ..utils.utils import logger
 from ..forms.user import PersonAliasForm, MassAuthorshipConfirmationForm
@@ -87,6 +88,7 @@ class LinkPersonAliasView(BaseCreateView):
         return reverse('core:person_detail', kwargs=kwargs)
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
 class UnlinkPersonAliasView(BaseUnlinkAliasView):
     queryset = models.PersonAlias.objects.select_related('target')
     page_title = _('Delete Personal Identifier')
@@ -98,6 +100,31 @@ class UnlinkPersonAliasView(BaseUnlinkAliasView):
         elif not ret.is_deletable():
             raise PermissionDenied(_('This identifier is permanent.'))
         return ret
+
+    def perform_delete(self):
+        person = self.object.target
+        # Lock papers referencing this alias
+        papertab = models.Paper.query_model
+        partab = papertab.paperauthorreference
+        evtab = models.FeedEvent.query_model
+        query = ((partab.author_alias == self.object) &
+            (partab.confirmed == True))
+        bool(models.Paper.objects.filter(query).select_for_update())
+
+        # Unlink alias
+        super(UnlinkPersonAliasView, self).perform_delete()
+        self.object.paperauthorreference_set.update(confirmed=None)
+
+        # Delete obsolete authorship confirmation events
+        evtype = const.user_feed_events.AUTHORSHIP_CONFIRMED
+        subq = models.Paper.objects.filter_by_author(person, True)
+        subq = subq.values_list('pk')
+        query = ((partab.author_alias == self.object) &
+            ~papertab.pk.belongs(subq))
+        paper_qs = models.Paper.objects.filter(query)
+        query = ((evtab.person == person) & evtab.paper.belongs(paper_qs) &
+            (evtab.event_type == evtype))
+        models.FeedEvent.objects.filter(query).delete()
 
     def get_success_url(self):
         kwargs = dict(username=self.request.user.username)

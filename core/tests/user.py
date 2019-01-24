@@ -222,6 +222,178 @@ class UserTestCase(TransactionTestCase):
             query = partab.confirmed.notnull()
             self.assertEqual(parobj.filter(query).count(), 3)
 
+    def test_useralias_unlinking(self):
+        partab = models.PaperAuthorReference.query_model
+        parobj = models.PaperAuthorReference.objects
+        sciswarm_scheme = const.person_alias_schemes.SCISWARM
+        orcid_scheme = const.person_alias_schemes.ORCID
+        email_scheme = const.person_alias_schemes.EMAIL
+        url_scheme = const.person_alias_schemes.URL
+        event_type = const.user_feed_events.AUTHORSHIP_CONFIRMED
+
+        person_defaults = dict(title_before='', title_after='', bio='')
+        user_defaults = dict(password='*', language='en', is_active=True,
+            is_superuser=False)
+        person1 = models.Person.objects.create(username='person1',
+            first_name='Test', last_name='User1', **person_defaults)
+        user1 = models.User.objects.create(username=person1.username,
+            person=person1, email='permanent@example.com', **user_defaults)
+        alias1 = models.PersonAlias.objects.create(scheme=sciswarm_scheme,
+            identifier='u/' + person1.username, target=person1)
+        person2 = models.Person.objects.create(username='person2',
+            first_name='Test', last_name='User2', **person_defaults)
+        alias2 = models.PersonAlias.objects.create(scheme=sciswarm_scheme,
+            identifier='u/' + person2.username, target=person2)
+        alias3 = models.PersonAlias.objects.create(scheme=email_scheme,
+            identifier='person1@example.com', target=person1)
+        alias4 = models.PersonAlias.objects.create(scheme=url_scheme,
+            identifier='https://www.example.com/', target=person1)
+        alias5 = models.PersonAlias.objects.create(scheme=orcid_scheme,
+            identifier='0000-0002-1825-0097', target=person1)
+        alias6 = models.PersonAlias.objects.create(scheme=email_scheme,
+            identifier='anon@example.com', target=None)
+        alias7 = models.PersonAlias.objects.create(scheme=email_scheme,
+            identifier=user1.email, target=person1)
+
+        paper_defaults = dict(abstract='Abstract', contents_theory=True,
+            contents_survey=False, contents_observation=False,
+            contents_experiment=False, contents_metaanalysis=False,
+            year_published=2019)
+        paper1 = models.Paper.objects.create(name='Paper1', posted_by=person1,
+            changed_by=person1, **paper_defaults)
+        paper2 = models.Paper.objects.create(name='Paper2', posted_by=person1,
+            changed_by=person2, **paper_defaults)
+        paper3 = models.Paper.objects.create(name='Paper3', posted_by=person2,
+            changed_by=person2, **paper_defaults)
+        paper4 = models.Paper.objects.create(name='Paper4', posted_by=person2,
+            changed_by=person1, **paper_defaults)
+
+        authorship_list = [(alias1, paper1, True), (alias2, paper2, True),
+            (alias3, paper2, True), (alias4, paper2, True),
+            (alias6, paper2, None), (alias2, paper3, True),
+            (alias3, paper3, False), (alias2, paper4, False),
+            (alias3, paper4, True), (alias5, paper4, None),
+            (alias6, paper4, None),
+        ]
+        event_set = set()
+
+        for alias, paper, confirmed in authorship_list:
+            parobj.create(paper=paper, author_alias=alias, confirmed=confirmed)
+            if confirmed:
+                event_set.add((alias.target, paper))
+
+        for person, paper in event_set:
+            models.FeedEvent.objects.create(person=person, paper=paper,
+                event_type=event_type)
+
+        par_count = parobj.count()
+        alias_count = models.PersonAlias.objects.count()
+
+        c = Client(HTTP_HOST='sciswarm.test')
+        c.force_login(user1)
+
+        # Test unlinking of an alias
+        kwargs = dict(pk=alias3.pk)
+        url = reverse('core:unlink_person_identifier', kwargs=kwargs)
+        kwargs = dict(username=person1.username)
+        redir_url = reverse('core:person_detail', kwargs=kwargs)
+        response = c.post(url, dict())
+        self.assertRedirects(response, redir_url,fetch_redirect_response=False)
+        tmp = models.PersonAlias.objects.get(pk=alias3.pk)
+        self.assertEqual(tmp.scheme, alias3.scheme)
+        self.assertEqual(tmp.identifier, alias3.identifier)
+        self.assertIs(tmp.target_id, None)
+        self.assertEqual(models.PersonAlias.objects.count(), alias_count)
+        self.assertEqual(tmp.paperauthorreference_set.count(), 3)
+        par_list = list(parobj.order_by('pk'))
+        self.assertEqual(len(par_list), par_count)
+        for item, exp in zip(par_list, authorship_list):
+            self.assertEqual(item.author_alias_id, exp[0].pk)
+            self.assertEqual(item.paper_id, exp[1].pk)
+            if item.author_alias_id == tmp.pk:
+                self.assertIs(item.confirmed, None)
+            else:
+                self.assertIs(item.confirmed, exp[2])
+        event_set.discard((person1, paper4))
+        query = (models.FeedEvent.query_model.event_type == event_type)
+        qs = models.FeedEvent.objects.filter(query)
+        qs = qs.select_related('person', 'paper')
+        self.assertEqual(len(qs), len(event_set))
+        test_set = set(((x.person, x.paper) for x in qs))
+        self.assertEqual(test_set, event_set)
+
+        # Test deletion of authorship confirmation events
+        kwargs = dict(pk=alias4.pk)
+        url = reverse('core:unlink_person_identifier', kwargs=kwargs)
+        kwargs = dict(username=person1.username)
+        redir_url = reverse('core:person_detail', kwargs=kwargs)
+        response = c.post(url, dict())
+        self.assertRedirects(response, redir_url,fetch_redirect_response=False)
+        tmp = models.PersonAlias.objects.get(pk=alias4.pk)
+        self.assertEqual(tmp.scheme, alias4.scheme)
+        self.assertEqual(tmp.identifier, alias4.identifier)
+        self.assertIs(tmp.target_id, None)
+        self.assertEqual(models.PersonAlias.objects.count(), alias_count)
+        self.assertEqual(tmp.paperauthorreference_set.count(), 1)
+        par_list = list(parobj.order_by('pk'))
+        self.assertEqual(len(par_list), par_count)
+        for item, exp in zip(par_list, authorship_list):
+            self.assertEqual(item.author_alias_id, exp[0].pk)
+            self.assertEqual(item.paper_id, exp[1].pk)
+            if item.author_alias_id in [alias3.pk, alias4.pk]:
+                self.assertIs(item.confirmed, None)
+            else:
+                self.assertIs(item.confirmed, exp[2])
+        event_set.discard((person1, paper2))
+        query = (models.FeedEvent.query_model.event_type == event_type)
+        qs = models.FeedEvent.objects.filter(query)
+        qs = qs.select_related('person', 'paper')
+        self.assertEqual(len(qs), len(event_set))
+        test_set = set(((x.person, x.paper) for x in qs))
+        self.assertEqual(test_set, event_set)
+
+        # Test that permanent aliases cannot be unlinked
+        for alias in [alias1, alias7]:
+            kwargs = dict(pk=alias.pk)
+            url = reverse('core:unlink_person_identifier', kwargs=kwargs)
+            kwargs = dict(username=person1.username)
+            response = c.post(url, dict())
+            self.assertEqual(response.status_code, 403)
+            tmp = models.PersonAlias.objects.get(pk=alias.pk)
+            self.assertEqual(tmp.scheme, alias.scheme)
+            self.assertEqual(tmp.identifier, alias.identifier)
+            self.assertIs(tmp.target_id, alias.target_id)
+
+        # Test that users cannot unlink somebody else's alias
+        for alias in [alias2, alias6]:
+            kwargs = dict(pk=alias.pk)
+            url = reverse('core:unlink_person_identifier', kwargs=kwargs)
+            kwargs = dict(username=person1.username)
+            response = c.post(url, dict())
+            self.assertEqual(response.status_code, 404)
+            tmp = models.PersonAlias.objects.get(pk=alias.pk)
+            self.assertEqual(tmp.scheme, alias.scheme)
+            self.assertEqual(tmp.identifier, alias.identifier)
+            self.assertIs(tmp.target_id, alias.target_id)
+
+        self.assertEqual(models.PersonAlias.objects.count(), alias_count)
+        par_list = list(parobj.order_by('pk'))
+        self.assertEqual(len(par_list), par_count)
+        for item, exp in zip(par_list, authorship_list):
+            self.assertEqual(item.author_alias_id, exp[0].pk)
+            self.assertEqual(item.paper_id, exp[1].pk)
+            if item.author_alias_id in [alias3.pk, alias4.pk]:
+                self.assertIs(item.confirmed, None)
+            else:
+                self.assertIs(item.confirmed, exp[2])
+        event_set.discard((person1, paper2))
+        query = (models.FeedEvent.query_model.event_type == event_type)
+        qs = models.FeedEvent.objects.filter(query)
+        qs = qs.select_related('person', 'paper')
+        self.assertEqual(len(qs), len(event_set))
+        test_set = set(((x.person, x.paper) for x in qs))
+        self.assertEqual(test_set, event_set)
+
     def test_authorship_acceptance(self):
         # Prepare test data
         partab = models.PaperAuthorReference.query_model
