@@ -21,16 +21,17 @@ from django.db.models import prefetch_related_objects
 from django.db.transaction import atomic
 from django.forms import ValidationError
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
-from django.views.generic import DetailView
+from django.views.generic import DetailView, FormView
 from .base import (BaseCreateView, BaseUpdateView, BaseListView,
     SearchListView, BaseModelFormsetView, BaseDeleteView, BaseUnlinkAliasView)
 from .utils import paper_navbar
 from ..forms.paper import (PaperSearchForm, PaperForm, PaperAliasForm,
-    PaperAliasFormset, PaperAuthorNameFormset, PaperSupplementalLinkForm)
+    PaperAliasFormset, PaperAuthorNameFormset, PaperSupplementalLinkForm,
+    PaperRecommendationForm)
 from ..forms.user import (PaperAuthorForm, PersonAliasForm, PersonAliasFormset,
     AuthorshipConfirmationForm)
 from ..models import const
@@ -108,6 +109,23 @@ class PersonAuthoredPaperListView(BasePaperListView):
         ret['page_title'] = _('Papers by %s') % self.person.full_name
         return ret
 
+class PersonRecommendedPaperListView(BasePaperListView):
+    def get_base_queryset(self):
+        qs = models.Person.objects.filter_active()
+        qs = qs.filter_username(self.kwargs['username'])
+        self.person = get_object_or_404(qs)
+        evtab = models.Paper.query_model.feedevent
+        query = ((evtab.person == self.person) &
+            (evtab.event_type == const.user_feed_events.PAPER_RECOMMENDATION))
+        return models.Paper.objects.filter_public().filter(query)
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(PersonRecommendedPaperListView, self).get_context_data(
+            *args, **kwargs)
+        title = _('Papers Recommended by %s') % self.person.full_name
+        ret['page_title'] = title
+        return ret
+
 @method_decorator(login_required, name='dispatch')
 class RejectedAuthorshipPaperListView(BasePaperListView):
     page_title = _('Papers You Have Rejected')
@@ -149,6 +167,9 @@ class PaperDetailView(DetailView):
         ret['alias_list'] = obj.paperalias_set.all()
         ret['suplink_list'] = obj.papersupplementallink_set.all()
         ret['edit_access'] = obj.is_owned_by(self.request.user)
+        if self.request.user.is_authenticated:
+            ret['recommend_form'] = PaperRecommendationForm(paper=obj,
+                person=self.request.user.person)
         ret['navbar'] = paper_navbar(self.request, obj)
         return ret
 
@@ -516,3 +537,24 @@ class DeleteSupplementalLinkView(BaseDeleteView):
 
     def get_success_url(self):
         return self.object.paper.get_absolute_url()
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
+class RecommendPaperFormView(FormView):
+    form_class = PaperRecommendationForm
+
+    def get_form_kwargs(self, *args, **kwargs):
+        ret = super(RecommendPaperFormView, self).get_form_kwargs(*args,
+            **kwargs)
+        ret['person'] = self.request.user.person
+        qs = models.Paper.objects.filter_public()
+        self.paper = get_object_or_404(qs, pk=self.kwargs['pk'])
+        ret['paper'] = self.paper
+        return ret
+
+    def get(self, *args, **kwargs):
+        return redirect('core:paper_detail', pk=self.kwargs['pk'])
+
+    def form_valid(self, form):
+        form.save()
+        return redirect(self.paper.get_absolute_url())

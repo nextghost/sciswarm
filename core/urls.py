@@ -58,6 +58,9 @@ person_patterns = [
     url(r'^(?P<username>[^/]+)/posted_papers/?\Z',
         paper.PersonPostedPaperListView.as_view(),
         name='person_posted_paper_list'),
+    url(r'^(?P<username>[^/]+)/recommended_papers/?\Z',
+        paper.PersonRecommendedPaperListView.as_view(),
+        name='person_recommended_paper_list'),
     url(r'^(?P<username>[^/]+)/?\Z', user.PersonDetailView.as_view(),
         name='person_detail'),
 ]
@@ -80,6 +83,8 @@ paper_patterns = [
         name='paperreview_list'),
     url(r'^(?P<pk>[0-9]+)/add_review/?\Z',
         comment.CreatePaperReviewView.as_view(), name='create_paperreview'),
+    url(r'^(?P<pk>[0-9]+)/recommend/?\Z',
+        paper.RecommendPaperFormView.as_view(), name='recommend_paper'),
     url(r'^(?P<pk>[0-9]+)/edit/?\Z', paper.UpdatePaperView.as_view(),
         name='edit_paper'),
     url(r'^(?P<pk>[0-9]+)/add_author/?\Z',

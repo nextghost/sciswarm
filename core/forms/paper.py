@@ -17,8 +17,10 @@
 from django import forms
 from django.core.exceptions import ImproperlyConfigured
 from django.forms import fields, modelformset_factory, widgets, ValidationError
+from django.utils.html import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from .base import Form, ModelForm, BaseAliasForm
+from .widgets import SubmitButton
 from ..models import const
 from ..utils import sql
 from ..utils.transaction import lock_record
@@ -275,3 +277,46 @@ class PaperSupplementalLinkForm(ModelForm):
         if paper.papersupplementallink_set.filter(query2).exists():
             msg = _('This paper already has this link.')
             self.add_error('url', ValidationError(msg, 'unique'))
+
+# This form must be processed and saved under transaction
+class PaperRecommendationForm(Form):
+    def __init__(self, *args, **kwargs):
+        person = kwargs.pop('person')
+        paper = kwargs.pop('paper')
+        if person is None:
+            raise ImproperlyConfigured('"person" keyword argument is required')
+        if paper is None:
+            raise ImproperlyConfigured('"paper" keyword argument is required')
+        super(PaperRecommendationForm, self).__init__(*args, **kwargs)
+        self.person = person
+        self.paper = paper
+        self.recommended = self._recommendation_queryset().exists()
+
+    def _recommendation_queryset(self):
+        evtab = models.FeedEvent.query_model
+        query = ((evtab.person == self.person) & (evtab.paper == self.paper) &
+            (evtab.event_type == const.user_feed_events.PAPER_RECOMMENDATION))
+        return models.FeedEvent.objects.filter(query)
+
+    def get_buttons(self):
+        if self.recommended:
+            return (('_unrecommend', _('Cancel recommendation')),)
+        else:
+            return (('_recommend', _('Recommend')),)
+
+    def submit_buttons(self):
+        button = SubmitButton()
+        ret = [button.render(name, title) for name,title in self.get_buttons()]
+        return mark_safe(' '.join(ret))
+
+    def clean(self):
+        lock_record(self.person)
+        self.recommended = self._recommendation_queryset().exists()
+
+    def save(self):
+        event_type = const.user_feed_events.PAPER_RECOMMENDATION
+        if '_recommend' in self.data and not self.recommended:
+            models.FeedEvent.objects.create(person=self.person,
+                paper=self.paper, event_type=event_type)
+        elif '_unrecommend' in self.data and self.recommended:
+            self._recommendation_queryset().delete()

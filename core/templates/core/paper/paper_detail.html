@@ -9,6 +9,14 @@
 {% block content %}
 <h1>{{ object.name }}</h1>
 {{ navbar }}
+
+{% if user.is_authenticated %}
+<div><form action="{% url 'core:recommend_paper' pk=object.pk %}" method="post">
+{% csrf_token %}
+{{ recommend_form.submit_buttons }}
+</form></div>
+{% endif %}
+
 <table class="info">
 <tr><th>{% trans 'Authors:' %}</th><td>{% for item in author_list %}{{ item.target_link }}{% if edit_access %} <a href="{% url 'core:delete_paper_author' pk=item.pk %}"><img src="{% static 'img/delete.png' %}" alt="{% trans '(delete)'%}"/></a>{% endif %}{% if author_names or not forloop.last %}; {% endif %}{% endfor %}{% for item in author_names %}{{ item }}{% if edit_access %} <a href="{% url 'core:delete_paper_author_name' pk=item.pk %}"><img src="{% static 'img/delete.png' %}" alt="{% trans '(delete)'%}"/></a>{% endif %}{% if not forloop.last %}; {% endif %}{% endfor %}{% if edit_access %} <a href="{% url 'core:add_paper_author' pk=object.pk %}"><img src="{% static 'img/create.png' %}" alt="{% trans '(add)' %}"/></a>{% endif %}</td></tr>
 <tr><td colspan="2">{{ object.abstract|linebreaks }}</td></tr>

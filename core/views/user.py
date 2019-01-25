@@ -55,6 +55,8 @@ class PersonDetailView(DetailView):
                 dict(username=self.kwargs['username'])),
             (_('Authored papers'), 'core:person_authored_paper_list', tuple(),
                 dict(username=self.kwargs['username'])),
+            (_('Recommended papers'), 'core:person_recommended_paper_list',
+                tuple(), dict(username=self.kwargs['username'])),
         ]
         ret['edit_access'] = False
         if self.request.user.is_authenticated:
