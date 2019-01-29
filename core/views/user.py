@@ -17,20 +17,60 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
+from django.db.models import aggregates
 from django.db.transaction import atomic
 from django.http import Http404
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView
-from .base import BaseCreateView, BaseUnlinkAliasView
+from .base import BaseCreateView, BaseListView, BaseUnlinkAliasView
 from .utils import PageNavigator
 from ..models import const
 from ..utils.html import NavigationBar
 from ..utils.utils import logger
-from ..forms.user import PersonAliasForm, MassAuthorshipConfirmationForm
+from ..forms.user import (PersonAliasForm, MassAuthorshipConfirmationForm,
+    FeedSubscriptionForm)
 from .. import models
+
+class PersonFollowerListView(BaseListView):
+    template_name = 'core/person/person_list.html'
+
+    def get_queryset(self):
+        ptab = models.Person.query_model
+        qs = models.Person.objects.filter_username(self.kwargs['username'])
+        self.person = get_object_or_404(qs.filter_active())
+        query = (ptab.feedsubscription.poster == self.person)
+        order = aggregates.Min(ptab.feedsubscription.pk.f())
+        qs = models.Person.objects.filter_active().filter(query).distinct()
+        return qs.annotate(order=order).order_by('order')
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(PersonFollowerListView, self).get_context_data(*args,
+            **kwargs)
+        ret['page_title'] = _('Followers of %s') % self.person.full_name
+        ret['navbar'] = ''
+        return ret
+
+class PersonSubscriptionListView(BaseListView):
+    template_name = 'core/person/person_list.html'
+
+    def get_queryset(self):
+        ptab = models.Person.query_model
+        qs = models.Person.objects.filter_username(self.kwargs['username'])
+        self.person = get_object_or_404(qs.filter_active())
+        query = (ptab.follower.follower == self.person)
+        order = aggregates.Min(ptab.follower.pk.f())
+        qs = models.Person.objects.filter_active().filter(query).distinct()
+        return qs.annotate(order=order).order_by('order')
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(PersonSubscriptionListView, self).get_context_data(*args,
+            **kwargs)
+        ret['page_title'] = _('People Followed by %s') % self.person.full_name
+        ret['navbar'] = ''
+        return ret
 
 class PersonDetailView(DetailView):
     queryset = models.Person.objects.filter_active()
@@ -51,6 +91,10 @@ class PersonDetailView(DetailView):
         links = [
             (_('Feed'), 'core:person_event_feed', tuple(),
                 dict(username=self.kwargs['username'])),
+            (_('Following'), 'core:person_subscription_list', tuple(),
+                dict(username=self.kwargs['username'])),
+            (_('Followers'), 'core:person_follower_list', tuple(),
+                dict(username=self.kwargs['username'])),
             (_('Posted papers'), 'core:person_posted_paper_list', tuple(),
                 dict(username=self.kwargs['username'])),
             (_('Authored papers'), 'core:person_authored_paper_list', tuple(),
@@ -59,8 +103,12 @@ class PersonDetailView(DetailView):
                 tuple(), dict(username=self.kwargs['username'])),
         ]
         ret['edit_access'] = False
+        ret['subscribe_form'] = None
         if self.request.user.is_authenticated:
             ret['edit_access'] = (self.request.user.person == obj)
+            if self.request.user.person != obj:
+                ret['subscribe_form'] = FeedSubscriptionForm(poster=obj,
+                    follower=self.request.user.person)
         ret['navbar'] = NavigationBar(self.request, links)
         # TODO: Show latest events from this user
         return ret
@@ -172,3 +220,24 @@ class MassAuthorshipConfirmationView(FormView):
             tuple(), dict())]
         ret['navbar'] = NavigationBar(self.request, links)
         return ret
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
+class FeedSubscriptionFormView(FormView):
+    form_class = FeedSubscriptionForm
+
+    def get_form_kwargs(self, *args, **kwargs):
+        ret = super(FeedSubscriptionFormView, self).get_form_kwargs(*args,
+            **kwargs)
+        ret['follower'] = self.request.user.person
+        qs = models.Person.objects.filter_username(self.kwargs['username'])
+        self.person = get_object_or_404(qs.filter_active())
+        ret['poster'] = self.person
+        return ret
+
+    def get(self, *args, **kwargs):
+        return redirect('core:person_detail', username=self.kwargs['username'])
+
+    def form_valid(self, form):
+        form.save()
+        return redirect(self.person.get_absolute_url())

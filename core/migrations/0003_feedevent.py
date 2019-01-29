@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('event_date', models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='event date')),
-                ('event_type', models.IntegerField(choices=[(0, '{person} posted a new paper: {paper}'), (1, '{person} confirmed authorship of {paper}'), (2, '{person} posted review of {paper}'), (3, '{person} recommends paper: {paper}')], db_index=True, editable=False, verbose_name='event type')),
+                ('event_type', models.IntegerField(choices=[(0, '{person} has posted a new paper: {paper}'), (1, '{person} has confirmed authorship of {paper}'), (2, '{person} has posted a review of {paper}'), (3, '{person} recommends paper: {paper}')], db_index=True, editable=False, verbose_name='event type')),
                 ('paper', models.ForeignKey(editable=False, on_delete=django.db.models.deletion.CASCADE, to='core.Paper', verbose_name='paper')),
                 ('person', models.ForeignKey(editable=False, on_delete=django.db.models.deletion.CASCADE, to='core.Person', verbose_name='person')),
             ],

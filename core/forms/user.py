@@ -23,6 +23,7 @@ from .base import Form, ModelForm, BaseAliasForm
 from .widgets import SubmitButton
 from ..models import const
 from ..utils.transaction import lock_record
+from ..utils.utils import update_diff
 from ..utils.validators import validate_person_alias
 from .. import models
 
@@ -164,6 +165,7 @@ class BaseAuthorshipConfirmationForm(Form):
 
     save.alters_data = True
 
+# This form must be processed and saved under transaction
 class MassAuthorshipConfirmationForm(BaseAuthorshipConfirmationForm):
     def __init__(self, *args, **kwargs):
         paper_list = kwargs.pop('paper_list', None)
@@ -193,6 +195,7 @@ class MassAuthorshipConfirmationForm(BaseAuthorshipConfirmationForm):
             del papermap[item.pk]
         self.selected_papers = list(papermap.values())
 
+# This form must be processed and saved under transaction
 class AuthorshipConfirmationForm(BaseAuthorshipConfirmationForm):
     def __init__(self, *args, **kwargs):
         paper = kwargs.pop('instance', None)
@@ -216,5 +219,58 @@ class AuthorshipConfirmationForm(BaseAuthorshipConfirmationForm):
     def save(self):
         super(AuthorshipConfirmationForm, self).save()
         return self.paper_list[0]
+
+    save.alters_data = True
+
+# This form must be processed and saved under transaction
+class FeedSubscriptionForm(Form):
+    def __init__(self, *args, **kwargs):
+        poster = kwargs.pop('poster', None)
+        follower = kwargs.pop('follower', None)
+        if poster is None:
+            raise ImproperlyConfigured('"poster" keyword argument is required')
+        if follower is None:
+            msg = '"follower" keyword argument is required'
+            raise ImproperlyConfigured(msg)
+        super(FeedSubscriptionForm, self).__init__(*args, **kwargs)
+        self.poster = poster
+        self.follower = follower
+        subscription_set = self._load_subscriptions()
+        fname_tpl = 'post_type_%d'
+        for subtype, title in const.feed_subscription_types.items():
+            fname = fname_tpl % subtype
+            field = forms.BooleanField(label=title, label_suffix='',
+                required=False, initial=(subtype in subscription_set))
+            self.fields[fname] = field
+
+    def _load_subscriptions(self):
+        subtab = models.FeedSubscription.query_model
+        query = ((subtab.poster == self.poster) &
+            (subtab.follower == self.follower))
+        qs = models.FeedSubscription.objects.filter(query)
+        return set((x.subscription_type for x in qs))
+
+    def clean(self):
+        lock_record(self.follower)
+
+    def save(self):
+        fname_tpl = 'post_type_%d'
+        new_set = set()
+        for subtype in const.feed_subscription_types:
+            if self.cleaned_data.get(fname_tpl % subtype):
+                new_set.add(subtype)
+        del_set, create_set = update_diff(self._load_subscriptions(), new_set)
+        if del_set:
+            subtab = models.FeedSubscription.query_model
+            query = ((subtab.poster == self.poster) &
+                (subtab.follower == self.follower) &
+                subtab.subscription_type.belongs(list(del_set)))
+            models.FeedSubscription.objects.filter(query).delete()
+        if create_set:
+            create_list = []
+            for subtype in create_set:
+                create_list.append(models.FeedSubscription(poster=self.poster,
+                    follower=self.follower, subscription_type=subtype))
+            models.FeedSubscription.objects.bulk_create(create_list)
 
     save.alters_data = True

@@ -61,6 +61,13 @@ person_patterns = [
     url(r'^(?P<username>[^/]+)/recommended_papers/?\Z',
         paper.PersonRecommendedPaperListView.as_view(),
         name='person_recommended_paper_list'),
+    url(r'^(?P<username>[^/]+)/followers/?\Z',
+        user.PersonFollowerListView.as_view(), name='person_follower_list'),
+    url(r'^(?P<username>[^/]+)/following/?\Z',
+        user.PersonSubscriptionListView.as_view(),
+        name='person_subscription_list'),
+    url(r'^(?P<username>[^/]+)/subscribe/?\Z',
+        user.FeedSubscriptionFormView.as_view(), name='person_feed_subscribe'),
     url(r'^(?P<username>[^/]+)/?\Z', user.PersonDetailView.as_view(),
         name='person_detail'),
 ]

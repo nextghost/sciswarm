@@ -15,8 +15,63 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
+from .base import BaseListView
+from ..models import const
+from ..utils import sql, utils
+from .. import models
 
 def homepage(request):
+    if request.user.is_authenticated:
+        return UserTimelineView.as_view()(request)
     context = dict(admin_email=settings.SYSTEM_EMAIL_ADMIN)
     return render(request, 'core/main/homepage.html', context)
+
+@method_decorator(login_required, name='dispatch')
+class UserTimelineView(BaseListView):
+    template_name = 'core/event/feed_detail.html'
+    paginate_by = 100
+
+    def get_queryset(self):
+        evtab = sql.Table(models.FeedEvent)
+        stab = sql.Table(models.FeedSubscription)
+        evtypes = const.user_feed_events
+        subtypes = const.feed_subscription_types
+        person_id = self.request.user.person_id
+        type_map = {
+            subtypes.PAPERS: [evtypes.PAPER_POSTED,
+                evtypes.AUTHORSHIP_CONFIRMED],
+            subtypes.REVIEWS: evtypes.PAPER_REVIEW,
+            subtypes.RECOMMENDATIONS: evtypes.PAPER_RECOMMENDATION,
+        }
+
+        # Subscription subquery
+        cond_list = []
+        for subscription, events in type_map.items():
+            tmp = (stab.subscription_type == subscription)
+            if isinstance(events, (list, tuple)):
+                tmp &= evtab.event_type.belongs(events)
+            else:
+                tmp &= (evtab.event_type == events)
+            cond_list.append(tmp)
+        query = (evtab.person_id == stab.poster_id) & utils.fold_or(cond_list)
+        join = evtab.left_join(stab, query)
+        where = ((evtab.person_id == person_id) |
+            (stab.follower_id == person_id))
+        event_subq = join.select(evtab.pk, where=where)
+
+        # Main queryset
+        feedtab = models.FeedEvent.query_model
+        poster_subq = models.Person.objects.filter_active().values_list('pk')
+        query = (feedtab.pk.belongs(event_subq) &
+            feedtab.person.pk.belongs(poster_subq))
+        return models.FeedEvent.objects.filter(query).select_related('person',
+            'paper')
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(UserTimelineView, self).get_context_data(*args, **kwargs)
+        ret['page_title'] = _('Timeline')
+        return ret

@@ -76,3 +76,9 @@ user_feed_events = ConstEnum(
     ('PAPER_REVIEW', 2, _('{person} has posted a review of {paper}')),
     ('PAPER_RECOMMENDATION', 3, _('{person} recommends paper: {paper}')),
 )
+
+feed_subscription_types = ConstEnum(
+    ('PAPERS', 0, _('New papers')),
+    ('REVIEWS', 1, _('Paper reviews')),
+    ('RECOMMENDATIONS', 2, _('Recommendations')),
+)

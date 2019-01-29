@@ -12,6 +12,19 @@
 {{ object.bio|linebreaks }}
 </div>
 
+{% if subscribe_form is not None %}
+<form action="{% url 'core:person_feed_subscribe' username=object.username %}" method="post">
+{% csrf_token %}
+<div class="box">
+<h2>{% trans 'Subscribe' %}</h2>
+{% for field in subscribe_form.visible_fields %}
+<div>{{ field }} {{ field.label_tag }}</div>
+{% endfor %}
+<div><input type="submit" value="{% trans 'Save' %}"/></div>
+</div>
+</form>
+{% endif %}
+
 <h2>{% trans 'Identifiers' %}{% if edit_access %} <a href="{% url 'core:add_person_identifier' %}"><img src="{% static 'img/create.png' %}" alt="{% trans '(add)' %}"/></a>{% endif %}</h2>
 <div class="box">
 <ul>

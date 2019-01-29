@@ -44,3 +44,16 @@ class FeedEvent(models.Model):
         msg = const.user_feed_events.get(self.event_type, self.default_message)
         paper = html.render_link(self.paper.get_absolute_url(),str(self.paper))
         return format_html(msg, person=self.person.__html__(), paper=paper)
+
+class FeedSubscription(models.Model):
+    class Meta:
+        ordering = ('-pk',)
+        unique_together = ('follower', 'subscription_type', 'poster')
+    poster = models.ForeignKey(paper.Person, verbose_name=_('person'),
+        on_delete=models.CASCADE, editable=False, related_name='follower_set',
+        related_query_name='follower')
+    follower = models.ForeignKey(paper.Person, verbose_name=_('person'),
+        on_delete=models.CASCADE, editable=False)
+    subscription_type = models.IntegerField(_('event type'),
+        choices=const.feed_subscription_types.items(), db_index=True,
+        editable=False)

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-25 20:34+0100\n"
+"POT-Creation-Date: 2019-01-29 19:41+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -165,23 +165,23 @@ msgstr ""
 msgid "Recommend"
 msgstr ""
 
-#: forms/user.py:90
+#: forms/user.py:91
 msgid "This user has rejected authorship."
 msgstr ""
 
-#: forms/user.py:115
+#: forms/user.py:116
 msgid "Confirm"
 msgstr ""
 
-#: forms/user.py:116
+#: forms/user.py:117
 msgid "Reject"
 msgstr ""
 
-#: forms/user.py:126
+#: forms/user.py:127
 msgid "Please choose whether to accept or reject authorship."
 msgstr ""
 
-#: forms/user.py:213
+#: forms/user.py:216
 msgid ""
 "You cannot accept authorship of a paper which you have reviewed. You must "
 "delete the review first."
@@ -199,7 +199,7 @@ msgstr ""
 msgid "account deletion date"
 msgstr ""
 
-#: models/auth.py:44 models/event.py:30
+#: models/auth.py:44 models/event.py:30 models/event.py:52 models/event.py:55
 msgid "person"
 msgstr ""
 
@@ -347,6 +347,18 @@ msgstr ""
 msgid "{person} recommends paper: {paper}"
 msgstr ""
 
+#: models/const.py:81
+msgid "New papers"
+msgstr ""
+
+#: models/const.py:82
+msgid "Paper reviews"
+msgstr ""
+
+#: models/const.py:83
+msgid "Recommendations"
+msgstr ""
+
 #: models/event.py:28
 #, python-brace-format
 msgid "{person} did something with paper {paper}"
@@ -356,7 +368,7 @@ msgstr ""
 msgid "event date"
 msgstr ""
 
-#: models/event.py:36
+#: models/event.py:36 models/event.py:57
 msgid "event type"
 msgstr ""
 
@@ -532,6 +544,7 @@ msgstr ""
 #: templates/core/comment/paperreview_form.html:16
 #: templates/core/comment/paperreviewresponse_form.html:22
 #: templates/core/paper/create_paper.html:38
+#: templates/core/person/person_detail.html:23
 #: templates/registration/password_change_form.html:16
 msgid "Save"
 msgstr ""
@@ -895,7 +908,7 @@ msgstr ""
 #: templates/core/paper/paper_detail.html:37
 #: templates/core/paper/paper_detail.html:46
 #: templates/core/paper/paper_detail.html:57
-#: templates/core/person/person_detail.html:18
+#: templates/core/person/person_detail.html:31
 msgid "(delete)"
 msgstr ""
 
@@ -903,7 +916,7 @@ msgstr ""
 #: templates/core/paper/paper_detail.html:34
 #: templates/core/paper/paper_detail.html:43
 #: templates/core/paper/paper_detail.html:54
-#: templates/core/person/person_detail.html:15
+#: templates/core/person/person_detail.html:28
 msgid "(add)"
 msgstr ""
 
@@ -948,7 +961,7 @@ msgid "Changed by:"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:34
-#: templates/core/person/person_detail.html:15
+#: templates/core/person/person_detail.html:28
 msgid "Identifiers"
 msgstr ""
 
@@ -979,6 +992,14 @@ msgstr ""
 
 #: templates/core/person/mass_authorship_confirmation.html:25
 msgid "No papers awaiting authorship confirmation have been found."
+msgstr ""
+
+#: templates/core/person/person_detail.html:19
+msgid "Subscribe"
+msgstr ""
+
+#: templates/core/person/person_list.html:14
+msgid "No people found."
 msgstr ""
 
 #: templates/registration/login.html:14
@@ -1128,6 +1149,10 @@ msgstr ""
 msgid "Latest Actions of %s"
 msgstr ""
 
+#: views/main.py:76
+msgid "Timeline"
+msgstr ""
+
 #: views/paper.py:78
 #, python-format
 msgid "Papers Citing: %s"
@@ -1194,7 +1219,7 @@ msgstr ""
 msgid "Delete Paper Identifier"
 msgstr ""
 
-#: views/paper.py:396 views/user.py:103
+#: views/paper.py:396 views/user.py:151
 msgid "This identifier is permanent."
 msgstr ""
 
@@ -1207,30 +1232,48 @@ msgid "Add Supplemental Link"
 msgstr ""
 
 #: views/user.py:52
-msgid "Feed"
-msgstr ""
-
-#: views/user.py:54
-msgid "Posted papers"
-msgstr ""
-
-#: views/user.py:56
-msgid "Authored papers"
-msgstr ""
-
-#: views/user.py:58
-msgid "Recommended papers"
+#, python-format
+msgid "Followers of %s"
 msgstr ""
 
 #: views/user.py:71
-msgid "Add Personal Identifier"
+#, python-format
+msgid "People Followed by %s"
+msgstr ""
+
+#: views/user.py:92
+msgid "Feed"
+msgstr ""
+
+#: views/user.py:94
+msgid "Following"
 msgstr ""
 
 #: views/user.py:96
+msgid "Followers"
+msgstr ""
+
+#: views/user.py:98
+msgid "Posted papers"
+msgstr ""
+
+#: views/user.py:100
+msgid "Authored papers"
+msgstr ""
+
+#: views/user.py:102
+msgid "Recommended papers"
+msgstr ""
+
+#: views/user.py:119
+msgid "Add Personal Identifier"
+msgstr ""
+
+#: views/user.py:144
 msgid "Delete Personal Identifier"
 msgstr ""
 
-#: views/user.py:171
+#: views/user.py:219
 msgid "Rejected papers"
 msgstr ""
 

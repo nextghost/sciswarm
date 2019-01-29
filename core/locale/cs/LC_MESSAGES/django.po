@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-25 20:34+0100\n"
+"POT-Creation-Date: 2019-01-29 19:41+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: Czech <doucha@swarmtech.cz>\n"
@@ -178,23 +178,23 @@ msgstr "Zrušit doporučení"
 msgid "Recommend"
 msgstr "Doporučit"
 
-#: forms/user.py:90
+#: forms/user.py:91
 msgid "This user has rejected authorship."
 msgstr "Tento uživatel odmítl autorství."
 
-#: forms/user.py:115
+#: forms/user.py:116
 msgid "Confirm"
 msgstr "Potvrdit"
 
-#: forms/user.py:116
+#: forms/user.py:117
 msgid "Reject"
 msgstr "Odmítnout"
 
-#: forms/user.py:126
+#: forms/user.py:127
 msgid "Please choose whether to accept or reject authorship."
 msgstr "Prosím vyberte, jestli chcete autorství potvrdit, nebo odmítnout."
 
-#: forms/user.py:213
+#: forms/user.py:216
 msgid ""
 "You cannot accept authorship of a paper which you have reviewed. You must "
 "delete the review first."
@@ -214,7 +214,7 @@ msgstr "ověřovací klíč e-mailové adresy"
 msgid "account deletion date"
 msgstr "datum pro smazání účtu"
 
-#: models/auth.py:44 models/event.py:30
+#: models/auth.py:44 models/event.py:30 models/event.py:52 models/event.py:55
 msgid "person"
 msgstr "osoba"
 
@@ -366,6 +366,18 @@ msgstr "{person} vložil(a) recenzi článku {paper}"
 msgid "{person} recommends paper: {paper}"
 msgstr "{person} doporučuje článek: {paper}"
 
+#: models/const.py:81
+msgid "New papers"
+msgstr "Nové články"
+
+#: models/const.py:82
+msgid "Paper reviews"
+msgstr "Recenze článků"
+
+#: models/const.py:83
+msgid "Recommendations"
+msgstr "Doporučení"
+
 #: models/event.py:28
 #, python-brace-format
 msgid "{person} did something with paper {paper}"
@@ -375,7 +387,7 @@ msgstr "{person} něco udělal(a) s článkem {paper}"
 msgid "event date"
 msgstr "datum události"
 
-#: models/event.py:36
+#: models/event.py:36 models/event.py:57
 msgid "event type"
 msgstr "druh události"
 
@@ -562,6 +574,7 @@ msgstr "URL"
 #: templates/core/comment/paperreview_form.html:16
 #: templates/core/comment/paperreviewresponse_form.html:22
 #: templates/core/paper/create_paper.html:38
+#: templates/core/person/person_detail.html:23
 #: templates/registration/password_change_form.html:16
 msgid "Save"
 msgstr "Uložit"
@@ -969,7 +982,7 @@ msgstr "Autoři:"
 #: templates/core/paper/paper_detail.html:37
 #: templates/core/paper/paper_detail.html:46
 #: templates/core/paper/paper_detail.html:57
-#: templates/core/person/person_detail.html:18
+#: templates/core/person/person_detail.html:31
 msgid "(delete)"
 msgstr "(smazat)"
 
@@ -977,7 +990,7 @@ msgstr "(smazat)"
 #: templates/core/paper/paper_detail.html:34
 #: templates/core/paper/paper_detail.html:43
 #: templates/core/paper/paper_detail.html:54
-#: templates/core/person/person_detail.html:15
+#: templates/core/person/person_detail.html:28
 msgid "(add)"
 msgstr "(přidat)"
 
@@ -1022,7 +1035,7 @@ msgid "Changed by:"
 msgstr "Změnil(a):"
 
 #: templates/core/paper/paper_detail.html:34
-#: templates/core/person/person_detail.html:15
+#: templates/core/person/person_detail.html:28
 msgid "Identifiers"
 msgstr "Identifikátory"
 
@@ -1054,6 +1067,14 @@ msgstr "Správa autorství"
 #: templates/core/person/mass_authorship_confirmation.html:25
 msgid "No papers awaiting authorship confirmation have been found."
 msgstr "Nebyly nalezeny žádné články čekající na potvrzení autorství."
+
+#: templates/core/person/person_detail.html:19
+msgid "Subscribe"
+msgstr "Sledovat"
+
+#: templates/core/person/person_list.html:14
+msgid "No people found."
+msgstr "Nenalezeni žádní uživatelé."
 
 #: templates/registration/login.html:14
 msgid "Invalid username or password"
@@ -1206,6 +1227,10 @@ msgstr "Nemůžete smazat cizí odpověď."
 msgid "Latest Actions of %s"
 msgstr "Nedávná aktivita uživatele %s"
 
+#: views/main.py:76
+msgid "Timeline"
+msgstr "Události z Vaší sítě"
+
 #: views/paper.py:78
 #, python-format
 msgid "Papers Citing: %s"
@@ -1272,7 +1297,7 @@ msgstr "Přidat identifikátor článku"
 msgid "Delete Paper Identifier"
 msgstr "Smazat identifikátor článku"
 
-#: views/paper.py:396 views/user.py:103
+#: views/paper.py:396 views/user.py:151
 msgid "This identifier is permanent."
 msgstr "Tento identifikátor je trvalý."
 
@@ -1285,30 +1310,48 @@ msgid "Add Supplemental Link"
 msgstr "Přidat doplňující odkaz"
 
 #: views/user.py:52
+#, python-format
+msgid "Followers of %s"
+msgstr "Sledovatelé uživatele %s"
+
+#: views/user.py:71
+#, python-format
+msgid "People Followed by %s"
+msgstr "Uživatelé, které sleduje %s"
+
+#: views/user.py:92
 msgid "Feed"
 msgstr "Události"
 
-#: views/user.py:54
+#: views/user.py:94
+msgid "Following"
+msgstr "Sledovaní"
+
+#: views/user.py:96
+msgid "Followers"
+msgstr "Sledovatelé"
+
+#: views/user.py:98
 msgid "Posted papers"
 msgstr "Články vložené uživatelem"
 
-#: views/user.py:56
+#: views/user.py:100
 msgid "Authored papers"
 msgstr "Články napsané uživatelem"
 
-#: views/user.py:58
+#: views/user.py:102
 msgid "Recommended papers"
 msgstr "Články doporučené uživatelem"
 
-#: views/user.py:71
+#: views/user.py:119
 msgid "Add Personal Identifier"
 msgstr "Přidat osobní identifikátor"
 
-#: views/user.py:96
+#: views/user.py:144
 msgid "Delete Personal Identifier"
 msgstr "Smazat osobní identifikátor"
 
-#: views/user.py:171
+#: views/user.py:219
 msgid "Rejected papers"
 msgstr "Vámi odmítnuté články"
 
