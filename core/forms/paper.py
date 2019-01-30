@@ -224,6 +224,8 @@ class PaperForm(ModelForm):
                 author_alias=author, confirmed=True)
         return ret
 
+    save.alters_data = True
+
 class PaperAliasForm(BaseAliasForm):
     class Meta:
         model = models.PaperAlias
@@ -320,3 +322,5 @@ class PaperRecommendationForm(Form):
                 paper=self.paper, event_type=event_type)
         elif '_unrecommend' in self.data and self.recommended:
             self._recommendation_queryset().delete()
+
+    save.alters_data = True
