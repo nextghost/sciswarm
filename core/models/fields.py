@@ -16,6 +16,7 @@
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from ..utils import validators
 
 class OpenChoiceField(models.CharField):
     # Don't validate value against self.choices
@@ -27,3 +28,5 @@ class OpenChoiceField(models.CharField):
         if not self.blank and value in self.empty_values:
             raise ValidationError(self.error_messages['blank'], code='blank')
 
+class URLField(models.URLField):
+    default_validators = [validators.SafeURLValidator()]

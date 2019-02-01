@@ -134,7 +134,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=128, verbose_name='title')),
-                ('url', models.URLField(max_length=512, verbose_name='URL')),
+                ('url', core.models.fields.URLField(max_length=512, verbose_name='URL')),
                 ('paper', models.ForeignKey(editable=False, on_delete=django.db.models.deletion.CASCADE, to='core.Paper', verbose_name='paper')),
             ],
             options={

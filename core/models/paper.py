@@ -461,7 +461,7 @@ class PaperSupplementalLink(models.Model):
     paper = models.ForeignKey(Paper, verbose_name=_('paper'),
         on_delete=models.CASCADE, editable=False)
     name = models.CharField(_('title'), max_length=128)
-    url = models.URLField(_('URL'), max_length=512)
+    url = fields.URLField(_('URL'), max_length=512)
 
     def __str__(self):
         return self.name

@@ -17,6 +17,7 @@
 from django.core import validators
 from django.forms import ValidationError
 from django.utils.translation import ugettext as _
+from urllib.parse import urlparse
 from ..models import const
 from .. import models
 import re
@@ -91,6 +92,14 @@ def arxiv_validator(value):
         raise ValidationError(_('Invalid identifier format.'), 'invalid')
     return result.group(1)
 
+class SafeURLValidator(validators.URLValidator):
+    def __call__(self, value):
+        super(SafeURLValidator, self).__call__(value)
+        tokens = urlparse(value)
+        if re.search(r'(?:^|\.)sci-?hub\.', tokens.hostname, re.IGNORECASE):
+            msg = _('We are sorry but Sci-Hub links are not allowed on this site. With all due respect to Alexandra Elbakyan for putting herself at risk in the name of science, this site cannot afford to play hide and seek with big publishers. That would hinder our goal of putting them out of business once and for all. Please link to a copy of the webpage or file hosted on your personal website instead (provided that you can legally host it yourself).')
+            raise ValidationError(msg, 'asscover')
+
 _person_alias_validator_map = {
     const.person_alias_schemes.EMAIL: validators.validate_email,
     const.person_alias_schemes.ORCID: isni_validator,
@@ -99,12 +108,12 @@ _person_alias_validator_map = {
     const.person_alias_schemes.TWITTER:
         validators.RegexValidator(r'^@[a-zA-Z0-9_]{1,15}$'),
     const.person_alias_schemes.SCISWARM: sciswarm_person_id_validator,
-    const.person_alias_schemes.URL: validators.URLValidator(),
+    const.person_alias_schemes.URL: SafeURLValidator(),
 }
 
 _paper_alias_validator_map = {
     const.person_alias_schemes.SCISWARM: sciswarm_paper_id_validator,
-    const.person_alias_schemes.URL: validators.URLValidator(),
+    const.person_alias_schemes.URL: SafeURLValidator(),
     const.paper_alias_schemes.DOI:
         validators.RegexValidator(r'^10\.[0-9]{4,}(?:\.[0-9]+)*/.*'),
     const.paper_alias_schemes.ISBN: isbn_validator,

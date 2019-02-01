@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-01 15:37+0100\n"
+"POT-Creation-Date: 2019-02-01 20:39+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -1144,35 +1144,45 @@ msgstr ""
 msgid "(at)"
 msgstr ""
 
-#: utils/validators.py:26
+#: utils/validators.py:27
 msgid "Invalid Sciswarm user identifier."
 msgstr ""
 
-#: utils/validators.py:30
+#: utils/validators.py:31
 msgid "This user does not exist."
 msgstr ""
 
-#: utils/validators.py:34
+#: utils/validators.py:35
 msgid "Invalid Sciswarm paper identifier."
 msgstr ""
 
-#: utils/validators.py:42
+#: utils/validators.py:43
 msgid "This paper does not exist."
 msgstr ""
 
-#: utils/validators.py:50
+#: utils/validators.py:51
 msgid "Invalid Sciswarm identifier."
 msgstr ""
 
-#: utils/validators.py:55 utils/validators.py:68 utils/validators.py:91
+#: utils/validators.py:56 utils/validators.py:69 utils/validators.py:92
 msgid "Invalid identifier format."
 msgstr ""
 
-#: utils/validators.py:65 utils/validators.py:85
+#: utils/validators.py:66 utils/validators.py:86
 msgid "Identifier checksum is incorrect."
 msgstr ""
 
-#: utils/validators.py:137
+#: utils/validators.py:101
+msgid ""
+"We are sorry but Sci-Hub links are not allowed on this site. With all due "
+"respect to Alexandra Elbakyan for putting herself at risk in the name of "
+"science, this site cannot afford to play hide and seek with big publishers. "
+"That would hinder our goal of putting them out of business once and for all. "
+"Please link to a copy of the webpage or file hosted on your personal website "
+"instead (provided that you can legally host it yourself)."
+msgstr ""
+
+#: utils/validators.py:147
 msgid ""
 "Generic identifier must have a scheme prefix separated by color (e.g. scheme:"
 "identifier)."
@@ -1302,7 +1312,7 @@ msgstr ""
 
 #: views/paper.py:261 views/paper.py:280 views/paper.py:310 views/paper.py:346
 #: views/paper.py:366 views/paper.py:398 views/paper.py:426 views/paper.py:458
-#: views/paper.py:506 views/paper.py:533 views/paper.py:599
+#: views/paper.py:506 views/paper.py:533 views/paper.py:579 views/paper.py:601
 msgid "You are not one of the authors."
 msgstr ""
 
