@@ -21,6 +21,10 @@
 <tr><th>{% trans 'Authors:' %}</th><td>{% for item in author_list %}{{ item.target_link }}{% if edit_access %} <a href="{% url 'core:delete_paper_author' pk=item.pk %}"><img src="{% static 'img/delete.png' %}" alt="{% trans '(delete)'%}"/></a>{% endif %}{% if author_names or not forloop.last %}; {% endif %}{% endfor %}{% for item in author_names %}{{ item }}{% if edit_access %} <a href="{% url 'core:delete_paper_author_name' pk=item.pk %}"><img src="{% static 'img/delete.png' %}" alt="{% trans '(delete)'%}"/></a>{% endif %}{% if not forloop.last %}; {% endif %}{% endfor %}{% if edit_access %} <a href="{% url 'core:add_paper_author' pk=object.pk %}"><img src="{% static 'img/create.png' %}" alt="{% trans '(add)' %}"/></a>{% endif %}</td></tr>
 <tr><td colspan="2">{{ object.abstract|linebreaks }}</td></tr>
 {% if edit_access %}<tr><td colspan="2" class="error">{% trans 'THIS PAPER HAS INCOMPLETE METADATA!' %}</td></tr>{% endif %}
+<tr><th>{% trans 'Fields:' %}</th><td>{% for item in field_list %}
+<div>{{ item.full_name }}{% if edit_access %} <a href="{% url 'core:delete_paper_field' paper=object.pk field=item.pk %}"><img src="{% static 'img/delete.png' %}" alt="{% trans '(delete)'%}"/></a>{% endif %}</div>
+{% endfor %}
+{% if edit_access %}<div><a href="{% url 'core:add_paper_field' pk=object.pk %}"><img src="{% static 'img/create.png' %}" alt="{% trans '(add)' %}"/></a></div>{% endif %}</td></tr>
 <tr><th>{% trans 'Contents:' %}</th><td>{{ object.contents_info }}</td></tr>
 <tr><th>{% trans 'Keywords:' %}</th><td>{% for item in keyword_list %}{{ item|html }}{% if not forloop.last %}, {% endif %}{% endfor %}</td></tr>
 <tr><th>{% trans 'Officially published:' %}</th><td>{{ object.year_published|default_if_none:_('No')|unlocalize }}</td></tr>

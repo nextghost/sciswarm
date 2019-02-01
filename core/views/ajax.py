@@ -14,8 +14,19 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from .auth import User, BruteBlock, BruteLog
-from .paper import (Person, PersonAlias, ScienceSubfield, Paper, PaperAlias,
-    PaperKeyword, PaperAuthorReference, PaperAuthorName, PaperSupplementalLink)
-from .comment import PaperReview, PaperReviewResponse
-from .event import FeedEvent, FeedSubscription
+from collections import OrderedDict
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
+from .base import BaseListView
+from .. import models
+
+def science_subfields(request):
+    field_id = request.GET.get('value')
+    qs = models.ScienceSubfield.objects.all()
+    if field_id is not None:
+        query = (models.ScienceSubfield.query_model.field == field_id)
+        qs = qs.filter(query)
+    ret = OrderedDict(((x.pk, str(x)) for x in qs))
+    return JsonResponse(ret)

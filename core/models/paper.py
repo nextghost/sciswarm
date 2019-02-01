@@ -206,6 +206,22 @@ class PersonAlias(models.Model):
         query = ((table.pk == self.pk) & (table.target.pk == self.target_id))
         self.__class__.objects.filter(query).update(target=None)
 
+class ScienceSubfield(models.Model):
+    class Meta:
+        ordering = ('field', 'name')
+    field = models.IntegerField(_('field'), db_index=True,
+        choices=const.science_fields.items())
+    name = models.CharField(_('name'), max_length=256, unique=True,
+        help_text=_('Please enter only the English name of the subfield.'))
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def full_name(self):
+        args = dict(field=self.get_field_display(), subfield=self.name)
+        return _('%(field)s / %(subfield)s') % args
+
 class PaperManager(models.Manager):
     def filter_public(self, value=True):
         return self.filter(public=value)
@@ -263,6 +279,7 @@ class Paper(models.Model):
     authors = models.ManyToManyField(PersonAlias,
         through='PaperAuthorReference')
     bibliography = models.ManyToManyField('PaperAlias')
+    fields = models.ManyToManyField(ScienceSubfield)
 
     def __str__(self):
         return self.name

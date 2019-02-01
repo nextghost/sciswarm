@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-29 19:41+0100\n"
+"POT-Creation-Date: 2019-02-01 15:37+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -67,7 +67,7 @@ msgid "Wrong password."
 msgstr ""
 
 #: forms/auth.py:143 forms/comment.py:50 forms/comment.py:59
-#: forms/comment.py:101 forms/paper.py:183
+#: forms/comment.py:101 forms/paper.py:184
 msgid "Database error, please try again later."
 msgstr ""
 
@@ -108,61 +108,78 @@ msgstr ""
 msgid "You cannot review a paper more than once."
 msgstr ""
 
-#: forms/paper.py:33
+#: forms/paper.py:34
 msgid "Title"
 msgstr ""
 
-#: forms/paper.py:34
+#: forms/paper.py:35
 msgid "Year published"
 msgstr ""
 
-#: forms/paper.py:36
+#: forms/paper.py:37
 msgid "Author"
 msgstr ""
 
-#: forms/paper.py:37
+#: forms/paper.py:38
 msgid "Author name or identifier."
 msgstr ""
 
-#: forms/paper.py:38 templates/core/paper/authorship_confirmation.html:17
+#: forms/paper.py:39 templates/core/paper/authorship_confirmation.html:17
 msgid "Identifier"
 msgstr ""
 
-#: forms/paper.py:39 forms/paper.py:153
+#: forms/paper.py:40 forms/paper.py:154
 msgid "Keywords"
 msgstr ""
 
-#: forms/paper.py:40
+#: forms/paper.py:41
 msgid "Comma-separated list of keywords."
 msgstr ""
 
-#: forms/paper.py:154
+#: forms/paper.py:155
 msgid "List of keywords separated by commas or newlines."
 msgstr ""
 
-#: forms/paper.py:161
+#: forms/paper.py:162
 msgid "I am an author"
 msgstr ""
 
-#: forms/paper.py:174
+#: forms/paper.py:175
 #, python-format
 msgid "Some keywords are longer than %(limit_value)s characters."
 msgstr ""
 
-#: forms/paper.py:275
+#: forms/paper.py:278
 msgid "This paper already has a link with this name."
 msgstr ""
 
-#: forms/paper.py:278
+#: forms/paper.py:281
 msgid "This paper already has this link."
 msgstr ""
 
-#: forms/paper.py:303
+#: forms/paper.py:306
 msgid "Cancel recommendation"
 msgstr ""
 
-#: forms/paper.py:305
+#: forms/paper.py:308
 msgid "Recommend"
+msgstr ""
+
+#: forms/paper.py:333
+msgid "Subfield"
+msgstr ""
+
+#: forms/paper.py:335
+msgid "Other:"
+msgstr ""
+
+#: forms/paper.py:376
+#, python-format
+msgid "This subfield already exists under %s."
+msgstr ""
+
+#: forms/paper.py:382
+msgid "Select a subfield from the list or enter new subfield name."
 msgstr ""
 
 #: forms/user.py:91
@@ -208,7 +225,7 @@ msgstr ""
 msgid "{first_name} {last_name}"
 msgstr ""
 
-#: models/comment.py:32 models/paper.py:252
+#: models/comment.py:32 models/paper.py:268
 msgid "date posted"
 msgstr ""
 
@@ -216,7 +233,7 @@ msgstr ""
 msgid "date changed"
 msgstr ""
 
-#: models/comment.py:36 models/paper.py:254
+#: models/comment.py:36 models/paper.py:270
 msgid "posted by"
 msgstr ""
 
@@ -224,9 +241,9 @@ msgstr ""
 msgid "message"
 msgstr ""
 
-#: models/comment.py:52 models/event.py:32 models/paper.py:320
-#: models/paper.py:357 models/paper.py:385 models/paper.py:432
-#: models/paper.py:444
+#: models/comment.py:52 models/event.py:32 models/paper.py:337
+#: models/paper.py:374 models/paper.py:402 models/paper.py:449
+#: models/paper.py:461
 msgid "paper"
 msgstr ""
 
@@ -359,6 +376,54 @@ msgstr ""
 msgid "Recommendations"
 msgstr ""
 
+#: models/const.py:87
+msgid "Astronomy"
+msgstr ""
+
+#: models/const.py:88
+msgid "Biology"
+msgstr ""
+
+#: models/const.py:89
+msgid "Chemistry"
+msgstr ""
+
+#: models/const.py:90
+msgid "Computer Science"
+msgstr ""
+
+#: models/const.py:91
+msgid "Earth Science"
+msgstr ""
+
+#: models/const.py:92
+msgid "Engineering"
+msgstr ""
+
+#: models/const.py:93
+msgid "History"
+msgstr ""
+
+#: models/const.py:94
+msgid "Mathematics"
+msgstr ""
+
+#: models/const.py:95
+msgid "Medicine"
+msgstr ""
+
+#: models/const.py:96
+msgid "Philosophy"
+msgstr ""
+
+#: models/const.py:97
+msgid "Physics"
+msgstr ""
+
+#: models/const.py:98
+msgid "Social Science"
+msgstr ""
+
 #: models/event.py:28
 #, python-brace-format
 msgid "{person} did something with paper {paper}"
@@ -401,11 +466,11 @@ msgstr ""
 msgid "{last_name}, {first_name}"
 msgstr ""
 
-#: models/paper.py:164 models/paper.py:317
+#: models/paper.py:164 models/paper.py:334
 msgid "scheme"
 msgstr ""
 
-#: models/paper.py:166 models/paper.py:319
+#: models/paper.py:166 models/paper.py:336
 msgid "identifier"
 msgstr ""
 
@@ -413,129 +478,146 @@ msgstr ""
 msgid "user"
 msgstr ""
 
-#: models/paper.py:227 models/paper.py:446
+#: models/paper.py:212
+msgid "field"
+msgstr ""
+
+#: models/paper.py:214
+msgid "name"
+msgstr ""
+
+#: models/paper.py:215
+msgid "Please enter only the English name of the subfield."
+msgstr ""
+
+#: models/paper.py:223
+#, python-format
+msgid "%(field)s / %(subfield)s"
+msgstr ""
+
+#: models/paper.py:243 models/paper.py:463
 msgid "title"
 msgstr ""
 
-#: models/paper.py:228
+#: models/paper.py:244
 msgid "abstract"
 msgstr ""
 
-#: models/paper.py:229
+#: models/paper.py:245
 msgid "theory development"
 msgstr ""
 
-#: models/paper.py:230
+#: models/paper.py:246
 msgid "Check this box if the paper expands prior theory."
 msgstr ""
 
-#: models/paper.py:232
+#: models/paper.py:248
 msgid "survey data"
 msgstr ""
 
-#: models/paper.py:233
+#: models/paper.py:249
 msgid "Check this box if the paper contains or analyzes survey data."
 msgstr ""
 
-#: models/paper.py:235
+#: models/paper.py:251
 msgid "observational data"
 msgstr ""
 
-#: models/paper.py:236
+#: models/paper.py:252
 msgid ""
 "Check this box if the paper contains or analyzes data from observation of "
 "natural phenomena."
 msgstr ""
 
-#: models/paper.py:238
+#: models/paper.py:254
 msgid "experimental data"
 msgstr ""
 
-#: models/paper.py:239
+#: models/paper.py:255
 msgid ""
 "Check this box if the paper contains or analyzes data from controlled "
 "experiments."
 msgstr ""
 
-#: models/paper.py:241
+#: models/paper.py:257
 msgid "metaanalysis"
 msgstr ""
 
-#: models/paper.py:242
+#: models/paper.py:258
 msgid ""
 "Check this box if the paper contains extensive metaanalysis or literature "
 "review (aside from the usual summary in introduction)."
 msgstr ""
 
-#: models/paper.py:244
+#: models/paper.py:260
 msgid "year published"
 msgstr ""
 
-#: models/paper.py:246
+#: models/paper.py:262
 msgid ""
 "Year when this paper was officially published, e.g. in a journal. Leave "
 "blank if publication date is pending."
 msgstr ""
 
-#: models/paper.py:247
+#: models/paper.py:263
 msgid "cite as"
 msgstr ""
 
-#: models/paper.py:248
+#: models/paper.py:264
 msgid "Preferred citation text."
 msgstr ""
 
-#: models/paper.py:249
+#: models/paper.py:265
 msgid "incomplete metadata"
 msgstr ""
 
-#: models/paper.py:250
+#: models/paper.py:266
 msgid ""
 "Check this box if some information about this paper is missing (e.g. omitted "
 "citations because the cited papers have no usable identifier)."
 msgstr ""
 
-#: models/paper.py:257
+#: models/paper.py:273
 msgid "last changed"
 msgstr ""
 
-#: models/paper.py:259
+#: models/paper.py:275
 msgid "changed by"
 msgstr ""
 
-#: models/paper.py:262
+#: models/paper.py:278
 msgid "public"
 msgstr ""
 
-#: models/paper.py:356
+#: models/paper.py:373
 msgid "keyword"
 msgstr ""
 
-#: models/paper.py:387 models/paper.py:434
+#: models/paper.py:404 models/paper.py:451
 msgid "author"
 msgstr ""
 
-#: models/paper.py:389
+#: models/paper.py:406
 msgid "confirmed"
 msgstr ""
 
-#: models/paper.py:423
+#: models/paper.py:440
 msgid "Confirmed"
 msgstr ""
 
-#: models/paper.py:425
+#: models/paper.py:442
 msgid "Pending"
 msgstr ""
 
-#: models/paper.py:426
+#: models/paper.py:443
 msgid "Rejected"
 msgstr ""
 
-#: models/paper.py:435
+#: models/paper.py:452
 msgid "Additional authors with no unique identifier"
 msgstr ""
 
-#: models/paper.py:447
+#: models/paper.py:464
 msgid "URL"
 msgstr ""
 
@@ -543,7 +625,8 @@ msgstr ""
 #: templates/core/account/profile_form.html:15
 #: templates/core/comment/paperreview_form.html:16
 #: templates/core/comment/paperreviewresponse_form.html:22
-#: templates/core/paper/create_paper.html:38
+#: templates/core/paper/create_paper.html:43
+#: templates/core/paper/science_subfield_form.html:18
 #: templates/core/person/person_detail.html:23
 #: templates/registration/password_change_form.html:16
 msgid "Save"
@@ -645,8 +728,8 @@ msgstr ""
 #: templates/core/comment/paperreview_detail.html:18
 #: templates/core/comment/paperreview_list.html:13
 #: templates/core/comment/paperreviewresponse_form.html:11
-#: templates/core/paper/paper_detail.html:29
-#: templates/core/paper/paper_detail.html:31
+#: templates/core/paper/paper_detail.html:33
+#: templates/core/paper/paper_detail.html:35
 msgid "Deleted user"
 msgstr ""
 
@@ -839,16 +922,16 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: templates/core/paper/create_paper.html:15
+#: templates/core/paper/create_paper.html:20
 msgid "Authors"
 msgstr ""
 
-#: templates/core/paper/create_paper.html:25
+#: templates/core/paper/create_paper.html:30
 msgid "Paper Identifiers"
 msgstr ""
 
-#: templates/core/paper/create_paper.html:32
-#: templates/core/paper/paper_detail.html:54
+#: templates/core/paper/create_paper.html:37
+#: templates/core/paper/paper_detail.html:58
 msgid "Bibliography"
 msgstr ""
 
@@ -900,22 +983,38 @@ msgstr ""
 msgid "Do you really want to delete this link?"
 msgstr ""
 
+#: templates/core/paper/delete_science_subfield.html:5
+#: templates/core/paper/delete_science_subfield.html:8
+#, python-format
+msgid "Remove Paper From: %(field)s"
+msgstr ""
+
+#: templates/core/paper/delete_science_subfield.html:9
+msgid "Do you really want to remove the paper from this scientific field?"
+msgstr ""
+
+#: templates/core/paper/delete_science_subfield.html:12
+msgid "Remove"
+msgstr ""
+
 #: templates/core/paper/paper_detail.html:21
 msgid "Authors:"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:21
-#: templates/core/paper/paper_detail.html:37
-#: templates/core/paper/paper_detail.html:46
-#: templates/core/paper/paper_detail.html:57
+#: templates/core/paper/paper_detail.html:25
+#: templates/core/paper/paper_detail.html:41
+#: templates/core/paper/paper_detail.html:50
+#: templates/core/paper/paper_detail.html:61
 #: templates/core/person/person_detail.html:31
 msgid "(delete)"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:21
-#: templates/core/paper/paper_detail.html:34
-#: templates/core/paper/paper_detail.html:43
-#: templates/core/paper/paper_detail.html:54
+#: templates/core/paper/paper_detail.html:27
+#: templates/core/paper/paper_detail.html:38
+#: templates/core/paper/paper_detail.html:47
+#: templates/core/paper/paper_detail.html:58
 #: templates/core/person/person_detail.html:28
 msgid "(add)"
 msgstr ""
@@ -925,55 +1024,59 @@ msgid "THIS PAPER HAS INCOMPLETE METADATA!"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:24
-msgid "Contents:"
-msgstr ""
-
-#: templates/core/paper/paper_detail.html:25
-msgid "Keywords:"
-msgstr ""
-
-#: templates/core/paper/paper_detail.html:26
-msgid "Officially published:"
-msgstr ""
-
-#: templates/core/paper/paper_detail.html:26
-msgid "No"
-msgstr ""
-
-#: templates/core/paper/paper_detail.html:27
-msgid "Cite as:"
+msgid "Fields:"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:28
-msgid "Posted:"
+msgid "Contents:"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:29
-msgid "Posted by:"
+msgid "Keywords:"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:30
-msgid "Last changed:"
+msgid "Officially published:"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:30
+msgid "No"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:31
-msgid "Changed by:"
+msgid "Cite as:"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:32
+msgid "Posted:"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:33
+msgid "Posted by:"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:34
+msgid "Last changed:"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:35
+msgid "Changed by:"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:38
 #: templates/core/person/person_detail.html:28
 msgid "Identifiers"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:43
+#: templates/core/paper/paper_detail.html:47
 msgid "Supplemental Links"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:50
+#: templates/core/paper/paper_detail.html:54
 msgid "No links have been entered."
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:61
+#: templates/core/paper/paper_detail.html:65
 msgid "No citations have been entered."
 msgstr ""
 
@@ -1181,54 +1284,58 @@ msgstr ""
 msgid "This paper is not available for legal reasons."
 msgstr ""
 
-#: views/paper.py:180
+#: views/paper.py:181
 msgid "Create Paper"
 msgstr ""
 
-#: views/paper.py:188
+#: views/paper.py:190
 msgid "Author:"
 msgstr ""
 
-#: views/paper.py:200 views/paper.py:426
+#: views/paper.py:202 views/paper.py:430
 msgid "Biblio entry:"
 msgstr ""
 
-#: views/paper.py:252
+#: views/paper.py:256
 msgid "Edit Paper"
 msgstr ""
 
-#: views/paper.py:257 views/paper.py:276 views/paper.py:306 views/paper.py:342
-#: views/paper.py:362 views/paper.py:394 views/paper.py:422 views/paper.py:454
-#: views/paper.py:502 views/paper.py:529
+#: views/paper.py:261 views/paper.py:280 views/paper.py:310 views/paper.py:346
+#: views/paper.py:366 views/paper.py:398 views/paper.py:426 views/paper.py:458
+#: views/paper.py:506 views/paper.py:533 views/paper.py:599
 msgid "You are not one of the authors."
 msgstr ""
 
-#: views/paper.py:268
+#: views/paper.py:272
 msgid "Add Paper Author"
 msgstr ""
 
-#: views/paper.py:308
+#: views/paper.py:312
 msgid "Rejected authorship cannot be deleted."
 msgstr ""
 
-#: views/paper.py:356
+#: views/paper.py:360
 msgid "Add Paper Identifier"
 msgstr ""
 
-#: views/paper.py:387
+#: views/paper.py:391
 msgid "Delete Paper Identifier"
 msgstr ""
 
-#: views/paper.py:396 views/user.py:151
+#: views/paper.py:400 views/user.py:151
 msgid "This identifier is permanent."
 msgstr ""
 
-#: views/paper.py:413
+#: views/paper.py:417
 msgid "Add Citations"
 msgstr ""
 
-#: views/paper.py:497
+#: views/paper.py:501
 msgid "Add Supplemental Link"
+msgstr ""
+
+#: views/paper.py:571
+msgid "Add Scientific Field"
 msgstr ""
 
 #: views/user.py:52

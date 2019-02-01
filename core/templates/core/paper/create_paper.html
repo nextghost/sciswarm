@@ -8,7 +8,12 @@
 <div class="box">
 <form method="post" action="?">
 {% csrf_token %}
+{% if subfield.non_field_errors %}
+<div class="error">{{ subfield.non_field_errors }}</div>
+{% endif %}
 <table class="form">
+  <tr><th>{{ subfield.field.label_tag }}</th><td>{{ subfield.field.errors }}{{ subfield.field }}</td></tr>
+  <tr><th>{{ subfield.subfield.label_tag }}</th><td>{{ subfield.subfield.errors }}{{ subfield.name.errors }}{{ subfield.subfield }} {{ subfield.name }}</td></tr>
   {{ form }}
 </table>
 

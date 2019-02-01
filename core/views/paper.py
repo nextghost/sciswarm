@@ -31,7 +31,7 @@ from .base import (BaseCreateView, BaseUpdateView, BaseListView,
 from .utils import paper_navbar
 from ..forms.paper import (PaperSearchForm, PaperForm, PaperAliasForm,
     PaperAliasFormset, PaperAuthorNameFormset, PaperSupplementalLinkForm,
-    PaperRecommendationForm)
+    PaperRecommendationForm, ScienceSubfieldForm)
 from ..forms.user import (PaperAuthorForm, PersonAliasForm, PersonAliasFormset,
     AuthorshipConfirmationForm)
 from ..models import const
@@ -166,6 +166,7 @@ class PaperDetailView(DetailView):
         ret['keyword_list'] = obj.paperkeyword_set.all()
         ret['alias_list'] = obj.paperalias_set.all()
         ret['suplink_list'] = obj.papersupplementallink_set.all()
+        ret['field_list'] = obj.fields.all()
         ret['edit_access'] = obj.is_owned_by(self.request.user)
         if self.request.user.is_authenticated:
             ret['recommend_form'] = PaperRecommendationForm(paper=obj,
@@ -183,6 +184,7 @@ class CreatePaperView(BaseCreateView):
         ret = super(CreatePaperView, self).get_form(*args, **kwargs)
         data = self.request.POST or None
         subforms = dict()
+        subforms['subfield'] = ScienceSubfieldForm(data, prefix='subfield')
         subforms['authors'] = PersonAliasFormset(data, prefix='authors',
             queryset=models.PersonAlias.objects.none(),
             form_kwargs=dict(label=_('Author:'), allow_sciswarm=True))
@@ -217,6 +219,8 @@ class CreatePaperView(BaseCreateView):
         try:
             with atomic():
                 ret = super(CreatePaperView, self).form_valid(form)
+                subfield = self.subforms['subfield'].save()
+                self.object.fields.add(subfield)
                 for subform in self.subforms['aliases']:
                     subform.instance.target = self.object
                 self.subforms['aliases'].save()
@@ -558,3 +562,50 @@ class RecommendPaperFormView(FormView):
     def form_valid(self, form):
         form.save()
         return redirect(self.paper.get_absolute_url())
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
+class AddScienceSubfieldView(BaseCreateView):
+    form_class = ScienceSubfieldForm
+    template_name = 'core/paper/science_subfield_form.html'
+    page_title = _('Add Scientific Field')
+
+    def get_form_kwargs(self, *args, **kwargs):
+        ret = super(AddScienceSubfieldView, self).get_form_kwargs(*args,
+            **kwargs)
+        qs = models.Paper.objects.filter_public()
+        self.parent = get_object_or_404(qs, pk=self.kwargs['pk'])
+        if not self.parent.is_owned_by(self.request.user):
+            raise PermissionDenied(_('You are not one of the authors.'))
+        ret['paper'] = self.parent
+        return ret
+
+    def form_valid(self, form):
+        self.parent.changed_by = self.request.user.person
+        return super(AddScienceSubfieldView, self).form_valid(form)
+
+    def get_success_url(self):
+        return self.parent.get_absolute_url()
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
+class DeleteScienceSubfieldView(BaseDeleteView):
+    template_name = 'core/paper/delete_science_subfield.html'
+
+    def get_object(self, *args, **kwargs):
+        qs = models.Paper.objects
+        if self.request.method == 'POST':
+            qs = qs.select_for_update()
+        paper = get_object_or_404(qs, pk=self.kwargs['paper'])
+        if not paper.is_owned_by(self.request.user):
+            raise PermissionDenied(_('You are not one of the authors.'))
+        self.parent = paper
+        return get_object_or_404(paper.fields, pk=self.kwargs['field'])
+
+    def perform_delete(self):
+        self.parent.fields.remove(self.object)
+        self.parent.changed_by = self.request.user.person
+        self.parent.save(update_fields=['last_changed', 'changed_by'])
+
+    def get_success_url(self):
+        return self.parent.get_absolute_url()

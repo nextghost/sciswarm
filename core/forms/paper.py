@@ -17,12 +17,13 @@
 from django import forms
 from django.core.exceptions import ImproperlyConfigured
 from django.forms import fields, modelformset_factory, widgets, ValidationError
+from django.urls import reverse
 from django.utils.html import mark_safe
 from django.utils.translation import ugettext_lazy as _
 from .base import Form, ModelForm, BaseAliasForm
 from .widgets import SubmitButton
 from ..models import const
-from ..utils import sql
+from ..utils import pgsql, sql
 from ..utils.transaction import lock_record
 from ..utils.utils import fold_and, fold_or
 from ..utils.validators import validate_paper_alias, validate_person_alias
@@ -322,5 +323,80 @@ class PaperRecommendationForm(Form):
                 paper=self.paper, event_type=event_type)
         elif '_unrecommend' in self.data and self.recommended:
             self._recommendation_queryset().delete()
+
+    save.alters_data = True
+
+class ScienceSubfieldForm(ModelForm):
+    class Meta:
+        model = models.ScienceSubfield
+        fields = ('field', 'subfield', 'name')
+    subfield = forms.ModelChoiceField(label=_('Subfield'), required=False,
+        queryset=models.ScienceSubfield.objects.none(),
+        empty_label=_('Other:'))
+
+    def __init__(self, *args, **kwargs):
+        # Paper may be None.
+        paper = kwargs.pop('paper', None)
+        super(ScienceSubfieldForm, self).__init__(*args, **kwargs)
+        self.paper = paper
+        widget = self.fields['field'].widget
+        widget.attrs['data-reload-select'] = self.add_prefix('subfield')
+        widget.attrs['data-callback'] = reverse('core:ajax_science_subfields')
+        self.fields['name'].required = False
+        if self.data is not None:
+            value = self.data.get(self.add_prefix('field'))
+            if value is not None:
+                sftab = models.ScienceSubfield.query_model
+                sfobj = models.ScienceSubfield.objects
+                query = (sftab.field == value)
+                self.fields['subfield'].queryset = sfobj.filter(query)
+
+    def clean(self):
+        sftab = models.ScienceSubfield.query_model
+        sfobj = models.ScienceSubfield.objects
+        field = self.cleaned_data.get('field')
+        subfield = self.cleaned_data.get('subfield')
+
+        # Creating new subfield, validate name
+        if subfield is None:
+            name = self.cleaned_data.get('name')
+            if name is not None:
+                name = name.strip().title()
+                self.cleaned_data['name'] = name
+            if name:
+                if field is not None:
+                    pgsql.lock_table(models.ScienceSubfield,
+                        pgsql.LOCK_SHARE_UPDATE_EXCLUSIVE)
+                    query = (sftab.name == name)
+                    tmp = sfobj.filter(query).first()
+                    if tmp is not None:
+                        if tmp.field == field:
+                            self.cleaned_data['subfield'] = tmp
+                        else:
+                            msg = _('This subfield already exists under %s.')
+                            msg = msg % const.science_fields[tmp.field]
+                            err = ValidationError(msg, 'unique')
+                            self.add_error('name', err)
+            # if subfield is None and (not name) and...
+            elif not (self.has_error('name') or self.has_error('subfield')):
+                msg = _('Select a subfield from the list or enter new subfield name.')
+                self.add_error('name', ValidationError(msg, 'required'))
+
+    def save(self):
+        if self.errors:
+            msg = 'Form cannot be saved because input validation failed.'
+            raise ValueError(msg)
+        subfield = self.cleaned_data.get('subfield')
+        if subfield is None:
+            sfobj = models.ScienceSubfield.objects
+            field = self.cleaned_data.get('field')
+            name = self.cleaned_data.get('name')
+            subfield = sfobj.create(field=field, name=name)
+        if self.paper is not None:
+            lock_record(self.paper)
+            if not self.paper.fields.filter(pk=subfield.pk).exists():
+                self.paper.fields.add(subfield)
+                self.paper.save(update_fields=['last_changed', 'changed_by'])
+        return subfield
 
     save.alters_data = True

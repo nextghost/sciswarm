@@ -82,3 +82,18 @@ feed_subscription_types = ConstEnum(
     ('REVIEWS', 1, _('Paper reviews')),
     ('RECOMMENDATIONS', 2, _('Recommendations')),
 )
+
+science_fields = ConstEnum(
+    ('ASTRONOMY', 1, _('Astronomy')),
+    ('BIOLOGY', 2, _('Biology')),
+    ('CHEMISTRY', 3, _('Chemistry')),
+    ('COMPSCI', 4, _('Computer Science')),
+    ('GEO', 5, _('Earth Science')),
+    ('ENGINEERING', 6, _('Engineering')),
+    ('HISTORY', 7, _('History')),
+    ('MATH', 8, _('Mathematics')),
+    ('MEDICINE', 9, _('Medicine')),
+    ('PHILOSOPHY', 10, _('Philosophy')),
+    ('PHYSICS', 11, _('Physics')),
+    ('SOCIAL', 12, _('Social Science')),
+)

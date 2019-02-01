@@ -1,0 +1,22 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<h1>{{ page_title }}</h1>
+<div class="box">
+<form method="post" action="?">
+{% csrf_token %}
+{% if form.non_field_errors %}
+<div class="error">{{ form.non_field_errors }}</div>
+{% endif %}
+<table class="form">
+  <tr><th>{{ form.field.label_tag }}</th><td>{{ form.field.errors }}{{ form.field }}</td></tr>
+  <tr><th>{{ form.subfield.label_tag }}</th><td>{{ form.subfield.errors }}{{ form.name.errors }}{{ form.subfield }} {{ form.name }}</td></tr>
+  {# Traslators: Link/submit button caption #}
+  <tr><td>&nbsp;</td><td><input type="submit" value="{% trans 'Save' %}"/></td></tr>
+</table>
+</form>
+</div>
+{% endblock %}

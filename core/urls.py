@@ -16,7 +16,7 @@
 
 from django.conf.urls import include, url
 from django.contrib.auth import views as auth
-from .views import account, comment, event, main, paper, user
+from .views import ajax, account, comment, event, main, paper, user
 
 account_patterns = [
     url(r'^login/?\Z', account.login, name='login'),
@@ -47,6 +47,11 @@ account_patterns = [
         name='verify_user_email'),
     url(r'^delete/?\Z', account.DeleteAccountView.as_view(),
         name='delete_account'),
+]
+
+ajax_patterns = [
+    url(r'^science_fields/?\Z', ajax.science_subfields,
+        name='ajax_science_subfields'),
 ]
 
 person_patterns = [
@@ -108,6 +113,10 @@ paper_patterns = [
         name='add_paper_supplemental_link'),
     url(r'^(?P<paper>[0-9]+)/delete_citation/(?P<ref>[0-9]+)/?\Z',
         paper.DeleteCitationView.as_view(), name='delete_paper_citation'),
+    url(r'^(?P<pk>[0-9]+)/add_field/?\Z',
+        paper.AddScienceSubfieldView.as_view(), name='add_paper_field'),
+    url(r'^(?P<paper>[0-9]+)/delete_field/(?P<field>[0-9]+)/?\Z',
+        paper.DeleteScienceSubfieldView.as_view(), name='delete_paper_field'),
     url(r'^(?P<pk>[0-9]+)/?\Z', paper.PaperDetailView.as_view(),
         name='paper_detail'),
 ]
@@ -135,6 +144,7 @@ review_patterns = [
 
 urlpatterns = [
     url(r'^\Z', main.homepage, name='homepage'),
+    url(r'^ajax/', include(ajax_patterns)),
     url(r'^p/?\Z', paper.PaperListView.as_view(), name='paper_list'),
     url(r'^u/', include(person_patterns)),
     url(r'^p/', include(paper_patterns)),

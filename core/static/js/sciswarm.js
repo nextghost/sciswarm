@@ -67,8 +67,35 @@ jQuery(document).ready(function() {
 		hide_timers[e.target.id] = tmr;
 	}
 
+	function sciswarm_reload_select(e) {
+		let target = jQuery(e.target);
+		let name = target.attr('data-reload-select');
+		let select = jQuery(e.target.form.elements[name]);
+		select.children('option[value!=""]').remove();
+
+		if (!e.target.value) {
+			return;
+		}
+
+		let url = target.attr('data-callback');
+		let arg = {value: e.target.value};
+
+		jQuery.get(url, arg, function(data) {
+			let elem, text;
+
+			for (let val in data) {
+				elem = document.createElement("option");
+				elem.setAttribute("value", val);
+				text = document.createTextNode(data[val]);
+				elem.appendChild(text);
+				select.append(elem);
+			}
+		});
+	}
+
 	doc = jQuery(document);
 	doc.on("input", "input.autocomplete", sciswarm_autocomplete_get);
 	doc.on("focusin", "input.autocomplete", sciswarm_autocomplete_show);
 	doc.on("focusout", "input.autocomplete", sciswarm_autocomplete_hide);
+	doc.on("change", "select[data-reload-select]", sciswarm_reload_select);
 })

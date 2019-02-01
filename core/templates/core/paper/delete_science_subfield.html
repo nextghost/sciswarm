@@ -1,0 +1,14 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% blocktrans with field=object.full_name %}Remove Paper From: {{ field }}{% endblocktrans %}{% endblock %}
+
+{% block content %}
+<h1>{% blocktrans with field=object.full_name %}Remove Paper From: {{ field }}{% endblocktrans %}</h1>
+<h2>{% trans 'Do you really want to remove the paper from this scientific field?' %}</h2>
+<form method="post" action="?">
+{% csrf_token %}
+<p><input type="submit" value="{% trans 'Remove' %}"/></p>
+</form>
+{% endblock %}
