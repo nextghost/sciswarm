@@ -28,5 +28,5 @@ def science_subfields(request):
     if field_id is not None:
         query = (models.ScienceSubfield.query_model.field == field_id)
         qs = qs.filter(query)
-    ret = OrderedDict(((x.pk, str(x)) for x in qs))
-    return JsonResponse(ret)
+    ret = [(x.pk, str(x)) for x in qs]
+    return JsonResponse(ret, safe=False)

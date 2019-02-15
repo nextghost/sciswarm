@@ -83,10 +83,10 @@ jQuery(document).ready(function() {
 		jQuery.get(url, arg, function(data) {
 			let elem, text;
 
-			for (let val in data) {
+			for (let idx in data) {
 				elem = document.createElement("option");
-				elem.setAttribute("value", val);
-				text = document.createTextNode(data[val]);
+				elem.setAttribute("value", data[idx][0]);
+				text = document.createTextNode(data[idx][1]);
 				elem.appendChild(text);
 				select.append(elem);
 			}
