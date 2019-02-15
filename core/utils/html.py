@@ -69,7 +69,7 @@ def doi_link(scheme, identifier):
     return render_link('https://doi.org/' + identifier, identifier)
 
 def arxiv_link(scheme, identifier):
-    return render_link('https://arxiv.org/abs/' + identifier[6:], identifier)
+    return render_link('https://arxiv.org/abs/' + identifier, identifier)
 
 _alias_linkgen_map = {
     const.person_alias_schemes.EMAIL: email_link,
