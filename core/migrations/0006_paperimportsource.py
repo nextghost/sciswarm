@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', models.CharField(max_length=32, unique=True, verbose_name='code')),
                 ('name', models.CharField(max_length=256, verbose_name='repository name')),
-                ('import_cursor', models.CharField(max_length=128, verbose_name='code')),
+                ('import_cursor', models.CharField(max_length=128, verbose_name='import cursor')),
                 ('bot_profile', models.ForeignKey(editable=False, on_delete=django.db.models.deletion.CASCADE, to='core.Person', verbose_name='bot profile')),
             ],
         ),

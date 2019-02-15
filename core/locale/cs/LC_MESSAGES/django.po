@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-01 20:39+0100\n"
+"POT-Creation-Date: 2019-02-15 17:56+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: Czech <doucha@swarmtech.cz>\n"
@@ -102,8 +102,12 @@ msgid "This scheme prefix is not allowed."
 msgstr "Tento typ identifikátoru není povolen."
 
 #: forms/base.py:200 forms/base.py:215
-msgid "This identifier is already in use."
-msgstr "Tento identifikátor už je zaregistrovaný."
+msgid ""
+"This identifier is already in use. If the existing assignment is incorrect "
+"and you cannot change it yourself, please contact the administrator."
+msgstr ""
+"Tento identifikátor už je zaregistrovaný. Pokud je stávající přiřazení "
+"chybné a nemůžete ho změnit sami, kontaktujte prosím správce serveru."
 
 #: forms/comment.py:43
 msgid "Details"
@@ -240,7 +244,7 @@ msgstr "osoba"
 msgid "{first_name} {last_name}"
 msgstr "{first_name} {last_name}"
 
-#: models/comment.py:32 models/paper.py:268
+#: models/comment.py:32 models/paper.py:272
 msgid "date posted"
 msgstr "datum vložení"
 
@@ -248,7 +252,7 @@ msgstr "datum vložení"
 msgid "date changed"
 msgstr "poslední změna"
 
-#: models/comment.py:36 models/paper.py:270
+#: models/comment.py:36 models/paper.py:274
 msgid "posted by"
 msgstr "vložil(a)"
 
@@ -256,9 +260,9 @@ msgstr "vložil(a)"
 msgid "message"
 msgstr "zpráva"
 
-#: models/comment.py:52 models/event.py:32 models/paper.py:337
-#: models/paper.py:374 models/paper.py:402 models/paper.py:449
-#: models/paper.py:461
+#: models/comment.py:52 models/event.py:32 models/paper.py:345
+#: models/paper.py:382 models/paper.py:410 models/paper.py:457
+#: models/paper.py:469
 msgid "paper"
 msgstr "článek"
 
@@ -485,65 +489,65 @@ msgstr "o vás"
 msgid "{last_name}, {first_name}"
 msgstr "{last_name}, {first_name}"
 
-#: models/paper.py:164 models/paper.py:334
+#: models/paper.py:168 models/paper.py:342
 msgid "scheme"
 msgstr "schéma"
 
-#: models/paper.py:166 models/paper.py:336
+#: models/paper.py:170 models/paper.py:344
 msgid "identifier"
 msgstr "identifikátor"
 
-#: models/paper.py:167
+#: models/paper.py:171
 msgid "user"
 msgstr "uživatel"
 
-#: models/paper.py:212
+#: models/paper.py:216
 msgid "field"
 msgstr "obor"
 
-#: models/paper.py:214
+#: models/paper.py:218
 msgid "name"
 msgstr "název"
 
-#: models/paper.py:215
+#: models/paper.py:219
 msgid "Please enter only the English name of the subfield."
 msgstr "Zadejte prosím pouze anglický název podoboru."
 
-#: models/paper.py:223
+#: models/paper.py:227
 #, python-format
 msgid "%(field)s / %(subfield)s"
 msgstr "%(field)s / %(subfield)s"
 
-#: models/paper.py:243 models/paper.py:463
+#: models/paper.py:247 models/paper.py:471
 msgid "title"
 msgstr "název"
 
-#: models/paper.py:244
+#: models/paper.py:248
 msgid "abstract"
 msgstr "abstrakt"
 
-#: models/paper.py:245
+#: models/paper.py:249
 msgid "theory development"
 msgstr "rozvoj teorie"
 
-#: models/paper.py:246
+#: models/paper.py:250
 msgid "Check this box if the paper expands prior theory."
 msgstr "Zaškrtněte toto pole, pokud článek dále rozvíjí dřívější teorii."
 
-#: models/paper.py:248
+#: models/paper.py:252
 msgid "survey data"
 msgstr "dotazníková data"
 
-#: models/paper.py:249
+#: models/paper.py:253
 msgid "Check this box if the paper contains or analyzes survey data."
 msgstr ""
 "Zaškrtněte toto pole, pokud článek obsahuje nebo analyzuje data z dotazníků."
 
-#: models/paper.py:251
+#: models/paper.py:255
 msgid "observational data"
 msgstr "data z pozorování"
 
-#: models/paper.py:252
+#: models/paper.py:256
 msgid ""
 "Check this box if the paper contains or analyzes data from observation of "
 "natural phenomena."
@@ -551,11 +555,11 @@ msgstr ""
 "Zaškrtněte toto pole, pokud článek obsahuje nebo analyzuje data z pozorování "
 "přírodních úkazů."
 
-#: models/paper.py:254
+#: models/paper.py:258
 msgid "experimental data"
 msgstr "experimentální data"
 
-#: models/paper.py:255
+#: models/paper.py:259
 msgid ""
 "Check this box if the paper contains or analyzes data from controlled "
 "experiments."
@@ -563,11 +567,11 @@ msgstr ""
 "Zaškrtněte toto pole, pokud článek obsahuje nebo analyzuje data z řízených "
 "experimentů."
 
-#: models/paper.py:257
+#: models/paper.py:261
 msgid "metaanalysis"
 msgstr "metaanalýza"
 
-#: models/paper.py:258
+#: models/paper.py:262
 msgid ""
 "Check this box if the paper contains extensive metaanalysis or literature "
 "review (aside from the usual summary in introduction)."
@@ -575,11 +579,11 @@ msgstr ""
 "Zaškrtněte toto pole, pokud článek obsahuje rozsáhlou metaanalýzu nebo "
 "přehled literatury (mimo obvyklé shrnutí v úvodu)."
 
-#: models/paper.py:260
+#: models/paper.py:264
 msgid "year published"
 msgstr "rok vydání"
 
-#: models/paper.py:262
+#: models/paper.py:266
 msgid ""
 "Year when this paper was officially published, e.g. in a journal. Leave "
 "blank if publication date is pending."
@@ -587,19 +591,19 @@ msgstr ""
 "Rok, kdy byl článek oficiálně vydán, např. ve vědeckém časopise. Pokud o "
 "datu vydání ještě není rozhodnuto, nechte prázdné."
 
-#: models/paper.py:263
+#: models/paper.py:267
 msgid "cite as"
 msgstr "doporučená citace"
 
-#: models/paper.py:264
+#: models/paper.py:268
 msgid "Preferred citation text."
 msgstr "Doporučená forma, jak tento článek citovat."
 
-#: models/paper.py:265
+#: models/paper.py:269
 msgid "incomplete metadata"
 msgstr "neúplná metadata"
 
-#: models/paper.py:266
+#: models/paper.py:270
 msgid ""
 "Check this box if some information about this paper is missing (e.g. omitted "
 "citations because the cited papers have no usable identifier)."
@@ -607,49 +611,65 @@ msgstr ""
 "Zaškrtněte toto pole, pokud některé informace o článku chybí (např. "
 "vynechané citace článků, které zatím nemají žádný použitelný identifikátor)."
 
-#: models/paper.py:273
+#: models/paper.py:277
 msgid "last changed"
 msgstr "poslední změna"
 
-#: models/paper.py:275
+#: models/paper.py:279
 msgid "changed by"
 msgstr "změnil(a)"
 
-#: models/paper.py:278
+#: models/paper.py:282
 msgid "public"
 msgstr "veřejný"
 
-#: models/paper.py:373
+#: models/paper.py:381
 msgid "keyword"
 msgstr "klíčové slovo"
 
-#: models/paper.py:404 models/paper.py:451
+#: models/paper.py:412 models/paper.py:459
 msgid "author"
 msgstr "autor"
 
-#: models/paper.py:406
+#: models/paper.py:414
 msgid "confirmed"
 msgstr "potvrzeno"
 
-#: models/paper.py:440
+#: models/paper.py:448
 msgid "Confirmed"
 msgstr "Potvrzeno"
 
-#: models/paper.py:442
+#: models/paper.py:450
 msgid "Pending"
 msgstr "Nepotvrzeno"
 
-#: models/paper.py:443
+#: models/paper.py:451
 msgid "Rejected"
 msgstr "Odmítnuto"
 
-#: models/paper.py:452
+#: models/paper.py:460
 msgid "Additional authors with no unique identifier"
 msgstr "Další autoři, kteří nemají žádný unikátní identifikátor"
 
-#: models/paper.py:464
+#: models/paper.py:472
 msgid "URL"
 msgstr "URL"
+
+#: models/paper.py:482
+msgid "code"
+msgstr "kód"
+
+#: models/paper.py:483
+msgid "repository name"
+msgstr "název repozitáře"
+
+#: models/paper.py:484
+msgid "bot profile"
+msgstr "uživatelský profil robota"
+
+#: models/paper.py:486
+msgid "import cursor"
+msgstr "importní záložka"
 
 #: templates/common/edit.html:14 templates/common/formset.html:16
 #: templates/core/account/profile_form.html:15
@@ -1248,7 +1268,7 @@ msgstr "Neplatný formát identifikátoru."
 msgid "Identifier checksum is incorrect."
 msgstr "Chybný kontrolní součet identifikátoru."
 
-#: utils/validators.py:101
+#: utils/validators.py:100
 msgid ""
 "We are sorry but Sci-Hub links are not allowed on this site. With all due "
 "respect to Alexandra Elbakyan for putting herself at risk in the name of "
@@ -1264,7 +1284,7 @@ msgstr ""
 "Zadejte raději odkaz na kopii dané stránky nebo souboru na Vašem osobním "
 "webu (pokud daný soubor můžete sami legálně hostovat)."
 
-#: utils/validators.py:147
+#: utils/validators.py:146
 msgid ""
 "Generic identifier must have a scheme prefix separated by color (e.g. scheme:"
 "identifier)."
@@ -1565,3 +1585,6 @@ msgstr "Další"
 msgctxt "navigation"
 msgid "Last"
 msgstr "Poslední"
+
+#~ msgid "This identifier is already in use."
+#~ msgstr "Tento identifikátor už je zaregistrovaný."

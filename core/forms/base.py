@@ -197,7 +197,7 @@ class BaseAliasForm(ModelForm):
             not (self.has_error('identifier') or self.has_error('scheme'))):
             objs = self._meta.model.objects
             if not objs.check_alias_available(scheme, identifier, target):
-                msg = _('This identifier is already in use.')
+                msg = _('This identifier is already in use. If the existing assignment is incorrect and you cannot change it yourself, please contact the administrator.')
                 err = forms.ValidationError(msg, 'unique')
                 self.add_error('identifier', err)
 
@@ -212,7 +212,7 @@ class BaseAliasForm(ModelForm):
         try:
             return objs.link_alias(tmp.scheme, tmp.identifier, target)
         except IntegrityError:
-            msg = _('This identifier is already in use.')
+            msg = _('This identifier is already in use. If the existing assignment is incorrect and you cannot change it yourself, please contact the administrator.')
             err = forms.ValidationError(msg, 'unique')
             self.add_error('identifier', err)
             raise

@@ -483,4 +483,4 @@ class PaperImportSource(models.Model):
     name = models.CharField(_('repository name'), max_length=256)
     bot_profile = models.ForeignKey(Person, verbose_name=_('bot profile'),
         on_delete=models.CASCADE, editable=False)
-    import_cursor = models.CharField(_('code'), max_length=128)
+    import_cursor = models.CharField(_('import cursor'), max_length=128)
