@@ -366,7 +366,7 @@ class ScienceSubfieldForm(ModelForm):
             if name:
                 if field is not None:
                     pgsql.lock_table(models.ScienceSubfield,
-                        pgsql.LOCK_SHARE_UPDATE_EXCLUSIVE)
+                        pgsql.LOCK_SHARE_ROW_EXCLUSIVE)
                     query = (sftab.name == name)
                     tmp = sfobj.filter(query).first()
                     if tmp is not None:

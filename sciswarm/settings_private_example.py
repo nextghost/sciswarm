@@ -53,12 +53,22 @@ LOGGING = {
             'filename': '/var/log/django/sciswarm.log',
             'formatter': 'simple',
         },
+        'stderr': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
     },
     'loggers': {
         'sciswarm': {
             'handlers': ['sciswarm_file'],
             'level': 'DEBUG',
             'propagate': True,
+        },
+        'sciswarm.harvest': {
+            'handlers': ['stderr'],
+            'level': 'DEBUG',
+            'propagate': False,
         },
     },
 }
@@ -73,6 +83,7 @@ EMAIL_TIMEOUT = 10
 SYSTEM_EMAIL_FROM = 'no-reply@example.com'
 SYSTEM_EMAIL_ADMIN = 'admin@example.com'
 ADMINS = [('Example', 'admin@example.com')]
+HARVEST_SCRIPTS = ['harvest.arxiv']
 
 LANGUAGE_CODE = 'en'
 

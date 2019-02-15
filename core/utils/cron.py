@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.utils import timezone
+from importlib import import_module
 from .. import models
 
 def delete_cancelled_accounts():
@@ -22,4 +23,8 @@ def delete_cancelled_accounts():
     models.User.objects.filter(query).delete()
 
 def run_tasks():
+    from django.conf import settings
     delete_cancelled_accounts()
+    for script in settings.HARVEST_SCRIPTS:
+        module = import_module(script)
+        module.harvest()

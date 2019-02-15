@@ -80,6 +80,10 @@ class Person(models.Model):
         return _('{first_name} {last_name}').format(**args)
 
     @property
+    def base_identifier(self):
+        return 'u/' + self.username
+
+    @property
     def full_name(self):
         args = dict(first_name=self.first_name, last_name=self.last_name,
             title_before=self.title_before, title_after=self.title_after)
@@ -284,6 +288,10 @@ class Paper(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def base_identifier(self):
+        return 'p/' + str(self.pk)
+
     def contents_info(self):
         field_list = ['contents_theory', 'contents_survey',
             'contents_observation', 'contents_experiment',
@@ -469,3 +477,10 @@ class PaperSupplementalLink(models.Model):
     def __html__(self):
         from ..utils.html import render_link
         return render_link(self.url, self.name)
+
+class PaperImportSource(models.Model):
+    code = models.CharField(_('code'), max_length=32, unique=True)
+    name = models.CharField(_('repository name'), max_length=256)
+    bot_profile = models.ForeignKey(Person, verbose_name=_('bot profile'),
+        on_delete=models.CASCADE, editable=False)
+    import_cursor = models.CharField(_('code'), max_length=128)
