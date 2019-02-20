@@ -13,6 +13,8 @@
 {% csrf_token %}
 <table class="form">
   {{ form.as_table }}
+  {% url 'core:infopage' pagename='terms' as terms_url %}
+  <tr><td colspan="2">{% blocktrans %}By clicking the &#8220;Register&#8221; button, you confirm that you have read and agree to our <a href="{{ terms_url }}">Terms of Service</a>.{% endblocktrans %}</td></tr>
   {# Traslators: Link/submit button caption #}
   <tr><td>&nbsp;</td><td><input type="submit" value="{% trans 'Register' %}"/></td></tr>
 </table>

@@ -16,9 +16,10 @@
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, get_language
 from .base import BaseListView
 from ..models import const
 from ..utils import sql, utils
@@ -29,6 +30,15 @@ def homepage(request):
         return UserTimelineView.as_view()(request)
     context = dict(admin_email=settings.SYSTEM_EMAIL_ADMIN)
     return render(request, 'core/main/homepage.html', context)
+
+def infopage(request, pagename):
+    tpl = 'core/info/%(lang)s/%(pagename)s.html'
+    lang = request.GET.get('lang', get_language() or setting.LANGUAGE_CODE)
+    if lang not in set((c for c,n in settings.LANGUAGES)):
+        raise Http404()
+    template_name = tpl % dict(lang=lang, pagename=pagename)
+    context = dict(admin_email=settings.SYSTEM_EMAIL_ADMIN)
+    return render(request, template_name, context)
 
 @method_decorator(login_required, name='dispatch')
 class UserTimelineView(BaseListView):

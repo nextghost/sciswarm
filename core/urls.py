@@ -150,4 +150,5 @@ urlpatterns = [
     url(r'^p/', include(paper_patterns)),
     url(r'^r/', include(review_patterns)),
     url(r'^account/', include(account_patterns)),
+    url(r'^(?P<pagename>about|terms)\Z', main.infopage, name='infopage'),
 ]

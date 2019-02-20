@@ -129,6 +129,14 @@ textarea {
 	padding-bottom: 5px;
 }
 
+.menu_group {
+	font-weight: bold;
+}
+
+.menu_item {
+	padding-left: 1em;
+}
+
 .navbar {
 	margin-bottom: 1em;
 }

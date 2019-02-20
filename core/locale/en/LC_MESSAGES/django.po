@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-15 17:56+0100\n"
+"POT-Creation-Date: 2019-02-20 16:14+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -67,7 +67,7 @@ msgid "Wrong password."
 msgstr ""
 
 #: forms/auth.py:143 forms/comment.py:50 forms/comment.py:59
-#: forms/comment.py:101 forms/paper.py:184
+#: forms/comment.py:101 forms/paper.py:185
 msgid "Database error, please try again later."
 msgstr ""
 
@@ -130,7 +130,7 @@ msgstr ""
 msgid "Identifier"
 msgstr ""
 
-#: forms/paper.py:40 forms/paper.py:154
+#: forms/paper.py:40 forms/paper.py:155
 msgid "Keywords"
 msgstr ""
 
@@ -138,49 +138,49 @@ msgstr ""
 msgid "Comma-separated list of keywords."
 msgstr ""
 
-#: forms/paper.py:155
+#: forms/paper.py:156
 msgid "List of keywords separated by commas or newlines."
 msgstr ""
 
-#: forms/paper.py:162
+#: forms/paper.py:163
 msgid "I am an author"
 msgstr ""
 
-#: forms/paper.py:175
+#: forms/paper.py:176
 #, python-format
 msgid "Some keywords are longer than %(limit_value)s characters."
 msgstr ""
 
-#: forms/paper.py:278
+#: forms/paper.py:279
 msgid "This paper already has a link with this name."
 msgstr ""
 
-#: forms/paper.py:281
+#: forms/paper.py:282
 msgid "This paper already has this link."
 msgstr ""
 
-#: forms/paper.py:306
+#: forms/paper.py:307
 msgid "Cancel recommendation"
 msgstr ""
 
-#: forms/paper.py:308
+#: forms/paper.py:309
 msgid "Recommend"
 msgstr ""
 
-#: forms/paper.py:333
+#: forms/paper.py:334
 msgid "Subfield"
 msgstr ""
 
-#: forms/paper.py:335
+#: forms/paper.py:336
 msgid "Other:"
 msgstr ""
 
-#: forms/paper.py:376
+#: forms/paper.py:377
 #, python-format
 msgid "This subfield already exists under %s."
 msgstr ""
 
-#: forms/paper.py:382
+#: forms/paper.py:383
 msgid "Select a subfield from the list or enter new subfield name."
 msgstr ""
 
@@ -705,7 +705,14 @@ msgid ""
 "will eventually pass to somebody else."
 msgstr ""
 
-#: templates/core/account/register.html:17 templates/core/layout.html:22
+#: templates/core/account/register.html:17
+#, python-format
+msgid ""
+"By clicking the &#8220;Register&#8221; button, you confirm that you have "
+"read and agree to our <a href=\"%(terms_url)s\">Terms of Service</a>."
+msgstr ""
+
+#: templates/core/account/register.html:19 templates/core/layout.html:22
 msgid "Register"
 msgstr ""
 
@@ -881,20 +888,28 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: templates/core/layout.html:31 views/paper.py:46
-msgid "Latest papers"
+#: templates/core/layout.html:31
+msgid "Papers"
 msgstr ""
 
 #: templates/core/layout.html:33
 msgid "New paper"
 msgstr ""
 
-#: templates/core/layout.html:34 views/paper.py:142 views/utils.py:96
+#: templates/core/layout.html:34
+msgid "My profile"
+msgstr ""
+
+#: templates/core/layout.html:35 views/paper.py:142 views/utils.py:96
 msgid "Manage authorship"
 msgstr ""
 
-#: templates/core/layout.html:35
-msgid "My profile"
+#: templates/core/layout.html:37
+msgid "About"
+msgstr ""
+
+#: templates/core/layout.html:38
+msgid "Terms of Service"
 msgstr ""
 
 #: templates/core/main/homepage.html:6
@@ -1280,8 +1295,12 @@ msgstr ""
 msgid "Latest Actions of %s"
 msgstr ""
 
-#: views/main.py:76
+#: views/main.py:86
 msgid "Timeline"
+msgstr ""
+
+#: views/paper.py:46
+msgid "Latest papers"
 msgstr ""
 
 #: views/paper.py:78
