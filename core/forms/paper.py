@@ -140,9 +140,10 @@ class PaperSearchForm(Form):
                 join = join.inner_join(kwtab, cond)
 
         # Filter queryset
-        sub = join.select(papertab.pk, where=fold_and(cond_list))
-        query = models.Paper.query_model.pk.belongs(sub)
-        self.queryset = self.queryset.filter(query)
+        if cond_list:
+            sub = join.select(papertab.pk, where=fold_and(cond_list))
+            query = models.Paper.query_model.pk.belongs(sub)
+            self.queryset = self.queryset.filter(query)
 
 class PaperForm(ModelForm):
     class Meta:
