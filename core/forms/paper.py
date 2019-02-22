@@ -48,6 +48,7 @@ class PaperSearchForm(Form):
         super(PaperSearchForm, self).__init__(*args, **kwargs)
         self.queryset = queryset
         self.fields['year_published'].widget.attrs['size'] = 6
+        self.filter = False
 
     def clean(self):
         papertab = sql.Table(models.Paper)
@@ -57,12 +58,14 @@ class PaperSearchForm(Form):
         # Paper title
         title = self.cleaned_data.get('title')
         if title:
-            cond_list.append(papertab.name.icontains(title))
+            cond_list.append(papertab.name.tsplain(title, 'english'))
+            self.filter = True
 
         # Year published
         year_published = self.cleaned_data.get('year_published')
         if year_published is not None:
             cond_list.append(papertab.year_published == year_published)
+            self.filter = True
 
         # Author name/identifier
         author = self.cleaned_data.get('author')
@@ -83,12 +86,14 @@ class PaperSearchForm(Form):
                 # Scheme prefix in input, search only identifiers
                 try:
                     scheme, identifier = validate_person_alias('', author)
-                    cond = ((papertab.pk == reftab.paper_id) &
+                    cond = (((papertab.pk == reftab.paper_id) &
                         (((aliastab.scheme == scheme) &
                         (aliastab.identifier == identifier)) |
                         ((extaliastab.scheme == scheme) &
-                        (extaliastab.identifier == identifier))))
+                        (extaliastab.identifier == identifier)))) &
+                        ((reftab.confirmed==True) | reftab.confirmed.isnull()))
                     join = join.inner_join(subjoin, cond)
+                    self.filter = True
                 except ValidationError as err:
                     self.add_error('author', err)
             else:
@@ -103,14 +108,16 @@ class PaperSearchForm(Form):
                     persontab.last_name.icontains(x)) for x in tokens]
                 tmplist.append(aliastab.identifier == author)
                 tmplist.append(extaliastab.identifier == author)
-                cond = (papertab.pk == reftab.paper_id)
+                cond = ((papertab.pk == reftab.paper_id) &
+                    ((reftab.confirmed==True) | reftab.confirmed.isnull()))
                 join = join.left_join(subjoin, cond & fold_or(tmplist))
 
                 # Search plain author names
-                tmplist = [nametab.author_name.icontains(x) for x in tokens]
-                tmplist.append(papertab.pk == nametab.paper_id)
-                join = join.left_join(nametab, fold_and(tmplist))
+                cond = ((papertab.pk == nametab.paper_id) &
+                    nametab.author_name.tsplain(author))
+                join = join.left_join(nametab, cond)
                 cond_list.append(aliastab.pk.notnull() | nametab.pk.notnull())
+                self.filter = True
 
         # Paper identifier
         identifier = self.cleaned_data.get('identifier')
@@ -126,6 +133,7 @@ class PaperSearchForm(Form):
             if not self.has_error('identifier'):
                 cond &= (aliastab.identifier == identifier)
                 join = join.inner_join(aliastab, cond)
+                self.filter = True
 
         # Paper keywords (multiple)
         keywords = self.cleaned_data.get('keywords')
@@ -138,9 +146,10 @@ class PaperSearchForm(Form):
                 cond = ((papertab.pk == kwtab.paper_id) &
                     (sql.upper(kwtab.keyword) == kw.upper()))
                 join = join.inner_join(kwtab, cond)
+                self.filter = True
 
         # Filter queryset
-        if cond_list:
+        if self.filter:
             sub = join.select(papertab.pk, where=fold_and(cond_list))
             query = models.Paper.query_model.pk.belongs(sub)
             self.queryset = self.queryset.filter(query)

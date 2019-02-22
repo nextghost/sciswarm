@@ -100,6 +100,15 @@ class StringQueryMixin(object):
     def iregex(self, other):
         return self._query(iregex=other)
 
+    def tsplain(self, query, conf='simple'):
+        return self._query(tsplain=(conf, query))
+
+    def tsphrase(self, query, conf='simple'):
+        return self._query(tsphrase=(conf, query))
+
+    def tsquery(self, query, conf='simple'):
+        return self._query(tsquery=(conf, query))
+
 class NumericQueryMixin(object):
     def __add__(self, other):
         return self.f() + other

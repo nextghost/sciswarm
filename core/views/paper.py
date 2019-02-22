@@ -64,6 +64,17 @@ class BasePaperListView(SearchListView):
 class PaperListView(BasePaperListView):
     ordering = ('-date_posted',)
 
+    def get_queryset(self):
+        qs = None
+        if self.form.is_valid():
+            # Workaround for PostgreSQL query optimizer bug
+            qs = self.form.queryset
+            if self.form.filter:
+                qs = qs.order_by('-date_posted', 'public')
+        if qs is None:
+            qs = self.get_base_queryset()
+        return qs
+
 class CitedByPaperListView(BasePaperListView):
     def get_base_queryset(self):
         table = models.Paper.query_model

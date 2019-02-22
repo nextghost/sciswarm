@@ -167,7 +167,8 @@ class PersonAlias(models.Model):
 
     scheme = fields.OpenChoiceField(_('scheme'), max_length=16, blank=True,
         choices=const.person_alias_schemes.items())
-    identifier = models.CharField(_('identifier'), max_length=150)
+    identifier = models.CharField(_('identifier'), max_length=150,
+        db_index=True)
     target = models.ForeignKey(Person, verbose_name=_('user'), null=True,
         on_delete=models.SET_NULL)
 
@@ -341,7 +342,8 @@ class PaperAlias(models.Model):
 
     scheme = fields.OpenChoiceField(_('scheme'), max_length=16, blank=True,
         choices=const.paper_alias_schemes.items())
-    identifier = models.CharField(_('identifier'), max_length=256)
+    identifier = models.CharField(_('identifier'), max_length=256,
+        db_index=True)
     target = models.ForeignKey(Paper, verbose_name=_('paper'), null=True,
         on_delete=models.SET_NULL)
 

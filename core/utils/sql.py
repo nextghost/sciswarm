@@ -254,6 +254,15 @@ class StringMixin(OrderedMixin):
     def istartswith(self, value):
         return StartsWithExpression(self, value, True)
 
+    def tsplain(self, query, conf='simple'):
+        return TSExpression('plainto_tsquery', self, query, conf)
+
+    def tsphrase(self, query, conf='simple'):
+        return TSExpression('phraseto_tsquery', self, query, conf)
+
+    def tsquery(self, query, conf='simple'):
+        return TSExpression('to_tsquery', self, query, conf)
+
 class ConstExpression(Expression):
     def __init__(self, value):
         self._value = value
@@ -353,6 +362,20 @@ class DateTimeExtractExpression(NumericExpression):
         else:
             msg = 'Cannot extract date/time components form %s object'
             raise ValueError(msg % self._field.__class__.__name__)
+        return sql, params
+
+class TSExpression(BooleanExpression):
+    def __init__(self, parser, lhs, query, conf='simple'):
+        self._parser = parser
+        self._lhs = lhs
+        self._query = query
+        self._config = conf
+
+    def as_sql(self, compiler, connection):
+        sql, lhs_params = compiler.compile(self._lhs)
+        tpl = 'to_tsvector(%s, {lhs}) @@ {parser}(%s, %s)'
+        sql = tpl.format(lhs=sql, parser=self._parser)
+        params = [self._config] + lhs_params + [self._config, self._query]
         return sql, params
 
 class Field(Expression):
