@@ -199,11 +199,6 @@ class PersonAlias(models.Model):
             return False
         elif self.target is None:
             return False
-        elif self.scheme == const.person_alias_schemes.EMAIL:
-            query = (auth.User.query_model.email == self.identifier)
-            qs = auth.User.objects.filter_by_person(self.target).filter(query)
-            if qs.exists():
-                return False
         return True
 
     def unlink(self):

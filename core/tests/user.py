@@ -43,19 +43,19 @@ class UserTestCase(TransactionTestCase):
         user1 = models.User.objects.create(username=person1.username,
             person=person1, **user_defaults)
         alias1 = models.PersonAlias.objects.create(scheme=sciswarm_scheme,
-            identifier='u/' + person1.username, target=person1)
+            identifier=person1.base_identifier, target=person1)
         person2 = models.Person.objects.create(username='person2',
             first_name='Test', last_name='User2', **person_defaults)
         user2 = models.User.objects.create(username=person2.username,
             person=person2, **user_defaults)
         alias2 = models.PersonAlias.objects.create(scheme=sciswarm_scheme,
-            identifier='u/' + person2.username, target=person2)
+            identifier=person2.base_identifier, target=person2)
         person3 = models.Person.objects.create(username='person3',
             first_name='Test', last_name='User3', **person_defaults)
         user3 = models.User.objects.create(username=person3.username,
             person=person3, **user_defaults)
         alias3 = models.PersonAlias.objects.create(scheme=sciswarm_scheme,
-            identifier='u/' + person3.username, target=person3)
+            identifier=person3.base_identifier, target=person3)
 
         paper_defaults = dict(abstract='Abstract', contents_theory=True,
             contents_survey=False, contents_observation=False,
@@ -239,11 +239,11 @@ class UserTestCase(TransactionTestCase):
         user1 = models.User.objects.create(username=person1.username,
             person=person1, email='permanent@example.com', **user_defaults)
         alias1 = models.PersonAlias.objects.create(scheme=sciswarm_scheme,
-            identifier='u/' + person1.username, target=person1)
+            identifier=person1.base_identifier, target=person1)
         person2 = models.Person.objects.create(username='person2',
             first_name='Test', last_name='User2', **person_defaults)
         alias2 = models.PersonAlias.objects.create(scheme=sciswarm_scheme,
-            identifier='u/' + person2.username, target=person2)
+            identifier=person2.base_identifier, target=person2)
         alias3 = models.PersonAlias.objects.create(scheme=email_scheme,
             identifier='person1@example.com', target=person1)
         alias4 = models.PersonAlias.objects.create(scheme=url_scheme,
@@ -353,16 +353,15 @@ class UserTestCase(TransactionTestCase):
         self.assertEqual(test_set, event_set)
 
         # Test that permanent aliases cannot be unlinked
-        for alias in [alias1, alias7]:
-            kwargs = dict(pk=alias.pk)
-            url = reverse('core:unlink_person_identifier', kwargs=kwargs)
-            kwargs = dict(username=person1.username)
-            response = c.post(url, dict())
-            self.assertEqual(response.status_code, 403)
-            tmp = models.PersonAlias.objects.get(pk=alias.pk)
-            self.assertEqual(tmp.scheme, alias.scheme)
-            self.assertEqual(tmp.identifier, alias.identifier)
-            self.assertIs(tmp.target_id, alias.target_id)
+        kwargs = dict(pk=alias1.pk)
+        url = reverse('core:unlink_person_identifier', kwargs=kwargs)
+        kwargs = dict(username=person1.username)
+        response = c.post(url, dict())
+        self.assertEqual(response.status_code, 403)
+        tmp = models.PersonAlias.objects.get(pk=alias1.pk)
+        self.assertEqual(tmp.scheme, alias1.scheme)
+        self.assertEqual(tmp.identifier, alias1.identifier)
+        self.assertIs(tmp.target_id, alias1.target_id)
 
         # Test that users cannot unlink somebody else's alias
         for alias in [alias2, alias6]:
@@ -411,19 +410,19 @@ class UserTestCase(TransactionTestCase):
         user1 = models.User.objects.create(username=person1.username,
             person=person1, **user_defaults)
         alias1 = models.PersonAlias.objects.create(scheme=sciswarm_scheme,
-            identifier='u/' + person1.username, target=person1)
+            identifier=person1.base_identifier, target=person1)
         person2 = models.Person.objects.create(username='person2',
             first_name='Test', last_name='User2', **person_defaults)
         user2 = models.User.objects.create(username=person2.username,
             person=person2, **user_defaults)
         alias2 = models.PersonAlias.objects.create(scheme=sciswarm_scheme,
-            identifier='u/' + person2.username, target=person2)
+            identifier=person2.base_identifier, target=person2)
         person3 = models.Person.objects.create(username='person3',
             first_name='Test', last_name='User3', **person_defaults)
         user3 = models.User.objects.create(username=person3.username,
             person=person3, **user_defaults)
         alias3 = models.PersonAlias.objects.create(scheme=sciswarm_scheme,
-            identifier='u/' + person3.username, target=person3)
+            identifier=person3.base_identifier, target=person3)
         alias4 = models.PersonAlias.objects.create(scheme=email_scheme,
             identifier='foo@example.com', target=person1)
 

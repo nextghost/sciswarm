@@ -78,15 +78,7 @@ class RegistrationForm(HelpTextMixin, auth.UserCreationForm):
 
     def clean(self):
         super(RegistrationForm, self).clean()
-        email = self.cleaned_data.get('email')
         username = self.cleaned_data.get('username')
-        if email is not None:
-            aliasobj = models.PersonAlias.objects
-            scheme = const.person_alias_schemes.EMAIL
-            if not aliasobj.check_alias_available(scheme, email):
-                msg = _('This e-mail address is already taken.')
-                err = ValidationError(msg, 'unique')
-                self.add_error('email', err)
         if username is not None and not re.match(r'^[a-z0-9@.+_-]+$',username):
             msg = _('This username is not allowed.')
             err = ValidationError(msg, 'invalid')
@@ -102,10 +94,9 @@ class RegistrationForm(HelpTextMixin, auth.UserCreationForm):
         person = models.Person.objects.create(**person_data)
         self.instance.person = person
         self.instance.save()
-        scheme = const.person_alias_schemes.EMAIL
-        models.PersonAlias.objects.link_alias(scheme, ret.email, person)
         scheme = const.person_alias_schemes.SCISWARM
-        models.PersonAlias.objects.link_alias(scheme,'u/'+ret.username, person)
+        models.PersonAlias.objects.link_alias(scheme, ret.base_identifier,
+            person)
         return ret
 
 # This form must be processed and saved under transaction
@@ -150,15 +141,6 @@ class UserProfileUpdateForm(ModelForm):
             msg = _('Database error, please try again later.')
             raise ValidationError(msg, 'lock')
         self.instance = tmp
-        person = tmp.person
-        email = self.cleaned_data.get('email')
-        if email is not None and 'email' in self.changed_data:
-            aliasobj = models.PersonAlias.objects
-            scheme = const.person_alias_schemes.EMAIL
-            if not aliasobj.check_alias_available(scheme, email, person):
-                msg = _('This e-mail address is already taken.')
-                err = ValidationError(msg, 'unique')
-                self.add_error('email', err)
 
     def save(self):
         ret = super(UserProfileUpdateForm, self).save()
@@ -167,9 +149,6 @@ class UserProfileUpdateForm(ModelForm):
         for fname in flist:
             setattr(ret.person, fname, self.cleaned_data[fname])
         ret.person.save()
-        if 'email' in self.changed_data:
-            scheme = const.person_alias_schemes.EMAIL
-            models.PersonAlias.objects.link_alias(scheme,ret.email, ret.person)
         return ret
 
 class DeleteAccountForm(ModelForm):
