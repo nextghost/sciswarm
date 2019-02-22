@@ -225,6 +225,8 @@ class ImportBridge(object):
         obj.fields.add(*paper['subfields'])
 
         # Create aliases
+        paobj.link_alias(const.paper_alias_schemes.SCISWARM,
+            obj.base_identifier, obj)
         for alias in paper.get('identifiers', []):
             paobj.link_alias(alias[0], alias[1], obj)
 
