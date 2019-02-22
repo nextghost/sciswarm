@@ -16,6 +16,7 @@
 
 from collections import OrderedDict
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
 from django.db import IntegrityError
 from django.db.transaction import atomic
 from . import pgsql
@@ -68,10 +69,11 @@ class ImportBridge(object):
                     person = models.Person.objects.create(username=username,
                         title_before='', first_name='', last_name=botname,
                         title_after='', bio=bio % reponame)
-                    models.User.objects.create(person=person, password='*',
-                        username=username, language=settings.LANGUAGE_CODE,
-                        first_name='', last_name=botname, email='',
-                        is_active=True, is_superuser=False)
+                    models.User.objects.create(person=person,
+                        password=make_password(None), username=username,
+                        language=settings.LANGUAGE_CODE, first_name='',
+                        last_name=botname, email='', is_active=True,
+                        is_superuser=False)
                     models.PersonAlias.objects.link_alias(scheme,
                         person.base_identifier, person)
                     obj = srcobj.create(code=code, name=reponame,
