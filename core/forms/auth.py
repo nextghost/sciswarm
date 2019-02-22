@@ -24,6 +24,7 @@ from django import forms
 from .base import HelpTextMixin, ModelForm
 from .. import models
 from ..models import const
+from ..utils.l10n import timezone_choices
 from ..utils.transaction import lock_record
 from ..utils.utils import generate_token
 import datetime
@@ -93,6 +94,7 @@ class RegistrationForm(HelpTextMixin, auth.UserCreationForm):
 
     def save(self):
         self.instance.verification_key = generate_token(32)
+        self.instance.timezone = timezone.get_current_timezone_name()
         ret = super(RegistrationForm, self).save(False)
         flist = ['username', 'title_before', 'first_name', 'last_name',
             'title_after', 'bio']
@@ -111,12 +113,14 @@ class UserProfileUpdateForm(ModelForm):
     class Meta:
         model = models.User
         fields = ['password_check', 'email', 'title_before', 'first_name',
-            'last_name', 'title_after', 'language', 'bio']
+            'last_name', 'title_after', 'language', 'timezone', 'bio']
     title_before = models.Person._meta.get_field('title_before').formfield()
     title_after = models.Person._meta.get_field('title_after').formfield()
     bio = models.Person._meta.get_field('bio').formfield()
     language = forms.ChoiceField(label=_('Language'),
         choices=settings.LANGUAGES)
+    timezone = forms.ChoiceField(label=_('Time zone'),
+        choices=timezone_choices)
     password_check = forms.CharField(label=_('Password'),
         widget=forms.PasswordInput)
 
@@ -125,6 +129,9 @@ class UserProfileUpdateForm(ModelForm):
         if self.instance.pk is None:
             msg = 'Creating new users through profile update form is not allowed'
             raise ImproperlyConfigured(msg)
+        tzname = timezone.get_current_timezone_name()
+        if tzname:
+            self.initial.setdefault('timezone', tzname)
         flist = ['title_before', 'title_after', 'bio']
         for fname in flist:
             tmp = models.Person._meta.get_field(fname).validators

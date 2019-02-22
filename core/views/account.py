@@ -34,6 +34,7 @@ from .base import BaseCreateView, BaseUpdateView
 from ..forms.auth import (LoginForm, RegistrationForm, UserProfileUpdateForm,
     PasswordChangeForm, SetPasswordForm, DeleteAccountForm)
 from ..utils.html import NavigationBar, full_reverse, query_string
+from ..utils.l10n import TIMEZONE_SESSION_KEY
 from ..utils.mail import send_template_mail
 from .. import models
 
@@ -56,6 +57,7 @@ def login(request):
     if request.user.is_authenticated:
         lang = request.user.language
         request.session[translation.LANGUAGE_SESSION_KEY] = lang
+        request.session[TIMEZONE_SESSION_KEY] = request.user.timezone
     return ret
 
 @sensitive_post_parameters()
@@ -172,7 +174,9 @@ class ProfileUpdateView(BaseUpdateView):
     def form_valid(self, form):
         ret = super(ProfileUpdateView, self).form_valid(form)
         lang = form.cleaned_data['language']
+        tzname = form.cleaned_data['timezone']
         self.request.session[translation.LANGUAGE_SESSION_KEY] = lang
+        self.request.session[TIMEZONE_SESSION_KEY] = tzname
         return ret
 
 # Decorators applied in parent class
