@@ -36,8 +36,8 @@ class UserTestCase(TransactionTestCase):
         other_scheme = const.person_alias_schemes.OTHER
 
         person_defaults = dict(title_before='', title_after='', bio='')
-        user_defaults = dict(password='*', language='en', is_active=True,
-            is_superuser=False)
+        user_defaults = dict(password='*', language='en', timezone='UTC',
+            is_active=True, is_superuser=False)
         person1 = models.Person.objects.create(username='person1',
             first_name='Test', last_name='User1', **person_defaults)
         user1 = models.User.objects.create(username=person1.username,
@@ -232,8 +232,8 @@ class UserTestCase(TransactionTestCase):
         event_type = const.user_feed_events.AUTHORSHIP_CONFIRMED
 
         person_defaults = dict(title_before='', title_after='', bio='')
-        user_defaults = dict(password='*', language='en', is_active=True,
-            is_superuser=False)
+        user_defaults = dict(password='*', language='en', timezone='UTC',
+            is_active=True, is_superuser=False)
         person1 = models.Person.objects.create(username='person1',
             first_name='Test', last_name='User1', **person_defaults)
         user1 = models.User.objects.create(username=person1.username,
@@ -403,8 +403,8 @@ class UserTestCase(TransactionTestCase):
         email_scheme = const.person_alias_schemes.EMAIL
         event_type = const.user_feed_events.AUTHORSHIP_CONFIRMED
         person_defaults = dict(title_before='', title_after='', bio='')
-        user_defaults = dict(password='*', language='en', is_active=True,
-            is_superuser=False)
+        user_defaults = dict(password='*', language='en', timezone='UTC',
+            is_active=True, is_superuser=False)
 
         person1 = models.Person.objects.create(username='person1',
             first_name='Test', last_name='User1', **person_defaults)

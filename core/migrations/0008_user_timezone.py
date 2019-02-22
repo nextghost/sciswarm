@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='timezone',
-            field=models.CharField(default='Europe/Prague', max_length=64, verbose_name='time zone'),
+            field=models.CharField(max_length=64, verbose_name='time zone'),
         ),
     ]

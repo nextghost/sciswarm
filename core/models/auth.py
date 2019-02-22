@@ -43,7 +43,7 @@ class User(auth_models.AbstractUser):
         null=True, db_index=True, editable=False)
     person = models.ForeignKey('Person', verbose_name=_('person'),
         on_delete=models.PROTECT, related_name='+')
-    timezone = models.CharField(_('time zone'), max_length=64, default='Europe/Prague')
+    timezone = models.CharField(_('time zone'), max_length=64)
 
     def __str__(self):
         # This applies only to bots
