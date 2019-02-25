@@ -106,7 +106,10 @@ class PersonDetailView(DetailView):
         ret['subscribe_form'] = None
         if self.request.user.is_authenticated:
             ret['edit_access'] = (self.request.user.person == obj)
-            if self.request.user.person != obj:
+            if self.request.user.person == obj:
+                links.append((_('Edit profile'), 'core:edit_profile', tuple(),
+                    dict()))
+            else:
                 ret['subscribe_form'] = FeedSubscriptionForm(poster=obj,
                     follower=self.request.user.person)
         ret['navbar'] = NavigationBar(self.request, links)
