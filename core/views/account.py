@@ -127,10 +127,14 @@ class RegistrationView(BaseCreateView):
     @method_decorator(sensitive_post_parameters())
     @method_decorator(csrf_protect)
     @method_decorator(never_cache)
-    @method_decorator(atomic)
+    @method_decorator(atomic())
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return utils.permission_denied(request)
+        max_users = settings.USER_COUNT_LIMIT
+        if max_users is not None and models.User.objects.count() >= max_users:
+            return render(request, 'core/account/registration_closed.html',
+                dict())
         return super(RegistrationView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):

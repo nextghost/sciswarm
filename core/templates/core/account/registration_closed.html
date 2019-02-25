@@ -1,0 +1,11 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Create Account' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Create Account' %}</h1>
+<div class="box">
+{% blocktrans %}Thank you for your interest in Sciswarm. Unfortunately, this installation is still in testing phase and registration is closed at the moment. Please come back later.{% endblocktrans %}
+</div>
+{% endblock %}

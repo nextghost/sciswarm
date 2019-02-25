@@ -95,7 +95,7 @@ class RegistrationForm(HelpTextMixin, auth.UserCreationForm):
         self.instance.person = person
         self.instance.save()
         scheme = const.person_alias_schemes.SCISWARM
-        models.PersonAlias.objects.link_alias(scheme, ret.base_identifier,
+        models.PersonAlias.objects.link_alias(scheme, person.base_identifier,
             person)
         return ret
 

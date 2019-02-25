@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-22 21:02+0100\n"
+"POT-Creation-Date: 2019-02-25 17:14+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: Czech <doucha@swarmtech.cz>\n"
@@ -714,7 +714,7 @@ msgstr ""
 "zkopírovali správně."
 
 #: templates/core/account/delete_form.html:4
-#: templates/core/account/delete_form.html:7 views/account.py:186
+#: templates/core/account/delete_form.html:7 views/account.py:190
 msgid "Delete Account"
 msgstr "Smazat účet"
 
@@ -731,12 +731,14 @@ msgstr ""
 "obnovení účtu."
 
 #: templates/core/account/delete_form.html:18 views/account.py:71
-#: views/account.py:168
+#: views/account.py:172
 msgid "Delete account"
 msgstr "Smazat účet"
 
 #: templates/core/account/register.html:4
 #: templates/core/account/register.html:7
+#: templates/core/account/registration_closed.html:4
+#: templates/core/account/registration_closed.html:7
 msgid "Create Account"
 msgstr "Vytvořit účet"
 
@@ -769,6 +771,16 @@ msgstr ""
 "potvrdit svoji e-mailovou adresu. Poslali jsme Vám e-mail s ověřovacím "
 "odkazem. Jednoduše tento odkaz navštivte a přejeme příjemné používání "
 "Sciswarmu."
+
+#: templates/core/account/registration_closed.html:9
+msgid ""
+"Thank you for your interest in Sciswarm. Unfortunately, this installation is "
+"still in testing phase and registration is closed at the moment. Please come "
+"back later."
+msgstr ""
+"Děkujeme, že máte o tuto službu zájem. Tato instalace systému Sciswarm je "
+"bohužel stále v testovacím režimu a registrace je prozatím uzavřena. Zkuste "
+"to prosím později."
 
 #. Translators: Page title
 #: templates/core/account/tempblock.html:4
@@ -896,7 +908,7 @@ msgid "[Sciswarm] Password reset confirmation"
 msgstr "[Sciswarm] Potvrzení resetu hesla"
 
 #: templates/core/email/registered.html:6 templates/core/email/registered.txt:2
-#: views/account.py:140
+#: views/account.py:144
 msgid "Welcome to Sciswarm!"
 msgstr "Vítejte v systému Sciswarm!"
 
@@ -1308,15 +1320,15 @@ msgstr ""
 msgid "Lost password?"
 msgstr "Zapomněli jste heslo?"
 
-#: views/account.py:70 views/account.py:166
+#: views/account.py:70 views/account.py:170
 msgid "Edit profile"
 msgstr "Upravit profil"
 
-#: views/account.py:159
+#: views/account.py:163
 msgid "Update User Profile"
 msgstr "Upravit uživatelský profil"
 
-#: views/account.py:167
+#: views/account.py:171
 msgid "Change password"
 msgstr "Změnit heslo"
 

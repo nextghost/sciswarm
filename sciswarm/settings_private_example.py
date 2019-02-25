@@ -84,6 +84,7 @@ SYSTEM_EMAIL_FROM = 'no-reply@example.com'
 SYSTEM_EMAIL_ADMIN = 'admin@example.com'
 ADMINS = [('Example', 'admin@example.com')]
 HARVEST_SCRIPTS = ['harvest.arxiv']
+USER_COUNT_LIMIT = None
 
 LANGUAGE_CODE = 'en'
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-22 21:02+0100\n"
+"POT-Creation-Date: 2019-02-25 17:14+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -680,7 +680,7 @@ msgid ""
 msgstr ""
 
 #: templates/core/account/delete_form.html:4
-#: templates/core/account/delete_form.html:7 views/account.py:186
+#: templates/core/account/delete_form.html:7 views/account.py:190
 msgid "Delete Account"
 msgstr ""
 
@@ -693,12 +693,14 @@ msgid ""
 msgstr ""
 
 #: templates/core/account/delete_form.html:18 views/account.py:71
-#: views/account.py:168
+#: views/account.py:172
 msgid "Delete account"
 msgstr ""
 
 #: templates/core/account/register.html:4
 #: templates/core/account/register.html:7
+#: templates/core/account/registration_closed.html:4
+#: templates/core/account/registration_closed.html:7
 msgid "Create Account"
 msgstr ""
 
@@ -723,6 +725,13 @@ msgid ""
 "Thank you for registering. As a final step, you need to verify your e-mail "
 "address before you log in. We have sent you an e-mail with verification "
 "link. Simply visit the link and enjoy using Sciswarm."
+msgstr ""
+
+#: templates/core/account/registration_closed.html:9
+msgid ""
+"Thank you for your interest in Sciswarm. Unfortunately, this installation is "
+"still in testing phase and registration is closed at the moment. Please come "
+"back later."
 msgstr ""
 
 #. Translators: Page title
@@ -841,7 +850,7 @@ msgid "[Sciswarm] Password reset confirmation"
 msgstr ""
 
 #: templates/core/email/registered.html:6 templates/core/email/registered.txt:2
-#: views/account.py:140
+#: views/account.py:144
 msgid "Welcome to Sciswarm!"
 msgstr ""
 
@@ -1222,15 +1231,15 @@ msgstr ""
 msgid "Lost password?"
 msgstr ""
 
-#: views/account.py:70 views/account.py:166
+#: views/account.py:70 views/account.py:170
 msgid "Edit profile"
 msgstr ""
 
-#: views/account.py:159
+#: views/account.py:163
 msgid "Update User Profile"
 msgstr ""
 
-#: views/account.py:167
+#: views/account.py:171
 msgid "Change password"
 msgstr ""
 
