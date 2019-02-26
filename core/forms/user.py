@@ -274,3 +274,48 @@ class FeedSubscriptionForm(Form):
             models.FeedSubscription.objects.bulk_create(create_list)
 
     save.alters_data = True
+
+# This form must be processed and saved under transaction
+class PaperManagementDelegationForm(Form):
+    def __init__(self, *args, **kwargs):
+        author = kwargs.pop('author')
+        target = kwargs.pop('target')
+        if author is None:
+            raise ImproperlyConfigured('"author" keyword argument is required')
+        if target is None:
+            raise ImproperlyConfigured('"target" keyword argument is required')
+        super(PaperManagementDelegationForm, self).__init__(*args, **kwargs)
+        self.author = author
+        self.target = target
+        self.delegated = self._delegation_queryset().exists()
+
+    def _delegation_queryset(self):
+        query = (models.Person.query_model.pk == self.target.pk)
+        return self.author.paper_managers.filter(query)
+
+    def get_buttons(self):
+        if self.delegated:
+            return (('_remove', _('Cancel delegation')),)
+        else:
+            return (('_delegate', _('Delegate')),)
+
+    def submit_buttons(self):
+        button = SubmitButton()
+        ret = [button.render(name, title) for name,title in self.get_buttons()]
+        return mark_safe(' '.join(ret))
+
+    def clean(self):
+        lock_record(self.author)
+        self.delegated = self._delegation_queryset().exists()
+
+    def save(self):
+        objs = models.PaperManagementDelegation.objects
+        if '_delegate' in self.data and not self.delegated:
+            objs.create(author=self.author, delegate=self.target)
+        elif '_remove' in self.data and self.delegated:
+            table = models.PaperManagementDelegation.query_model
+            query = ((table.author == self.author) &
+                (table.delegate == self.target))
+            objs.filter(query).delete()
+
+    save.alters_data = True

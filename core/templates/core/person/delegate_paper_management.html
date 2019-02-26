@@ -1,0 +1,20 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'Delegate Paper Management' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Delegate Paper Management' %}</h1>
+<div class="box">
+<table class="form">
+<tr><th>{% trans 'User:' %}</th><td>{{ object|object_link }}</td></tr>
+<tr><th>{% trans 'Editing permissions delegated:' %}</th><td>{{ form.delegated|yesno:_('Yes,No') }}</td></tr>
+</table>
+</div>
+<h2>{% if form.delegated %}{% trans 'Do you really want to cancel the permission to edit all your papers?' %}{% else %}{% trans 'Do you really want to give this user permission to edit all your papers?' %}{% endif %}</h2>
+<form method="post" action="?">
+{% csrf_token %}
+<p>{{ form.submit_buttons }}</p>
+</form>
+{% endblock %}

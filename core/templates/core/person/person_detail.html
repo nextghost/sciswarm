@@ -8,6 +8,7 @@
 {% block content %}
 <h1>{{ object.full_name }}</h1>
 {{ navbar }}
+{% if delegated_permissions %}<div class="box highlight"><p>{% trans 'This user has permission to edit all your articles.' %}</p></div>{% endif %}
 <div class="box">
 {{ object.bio|linebreaks }}
 </div>

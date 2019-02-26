@@ -15,8 +15,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from .auth import User, BruteBlock, BruteLog
-from .paper import (Person, PersonAlias, ScienceSubfield, Paper, PaperAlias,
-    PaperKeyword, PaperAuthorReference, PaperAuthorName, PaperSupplementalLink,
-    PaperImportSource)
+from .paper import (Person, PaperManagementDelegation, PersonAlias,
+    ScienceSubfield, Paper, PaperAlias, PaperKeyword, PaperAuthorReference,
+    PaperAuthorName, PaperSupplementalLink, PaperImportSource)
 from .comment import PaperReview, PaperReviewResponse
 from .event import FeedEvent, FeedSubscription

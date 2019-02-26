@@ -160,6 +160,10 @@ textarea {
 	border-bottom: 1px dotted black;
 }
 
+.highlight {
+	font-weight: bold;
+}
+
 span.author.rejected {
 	text-decoration: line-through;
 }

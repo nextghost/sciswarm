@@ -1,0 +1,19 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load sciswarm %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<h1>{{ page_title }}</h1>
+{{ navbar }}
+<div class="box">
+{% for object in object_list %}
+<div>{{ object|object_link }} <a href="{% url 'core:delegate_paper_management' username=object.username %}"><img src="{% static 'img/delete.png' %}" alt="{% trans '(delete)'%}"/></a></a></div>
+{% empty %}
+<div>{% trans 'No users with delegated editing permissions found.' %}</div>
+{% endfor %}
+{{ paginator }}
+</div>
+{% endblock %}

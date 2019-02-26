@@ -55,6 +55,9 @@ class Person(models.Model):
     title_after = models.CharField(_('titles after name'), max_length=64,
         blank=True)
     bio = models.TextField(_('about you'), max_length=1024, blank=True)
+    paper_managers = models.ManyToManyField('Person',
+        related_name='delegating_authors', through='PaperManagementDelegation',
+        symmetrical=False, through_fields=('author', 'delegate'))
 
     def __str__(self):
         # This applies only to bots
@@ -103,6 +106,15 @@ class Person(models.Model):
     def get_absolute_url(self):
         kwargs = dict(username=self.username)
         return reverse('core:person_detail', kwargs=kwargs)
+
+class PaperManagementDelegation(models.Model):
+    class Meta:
+        ordering = ('author', 'delegate')
+
+    author = models.ForeignKey(Person, verbose_name=_('author'),
+        on_delete=models.CASCADE, related_name='+')
+    delegate = models.ForeignKey(Person, verbose_name=_('delegate'),
+        on_delete=models.CASCADE, related_name='+')
 
 class AliasManager(models.Manager):
     def check_alias_available(self, scheme, identifier, target=None):
@@ -319,7 +331,9 @@ class Paper(models.Model):
             return True
         author_list = [x.target for x in self.author_list()
             if x.target is not None]
-        if user.person in author_list:
+        query = Person.query_model.pk.belongs([x.pk for x in author_list])
+        qs = user.person.delegating_authors.filter(query)
+        if user.person in author_list or qs.exists():
             return True
         return (not author_list) and user.person == self.posted_by
 

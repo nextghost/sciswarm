@@ -31,7 +31,7 @@ from ..models import const
 from ..utils.html import NavigationBar
 from ..utils.utils import logger
 from ..forms.user import (PersonAliasForm, MassAuthorshipConfirmationForm,
-    FeedSubscriptionForm)
+    FeedSubscriptionForm, PaperManagementDelegationForm)
 from .. import models
 
 class PersonFollowerListView(BaseListView):
@@ -104,12 +104,19 @@ class PersonDetailView(DetailView):
         ]
         ret['edit_access'] = False
         ret['subscribe_form'] = None
+        ret['delegated_permissions'] = False
         if self.request.user.is_authenticated:
             ret['edit_access'] = (self.request.user.person == obj)
             if self.request.user.person == obj:
                 links.append((_('Edit profile'), 'core:edit_profile', tuple(),
                     dict()))
             else:
+                links.append((_('Delegate paper management'),
+                    'core:delegate_paper_management', tuple(),
+                    dict(username=obj.username)))
+                query = (models.Person.query_model.pk == obj.pk)
+                qs = self.request.user.person.paper_managers.filter(query)
+                ret['delegated_permissions'] = qs.exists()
                 ret['subscribe_form'] = FeedSubscriptionForm(poster=obj,
                     follower=self.request.user.person)
         ret['navbar'] = NavigationBar(self.request, links)
@@ -244,3 +251,64 @@ class FeedSubscriptionFormView(FormView):
     def form_valid(self, form):
         form.save()
         return redirect(self.person.get_absolute_url())
+
+@method_decorator(login_required, name='dispatch')
+class PaperManagersListView(BaseListView):
+    template_name = 'core/person/paper_managers_list.html'
+
+    def get_queryset(self):
+        # List inactive users, too
+        return self.request.user.person.paper_managers.all()
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(PaperManagersListView, self).get_context_data(*args,
+            **kwargs)
+        links = [(_('Delegating authors'), 'core:user_delegating_authors_list',
+            tuple(), dict())]
+        ret['navbar'] = NavigationBar(self.request, links)
+        ret['page_title'] = _('Your Delegated Paper Managers')
+        return ret
+
+@method_decorator(login_required, name='dispatch')
+class DelegatingAuthorsListView(BaseListView):
+    template_name = 'core/person/person_list.html'
+
+    def get_queryset(self):
+        return self.request.user.person.delegating_authors.filter_active()
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(DelegatingAuthorsListView, self).get_context_data(*args,
+            **kwargs)
+        links = [(_('Your paper managers'), 'core:user_paper_managers_list',
+            tuple(), dict())]
+        ret['navbar'] = NavigationBar(self.request, links)
+        ret['page_title'] = _('Authors Who Delegated Paper Management to You')
+        return ret
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
+class PaperManagementDelegationView(FormView):
+    form_class = PaperManagementDelegationForm
+    template_name = 'core/person/delegate_paper_management.html'
+
+    def get_form_kwargs(self, *args, **kwargs):
+        ret = super(PaperManagementDelegationView, self).get_form_kwargs(*args,
+            **kwargs)
+        ret['author'] = self.request.user.person
+        # Allow (un)delegation even for inactive users
+        qs = models.Person.objects.filter_username(self.kwargs['username'])
+        self.person = get_object_or_404(qs)
+        if self.person == self.request.user.person:
+            raise Http404()
+        ret['target'] = self.person
+        return ret
+
+    def form_valid(self, form):
+        form.save()
+        return redirect(self.person.get_absolute_url())
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(PaperManagementDelegationView, self).get_context_data(
+            *args, **kwargs)
+        ret['object'] = self.person
+        return ret
