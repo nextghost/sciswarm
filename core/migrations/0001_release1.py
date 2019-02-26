@@ -12,8 +12,6 @@ import django.utils.timezone
 
 class Migration(migrations.Migration):
 
-    replaces = [('core', '0001_initial'), ('core', '0002_paper_review'), ('core', '0003_feedevent'), ('core', '0004_feedsubscription'), ('core', '0005_sciencesubfield'), ('core', '0006_paperimportsource'), ('core', '0007_textsearch_index'), ('core', '0008_user_timezone'), ('core', '0009_paper_management_delegation')]
-
     initial = True
 
     dependencies = [
