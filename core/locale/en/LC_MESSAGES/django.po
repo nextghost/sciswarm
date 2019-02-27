@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-26 16:47+0100\n"
+"POT-Creation-Date: 2019-02-27 16:33+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -932,6 +932,10 @@ msgstr ""
 
 #: templates/core/layout.html:39
 msgid "Terms of Service"
+msgstr ""
+
+#: templates/core/layout.html:40
+msgid "Sciswarm on GitHub"
 msgstr ""
 
 #: templates/core/main/homepage.html:6
