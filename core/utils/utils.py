@@ -75,28 +75,6 @@ def update_diff(old, new):
     insert = list(newset - oldset)
     return delete, insert
 
-def czech_holidays(year):
-    dates = [(1, 1), (1, 5), (8, 5), (5, 7), (6, 7), (28, 9), (28, 10),
-        (17, 11), (24, 12), (25, 12), (26, 12)]
-
-    # Easter date
-    gn = (year % 19) + 1
-    century = (year // 100) + 1
-    x = (3 * century) // 4 - 12
-    z = (8 * century + 5) // 25 - 5
-    sunday = (5 * year) // 4 - x - 10
-    epact = (11 * gn + 20 + z - x) % 30
-    if epact == 24 or (epact == 25 and gn > 11):
-        epact += 1
-    full_moon = 44 - epact
-    if full_moon < 21:
-        full_moon += 30
-    s2 = full_moon + 7 - (sunday + full_moon) % 7
-
-    tmp = [(tmp - 31, 4) if tmp > 31 else (tmp, 3) for tmp in (s2 - 2, s2 + 1)]
-    dates[1:1] = tmp
-    return [datetime.date(year, month, day) for day, month in dates]
-
 def local_date():
     return timezone.localtime(timezone.now()).date()
 
