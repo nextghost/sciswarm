@@ -45,6 +45,25 @@ class BasePaperListView(SearchListView):
     template_name = 'core/paper/paper_list.html'
     page_title = _('Latest papers')
 
+    def get_queryset(self):
+        qs = None
+        if self.form.is_valid():
+            # Workaround for PostgreSQL query optimizer bug
+            qs = self.form.queryset
+            if self.form.filter:
+                ordering = self.get_ordering()
+                if ordering is None:
+                    ordering = models.Paper._meta.ordering
+                if isinstance(ordering, (list, tuple)):
+                    ordering = list(ordering)
+                else:
+                    ordering = [ordering]
+                ordering.append('public')
+                qs = qs.order_by(*ordering)
+        if qs is None:
+            qs = self.get_base_queryset()
+        return qs
+
     def get_context_data(self, *args, **kwargs):
         ret = super(BasePaperListView, self).get_context_data(*args, **kwargs)
         obj_list = list(ret['object_list'])
@@ -63,17 +82,6 @@ class BasePaperListView(SearchListView):
 
 class PaperListView(BasePaperListView):
     ordering = ('-date_posted',)
-
-    def get_queryset(self):
-        qs = None
-        if self.form.is_valid():
-            # Workaround for PostgreSQL query optimizer bug
-            qs = self.form.queryset
-            if self.form.filter:
-                qs = qs.order_by('-date_posted', 'public')
-        if qs is None:
-            qs = self.get_base_queryset()
-        return qs
 
 class CitedByPaperListView(BasePaperListView):
     def get_base_queryset(self):
