@@ -181,7 +181,7 @@ class PaperForm(ModelForm):
         kwlist = re.split('[,\n]+', text, flags=re.MULTILINE)
         ret = set((x for x in map(lambda y: y.strip(), kwlist) if x))
         mfield = models.PaperKeyword._meta.get_field('keyword')
-        if max((len(x) for x in ret)) > mfield.max_length:
+        if ret and max((len(x) for x in ret)) > mfield.max_length:
             msg=_('Some keywords are longer than %(limit_value)s characters.')
             params = dict(limit_value=mfield.max_length)
             raise ValidationError(msg, 'max_value', params=params)
