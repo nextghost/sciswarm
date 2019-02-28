@@ -84,6 +84,7 @@ def isbn_validator(value):
         raise err
     if value[-1] != str(checksum):
         raise ValidationError(_('Identifier checksum is incorrect.'),'invalid')
+    return number
 
 def arxiv_validator(value):
     pattern = r'^(?:arXiv:)?((?:[0-9]{4}\.[0-9]{4,5}|[a-z][a-z-]*(?:\.[A-Z]+)/[0-9]{7})(?:v[0-9]+)?)$'
