@@ -71,6 +71,11 @@ def doi_link(scheme, identifier):
 def arxiv_link(scheme, identifier):
     return render_link('https://arxiv.org/abs/' + identifier, identifier)
 
+def isbn_link(scheme, identifier):
+    qstr = query_string(tbm='bks', q='isbn:' + identifier)
+    url = 'https://www.google.com/search?' + qstr
+    return render_link(url, identifier)
+
 _alias_linkgen_map = {
     const.person_alias_schemes.EMAIL: email_link,
     const.person_alias_schemes.ORCID: orcid_link,
@@ -80,6 +85,7 @@ _alias_linkgen_map = {
     const.person_alias_schemes.URL: web_link,
     const.paper_alias_schemes.DOI: doi_link,
     const.paper_alias_schemes.ARXIV: arxiv_link,
+    const.paper_alias_schemes.ISBN: isbn_link,
 }
 
 def alias_link(scheme, identifier):
