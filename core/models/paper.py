@@ -287,7 +287,7 @@ class Paper(models.Model):
     changed_by = models.ForeignKey(Person, verbose_name=_('changed by'),
         null=True, on_delete=models.SET_NULL, editable=False, related_name='+')
     # Public flag marks that the paper was taken down due to copyright claim
-    public = models.BooleanField(_('public'), default=True)
+    public = models.BooleanField(_('public'), default=True, db_index=True)
     authors = models.ManyToManyField(PersonAlias,
         through='PaperAuthorReference')
     bibliography = models.ManyToManyField('PaperAlias')
