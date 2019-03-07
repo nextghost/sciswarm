@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-27 16:33+0100\n"
+"POT-Creation-Date: 2019-03-07 17:53+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: Czech <doucha@swarmtech.cz>\n"
@@ -949,6 +949,500 @@ msgstr ""
 msgid "No events yet."
 msgstr "Zatím žádné události."
 
+#: templates/core/help/identifiers.html:5
+#: templates/core/help/identifiers.html:8
+msgid "Using Identifiers"
+msgstr "Jak používat identifikátory"
+
+#: templates/core/help/identifiers.html:11
+msgid ""
+"Sciswarm uses various unique identifiers to link authorship and citations. "
+"If the author or cited paper isn't registered in the system yet, the "
+"identifier will be converted to an external link (if supported). Once the "
+"author or paper gets registered in the system, the identifier will be "
+"converted to a link to their user profile or paper detail page in Sciswarm, "
+"through which you can also access the original external links."
+msgstr ""
+"Sciswarm využívá různé unikátní identifikátor k přiřazování autorů a citací. "
+"Pokud autor nebo citovaný článek ještě není zaregistrovaný v systému, "
+"identifikátor se převede na odkaz mimo systém (pokud možno). Až se autor "
+"nebo článek do systému zaregistruje, identifikátor se převede na odkaz na "
+"uživatelský profil nebo detail článku ve Sciswarmu, odkud se dále dostanete "
+"k původním odkazům mimo systém."
+
+#: templates/core/help/identifiers.html:12
+msgid ""
+"Identifiers have two parts: The <b>scheme</b>, which determines the "
+"identifier namespace and how the value will be converted to an external "
+"link, and the <b>value</b>, which must be unique for the given scheme and "
+"permanently associated with the given user or paper."
+msgstr ""
+"Identifikátory mají dvě části: <b>Schéma</b>, které určuje jmenný prostor "
+"identifikátoru a jak ho převést na odkaz mimo systém, a <b>hodnotu</b>, "
+"která musí být pro dané schéma unikátní a trvale spojená s daným uživatelem "
+"nebo článkem."
+
+#: templates/core/help/identifiers.html:13
+msgid ""
+"When entering an identifier into Sciswarm, you can either select one of the "
+"supported schemes from the drop-down menu, or you can select &#8220;"
+"Other&#8221; and enter the full identifier into the text field as &#8220;"
+"<tt>prefix:value</tt>&#8221;. Supported scheme prefixes listed below will be "
+"automatically recognized as if you had selected the scheme using the drop-"
+"down menu. But you can enter any arbitrary scheme prefix as long as the "
+"corresponding identifier namespace is well known. Scheme prefixes are case "
+"insensitive."
+msgstr ""
+"Když do Sciswarmu zadáváte identifikátor, můžete buď vybrat jedno z "
+"podporovaných schémat z rozbalovací nabídky, nebo můžete vybrat &#8222;"
+"Jiné&#8220; a zapsat celý identifikátor do textového pole ve formátu &#8222;"
+"<tt>prefix:hodnota</tt>&#8220;. Systém automaticky rozpozná prefixy níže "
+"uvedených podporovaných schémat, jako kdybyste schéma vybrali z rozbalovací "
+"nabídky. Ale můžete zadat libovolný prefix, pokud je příslušný jmenný "
+"prostor dobře známý. Prefixy schémat nerozlišují velká a malá písmena."
+
+#: templates/core/help/identifiers.html:15
+msgid "User Identifiers"
+msgstr "Identifikátory uživatelů"
+
+#: templates/core/help/identifiers.html:16
+msgid "Sciswarm supports the following user identifier schemes:"
+msgstr "Sciswarm podporuje následující schémata pro identifikátory uživatelů:"
+
+#: templates/core/help/identifiers.html:18
+msgid "E-mail address (prefix: mailto)"
+msgstr "E-mailová adresa (prefix: mailto)"
+
+#: templates/core/help/identifiers.html:19
+msgid "ORCID iD (prefix: orcid)"
+msgstr "ORCID iD (prefix: orcid)"
+
+#: templates/core/help/identifiers.html:20
+msgid "XMPP address/JID (prefix: xmpp)"
+msgstr "XMPP adresa/JID (prefix: xmpp)"
+
+#: templates/core/help/identifiers.html:21
+msgid "Twitter handle (prefix: twitter)"
+msgstr "Twitter účet (prefix: twitter)"
+
+#: templates/core/help/identifiers.html:22
+#: templates/core/help/identifiers.html:32
+msgid "Sciswarm ID (prefix: swarm)"
+msgstr "Sciswarm ID (prefix: swarm)"
+
+#: templates/core/help/identifiers.html:23
+msgid "Personal website (prefixes: http, https, ftp, ftps)"
+msgstr "Osobní webová stránka (prefixy: http, https, ftp, ftps)"
+
+#: templates/core/help/identifiers.html:26
+msgctxt "help"
+msgid "Paper Identifiers"
+msgstr "Identifikátory článků"
+
+#: templates/core/help/identifiers.html:27
+msgid "Sciswarm supports the following paper identifier schemes:"
+msgstr "Sciswarm podporuje následující schémata pro identifikátory článků:"
+
+#: templates/core/help/identifiers.html:29
+msgid "DOI (prefix: doi)"
+msgstr "DOI (prefix: doi)"
+
+#: templates/core/help/identifiers.html:30
+msgid "ISBN (prefix: isbn)"
+msgstr "ISBN (prefix: isbn)"
+
+#: templates/core/help/identifiers.html:31
+msgid "arXiv ID (prefix: arxiv)"
+msgstr "arXiv ID (prefix: arxiv)"
+
+#: templates/core/help/identifiers.html:33
+msgid "Web URL (prefixes: http, https, ftp, ftps)"
+msgstr "Webové URL (prefixy: http, https, ftp, ftps)"
+
+#: templates/core/help/identifiers.html:35
+msgid ""
+"When you select arXiv scheme from the drop-down menu, the system will accept "
+"arXiv identifiers with or without the (case sensitive) &#8220;arXiv:&#8221; "
+"prefix."
+msgstr ""
+"Když z rozbalovací nabídky vyberete schéma arXiv, systém přijme "
+"identifikátory s prefixem &#8222;arXiv:&#8220; i bez něj. V tomto případě se "
+"ale rozlišuje velikost písmen."
+
+#: templates/core/help/index.html:5 templates/core/help/index.html:8
+msgid "Sciswarm Help"
+msgstr "Nápověda Sciswarmu"
+
+#: templates/core/help/index.html:11
+msgid ""
+"Most social networks are about interacting with other users directly. This "
+"social network focuses on interaction with scientific papers instead. You "
+"can think of Sciswarm as a massively collaborative overlay journal where you "
+"get to pick your own editorial board by following people you trust. But it's "
+"not an overlay of any particular preprint repository. It's an overlay of the "
+"entire body of scientific literature, including papers published in "
+"paywalled journals. Sciswarm stores only basic paper metadata and links to "
+"content hosted elsewhere (sometimes behind paywall) so that you don't have "
+"to compromise between your career advancement and supporting Open Access. "
+"When Sciswarm paper metrics become more important than journal impact "
+"factor, Open Access will win without a fight."
+msgstr ""
+"Většina sociálních sítí se zaměřuje na přímou komunikaci s ostatními "
+"uživateli. Tato sociální síť je naopak zaměřená na práci s vědeckými články. "
+"Sciswarm si můžete představit jako masově kooperativní overlay žurnál, kde "
+"si můžete sestavit vlastní redakci sledováním lidí, kterým důvěřujete. Ale "
+"není to overlay žurnál postavený nad jedním konkrétním preprint repozitářem. "
+"Je to overlay žurnál pokrývající veškerou vědeckou literaturu, včetně "
+"zpoplatněných článků vydaných v uzavřených vědeckých časopisech. Sciswarm "
+"obsahuje pouze základní metadata o článcích a odkazy na obsah uložený jinde "
+"(někdy i zpoplatněný), abyste nemuseli dělat kompromisy mezi vlastním "
+"kariérním postupem a podporou Open Access. Až budou mít metriky kvality "
+"článků ve Sciswarmu větší váhu než impakt faktor tradičních časopisů, Open "
+"Access vyhraje bez boje."
+
+#: templates/core/help/index.html:14
+msgid "Help Topics"
+msgstr "Témata nápovědy"
+
+#: templates/core/help/index.html:17
+msgid "Using identifiers"
+msgstr "Jak používat identifikátory"
+
+#: templates/core/help/index.html:18
+msgid "User profiles"
+msgstr "Uživatelské profily"
+
+#: templates/core/help/index.html:19
+msgid "Paper metadata"
+msgstr "Metadata článků"
+
+#: templates/core/help/index.html:20
+msgid "Paper management"
+msgstr "Správa článků"
+
+#: templates/core/help/index.html:21
+msgid "Reviewing papers"
+msgstr "Recenzování článků"
+
+#: templates/core/help/index.html:25
+msgid "Planned Features"
+msgstr "Plánované funkce"
+
+#: templates/core/help/index.html:28
+msgid "Detailed citation and review metrics for papers"
+msgstr "Podrobné metriky článků podle citací a recenzí"
+
+#: templates/core/help/index.html:29
+msgid "Event notifications"
+msgstr "Oznámení o událostech"
+
+#: templates/core/help/index.html:30
+msgid "Paper collections"
+msgstr "Kolekce článků"
+
+#: templates/core/help/index.html:31
+msgid "Research replications and other relationships between papers"
+msgstr "Replikace výzkumu a další vztahy mezi články"
+
+#: templates/core/help/index.html:32
+msgid "Open data"
+msgstr "Otevřená data"
+
+#: templates/core/help/index.html:33
+msgid "Federation protocol"
+msgstr "Protokol pro decentralizaci systému"
+
+#: templates/core/help/index.html:37
+msgid "Changelog"
+msgstr "Průběh vývoje"
+
+#: templates/core/help/index.html:40
+msgid "Mar. 1, 2019"
+msgstr "1. března 2019"
+
+#: templates/core/help/index.html:41
+msgid "First public version"
+msgstr "První veřejná verze"
+
+#: templates/core/help/papers.html:5 templates/core/help/papers.html:9
+msgid "Paper Metadata"
+msgstr "Metadata článků"
+
+#: templates/core/help/papers.html:11
+#, python-format
+msgid ""
+"Paper metadata in Sciswarm includes the usual: title, authors, abstract, "
+"keywords, recommended citation format and bibliography. But bibliography "
+"needs to be entered using <a href=\"%(help_identifiers_url)s\">unique "
+"identifiers</a> of the cited papers. Authors can be entered either as plain "
+"names (only when you're posting a new paper) or using <a href="
+"\"%(help_identifiers_url)s\">unique identifiers</a>. In addition to that, "
+"you can specify one or more scientific fields, the type of research (theory/"
+"experiment/observation) and provide supplemental links for example to data "
+"or software used in the research."
+msgstr ""
+"Sciswarm sbírá obvyklá metadata článků: název, autory, abstrakt, klíčová "
+"slova, doporučený způsob citace a literaturu. Jenže literaturu musíte "
+"zadávat pomocí <a href=\"%(help_identifiers_url)s\">unikátních "
+"identifikátorů</a> citovaných článků. Autory můžete zadávat buď prostým "
+"jménem (pouze při vkládání nového článku), nebo pomocí <a href="
+"\"%(help_identifiers_url)s\">unikátních identifikátorů</a>. Navíc můžete "
+"zadat jeden nebo více vědeckých oborů, druh výzkumu (teorie/experiment/"
+"pozorování) a přidat doplňující odkazy například na data nebo software "
+"použitý při výzkumu."
+
+#: templates/core/help/papers.html:12
+msgid ""
+"When specifying a scientific field, you can either select both the main "
+"field and subfield from the drop-down menu, or you can select the subfield "
+"as &#8220;Other&#8221; and type the name of a new subfield into the text "
+"field. Always use the English name when creating a new subfield. The new "
+"entry will be created under the selected main field."
+msgstr ""
+"Když zadáváte vědecký obor, můžete buď vybrat hlavní obor i podobor z "
+"rozbalovacího menu, nebo můžete jako podobor vybrat &#8222;Jiný&#8220; a "
+"zadat název nového podoboru do textového pole. Při vytváření nového podoboru "
+"vždy zadávejte anglický název. Nový podobor se vytvoří pod zadaným hlavním "
+"oborem."
+
+#: templates/core/help/papers.html:13
+msgid ""
+"One of the planned features is to track replications of papers. If you have "
+"replicated a paper (intentionally or not), you will be able to link your "
+"paper with the original one and specify whether you have used the same "
+"method and whether your conclusions confirm or contradict the original "
+"findings."
+msgstr ""
+"Jednou z plánovaných funkcí je sledovat replikace výzkumu. Pokud jste "
+"provedli replikaci některého článku (záměrně nebo náhodou), budete moci svůj "
+"článek propojit s tím předchozím a zadat, jestli jste použili stejnou metodu "
+"a jestli Vaše závěry potvrzují nebo zpochybňují předchozí výsledky."
+
+#: templates/core/help/papers.html:16
+msgid "Paper Management"
+msgstr "Správa článků"
+
+#: templates/core/help/papers.html:18
+#, python-format
+msgid ""
+"You can post papers whether you are the author or not by clicking <a href="
+"\"%(create_paper_url)s\">New paper</a> in the main menu on the left. But if "
+"you're posting somebody else's paper which is not released under one of the "
+"free licenses (e.g. Creative Commons), you need to ask the authors for "
+"permission first. All authors automatically have edit access to their "
+"papers. If none of the authors is registered in the system yet, the poster "
+"will be granted provisional edit access instead."
+msgstr ""
+"Kliknutím na <a href=\"%(create_paper_url)s\">Nový článek</a> v hlavním menu "
+"nalevo můžete vkládat svoje i cizí články. Ale když chcete vložit cizí "
+"článek, který není vydaný pod některou svobodnou licencí (např. Creative "
+"Commons), musíte nejprve požádat autory o povolení. Všichni autoři mají "
+"automaticky práva upravovat své články. Pokud žádný z autorů článku zatím "
+"není registrovaný v systému, dostane práva k editaci provizorně uživatel, "
+"který článek vložil."
+
+#: templates/core/help/papers.html:19
+#, python-format
+msgid ""
+"Authors can also delegate paper management to other users, for example their "
+"librarian or assistant. To do so, visit the other user's profile page and "
+"click &#8220;Delegate paper management&#8221;. You can delegate paper "
+"management to multiple users. You do not lose your edit access by doing so. "
+"Provisional edit access cannot be delegated. You can view or change "
+"delegation at any time through the list of <a href="
+"\"%(delegated_permissions_url)s\">delegated permissions</a> accessible from "
+"the main menu on the left."
+msgstr ""
+"Autoři také mohou správu článků delegovat na jiné uživatele, například "
+"knihovníka nebo asistenta. Jiného uživatele pověříte tak, že v jeho profilu "
+"kliknete na &#8222;Pověření ke správě článků&#8220;. Správu můžete delegovat "
+"na více uživatelů současně. Sami tím práva k editaci článků neztratíte. "
+"Provizorní práva k editaci delegovat nelze. Aktuálně udělená pověření si "
+"můžete prohlédnout nebo změnit v <a href=\"%(delegated_permissions_url)s"
+"\">seznamu pověření</a>, který najdete v hlavním menu nalevo."
+
+#: templates/core/help/papers.html:20
+#, python-format
+msgid ""
+"Authorship linked through a unique identifier starts as unconfirmed "
+"(highlighted with yellow background). You can then confirm or reject "
+"authorship of papers en masse by clicking <a href=\"%(manage_authorship_url)s"
+"\">Manage authorship</a> in the main menu on the left. The list of papers "
+"you have rejected is also accessible through this menu option. If you make a "
+"mistake, you can change confirmation at any time by clicking &#8220;Manage "
+"authorship&#8221; on the detail page of a specific paper. Only confirmed "
+"papers will show up in the list of authored papers in your profile. If "
+"somebody adds you as an author to a paper which is not yours, it is better "
+"to reject the authorship than to simply delete yourself from the list. If "
+"you reject authorship, the other user cannot add you back."
+msgstr ""
+"Autorství zapsané pomocí unikátního identifikátoru je zpočátku nepotvrzené "
+"(zvýrazněno žlutým podkladem). Následně můžete autorství článků hromadně "
+"potvrdit nebo odmítnout klinkutím na <a href=\"%(manage_authorship_url)s"
+"\">správu autorství</a> v hlavním menu nalevo. Přes tuto volbu se také "
+"dostanete k seznamu článků, které jste odmítli. Pokud se spletete, můžete "
+"potvrzení autorství kdykoliv změnit kliknutím na odkaz &#8222;Správa "
+"autorství&#8220; v detailu konkrétního článku. V seznamu Vámi napsaných "
+"článků ve Vašem profilu se objeví pouze články s potvrzeným autorstvím. "
+"Pokud Vás někdo přidá jako autora k článku, který není Váš, je lepší "
+"autorství omítnout než se ze seznamu autorů vymazat. Když autorství "
+"odmítnete, druhý uživatel Vás nebude moci mezi autory opět přidat."
+
+#: templates/core/help/papers.html:21
+msgid ""
+"Make sure that the identifiers which you add to your paper uniquely and "
+"permanently identify only the paper itself. Do <b><i>NOT</i></b> use "
+"identifiers which point to a larger collection of papers. Links to such "
+"paper collections should be added to supplemental links instead."
+msgstr ""
+"Ke svým článkům přidávejte pouze identifikátory, které jsou trvale a "
+"jednoznačně spojené pouze se samotným článkem. V žádném případě nepoužívejte "
+"identifikátory, které se vztahují na větší kolekci článků. Takovéto kolekce "
+"článků patří mezi doplňující odkazy."
+
+#: templates/core/help/papers.html:24
+msgid "Reviewing Papers"
+msgstr "Recenzování článků"
+
+#: templates/core/help/papers.html:26
+msgid ""
+"To review a paper in Sciswarm, click &#8220;Add review&#8221; on the paper "
+"detail page. You can rate the methodology and importance separately and also "
+"write a short explanation of any problems and highlights. The review will "
+"also show up on your followers' timeline. The authors can then respond to "
+"the review for example to clear up any misunderstandings."
+msgstr ""
+"Pro vložení recenze přejděte na detail článku a klikněte na &#8222;Napsat "
+"recenzi&#8220;. Metodiku a důležitost článku můžete hodnotit zvlášť a dále "
+"napsat stručné shrnutí hlavních zajímavostí nebo chyb. Vaše recenze se pak "
+"zobrazí jako novinka uživatelům, kteří Vás sledují. Autoři následně mohou "
+"odpovědět na recenzi a vysvětlit případná nedorozumění."
+
+#: templates/core/help/papers.html:27
+msgid ""
+"You cannot review your own papers or claim authorship of papers which you "
+"have reviewed. If you delete a review, you cannot write another one later."
+msgstr ""
+"Nemůžete recenzovat své vlastní články ani potvrdit autorství článků, které "
+"jste recenzovali. Pokud recenzi smažete, novou již nebudete moci napsat."
+
+#: templates/core/help/papers.html:30
+msgid "Notes About Imported Papers"
+msgstr "Poznámky k importu článků"
+
+#: templates/core/help/papers.html:32
+msgid ""
+"Sciswarm currently supports importing paper metadata from <a href=\"https://"
+"arxiv.org/\">arXiv</a>. While arXiv does support unique author identifiers "
+"internally, it doesn't export them through OAI-PMH at the moment. arXiv "
+"papers are therefore imported only with plain author names. You will be able "
+"to claim your arXiv papers through user profile name match soon."
+msgstr ""
+"Sciswarm aktuálně podporuje import metadat článků z <a href=\"https://arxiv."
+"org/\">arXivu</a>. Přestože arXiv interně podporuje unikátní identifikátory "
+"autorů, momentálně tato data neexportuje přes OAI-PMH. Články z arXivu se "
+"proto importují pouze s prostými jmény autorů. Brzy ale budete moci převzít "
+"autorství svých článků z arXivu podle shody profilového jména."
+
+#: templates/core/help/papers.html:33
+msgid ""
+"Another import problem is that arXiv doesn't treat DOI as a unique "
+"identifier. Multiple papers from different authors often have the same DOI, "
+"and this DOI sometimes belongs to a whole collection of papers rather than "
+"any specific paper. Sciswarm assigns the DOI to the first paper that appears "
+"in the export data and silently ignores the duplicates. If you find out that "
+"one of your DOIs was incorrectly assigned to somebody else's paper, contact "
+"the administrator."
+msgstr ""
+"Další problém je, že arXiv nezachází s DOI jako s unikátním identifikátorem. "
+"Více různých článků od různých autorů má někdy stejný DOI identifikátor, a "
+"toto DOI někdy patří celé kolekci článků místo jednoho z nich. Sciswarm "
+"zapíše DOI identifikátor k prvnímu článku, u kterého se v exportních datech "
+"objeví, a import pak tiše ignoruje všechny duplicity. Pokud zjistíte, že "
+"jeden z Vašich DOI identifikátorů byl chybně zapsán k cizímu článku, "
+"kontaktujte správce serveru."
+
+#: templates/core/help/papers.html:34
+msgid ""
+"In general, if the import script finds out that one of the imported papers "
+"already exists, it'll only attempt to add missing identifiers. It'll not "
+"overwrite or delete any other metadata."
+msgstr ""
+"A obecně platí, že importní skript bude k již existujícím článkům pouze "
+"přidávat chybějící identifikátory. Žádná jiná metadata přepisovat ani mazat "
+"nebude."
+
+#: templates/core/help/users.html:5 templates/core/help/users.html:9
+msgid "User Profiles"
+msgstr "Uživatelské profily"
+
+#: templates/core/help/users.html:11
+#, python-format
+msgid ""
+"Your user profile contains some public information about you (name and short "
+"bio) and basic system settings (language and time zone). To select your time "
+"zone, you need to <a href=\"%(edit_profile_url)s\">edit your user profile</"
+"a> after registration by clicking your name in the upper right corner of the "
+"page."
+msgstr ""
+"Váš uživatelský profil obsahuje pár veřejných informací o Vás (jméno a "
+"stručnou vizitku) a základní nastavení systému (jazyk a časové pásmo). Pro "
+"výběr časového pásma si musíte po registraci <a href=\"%(edit_profile_url)s"
+"\">upravit profil</a> kliknutím na své jméno v pravém horním rohu stránky."
+
+#: templates/core/help/users.html:12
+#, python-format
+msgid ""
+"However, to make full use of Sciswarm, you also need to <a href="
+"\"%(add_identifier_url)s\">add</a> some <a href=\"%(help_identifiers_url)s"
+"\">unique identifiers</a> to your profile, for example your public e-mail "
+"address which you include in your scientific papers or your ORCID iD. Click "
+"&#8220;My profile&#8221; in the main menu, then click the green &#8220;"
+"+&#8221; icon next to the &#8220;Identifiers&#8221; subheader. Sciswarm will "
+"then use these identifiers to connect you with your papers which have been "
+"posted by somebody else. See the section on <a href="
+"\"%(help_papers_url)s#management\">paper management</a> for instructions how "
+"to claim authorship of existing papers."
+msgstr ""
+"Ale abyste mohli Sciswarm využívat opravdu naplno, musíte si do profilu <a "
+"href=\"%(add_identifier_url)s\">přidat</a> pár <a href="
+"\"%(help_identifiers_url)s\">unikátních identifikátorů</a>, například svou e-"
+"mailovou adresu, kterou píšete do svých vědeckých článků, nebo své ORCID iD. "
+"V hlavním menu nalevo klikněte na &#8222;Můj profil&#8220;, a dále na "
+"zelenou ikonku &#8222;+&#8220; vedle podnadpisu &#8222;"
+"Identifikátory&#8220;. Sciswarm Váš účet pomocí těchto identifikátorů "
+"propojí s Vašimi články, které do systému vložil někdo jiný. Postup, jak "
+"přijmout autorství existujících článků, najdete v sekci o <a href="
+"\"%(help_papers_url)s#management\">správě článků</a>."
+
+#: templates/core/help/users.html:15
+msgid "Following Other Users"
+msgstr "Sledovaní jiných uživatelů"
+
+#: templates/core/help/users.html:17
+msgid ""
+"After you log into Sciswarm, the main page will show a timeline of new "
+"papers, recommendations and reviews from people you follow. In order to "
+"follow somebody, you need to visit their user profile page and select which "
+"types of events you're interested in. There is no public list of all users "
+"in Sciswarm (by design) so you need to ask your colleagues for a link to "
+"their profile or find them through linked paper authorship."
+msgstr ""
+"Když se přihlásíte do Sciswarmu, na hlavní stránce se Vám zobrazí nové "
+"články, doporučení a recenze od uživatelů, které sledujete. Abyste někoho "
+"začali sledovat, musíte navštívit jejich uživatelský profil a vybrat druhy "
+"novinek, které Vás zajímají. Ve Sciswarmu není žádný veřejný seznam všech "
+"uživatelů (záměrně), takže své kolegy budete muset požádat o odkaz na jejich "
+"profil nebo je najít skrz záznamy o autorství článků."
+
+#: templates/core/help/users.html:18
+msgid ""
+"Other people can see whom you follow but nobody else can see which types of "
+"events you have subscribed to. Not even the person you follow."
+msgstr ""
+"Váš seznam uživatelů, které sledujete, je veřejný, ale nikdo jiný nevidí, "
+"jaké druhy novinek odebíráte. Ani sami sledovaní uživatelé."
+
 #: templates/core/layout.html:6
 msgid "Scientific social network"
 msgstr "Vědecká sociální síť"
@@ -982,7 +1476,7 @@ msgstr "Nový článek"
 msgid "My profile"
 msgstr "Můj profil"
 
-#: templates/core/layout.html:35 views/paper.py:153 views/utils.py:96
+#: templates/core/layout.html:35 views/paper.py:161 views/utils.py:96
 msgid "Manage authorship"
 msgstr "Správa autorství"
 
@@ -991,14 +1485,18 @@ msgid "Delegated permissions"
 msgstr "Seznam pověření"
 
 #: templates/core/layout.html:38
+msgid "Help"
+msgstr "Nápověda"
+
+#: templates/core/layout.html:39
 msgid "About"
 msgstr "Kontakty"
 
-#: templates/core/layout.html:39
+#: templates/core/layout.html:40
 msgid "Terms of Service"
 msgstr "Provozní podmínky"
 
-#: templates/core/layout.html:40
+#: templates/core/layout.html:41
 msgid "Sciswarm on GitHub"
 msgstr "Sciswarm na GitHubu"
 
@@ -1339,7 +1837,7 @@ msgstr "Tento článek neexistuje."
 msgid "Invalid Sciswarm identifier."
 msgstr "Neplatný Sciswarm identifikátor."
 
-#: utils/validators.py:56 utils/validators.py:69 utils/validators.py:92
+#: utils/validators.py:56 utils/validators.py:69 utils/validators.py:93
 msgid "Invalid identifier format."
 msgstr "Neplatný formát identifikátoru."
 
@@ -1347,7 +1845,7 @@ msgstr "Neplatný formát identifikátoru."
 msgid "Identifier checksum is incorrect."
 msgstr "Chybný kontrolní součet identifikátoru."
 
-#: utils/validators.py:100
+#: utils/validators.py:101
 msgid ""
 "We are sorry but Sci-Hub links are not allowed on this site. With all due "
 "respect to Alexandra Elbakyan for putting herself at risk in the name of "
@@ -1363,7 +1861,7 @@ msgstr ""
 "Zadejte raději odkaz na kopii dané stránky nebo souboru na Vašem osobním "
 "webu (pokud daný soubor můžete sami legálně hostovat)."
 
-#: utils/validators.py:146
+#: utils/validators.py:147
 msgid ""
 "Generic identifier must have a scheme prefix separated by color (e.g. scheme:"
 "identifier)."
@@ -1445,93 +1943,93 @@ msgstr "Nemůžete smazat cizí odpověď."
 msgid "Latest Actions of %s"
 msgstr "Nedávná aktivita uživatele %s"
 
-#: views/main.py:86
+#: views/main.py:90
 msgid "Timeline"
-msgstr "Události z Vaší sítě"
+msgstr "Novinky z Vaší sítě"
 
 #: views/paper.py:46
 msgid "Latest papers"
 msgstr "Nejnovější články"
 
-#: views/paper.py:89
+#: views/paper.py:97
 #, python-format
 msgid "Papers Citing: %s"
 msgstr "Články citující: %s"
 
-#: views/paper.py:103
+#: views/paper.py:111
 #, python-format
 msgid "Papers Posted by %s"
 msgstr "Články vložené uživatelem %s"
 
-#: views/paper.py:120
+#: views/paper.py:128
 #, python-format
 msgid "Papers by %s"
 msgstr "Články uživatele %s"
 
-#: views/paper.py:136
+#: views/paper.py:144
 #, python-format
 msgid "Papers Recommended by %s"
 msgstr "Články doporučené uživatelem %s"
 
-#: views/paper.py:142
+#: views/paper.py:150
 msgid "Papers You Have Rejected"
 msgstr "Vámi odmítnuté články"
 
-#: views/paper.py:166
+#: views/paper.py:174
 msgid "This paper is not available for legal reasons."
 msgstr "Tento článek je z právních důvodů nedostupný."
 
-#: views/paper.py:192
+#: views/paper.py:200
 msgid "Create Paper"
 msgstr "Vložit článek"
 
-#: views/paper.py:201
+#: views/paper.py:209
 msgid "Author:"
 msgstr "Autor:"
 
-#: views/paper.py:213 views/paper.py:441
+#: views/paper.py:221 views/paper.py:449
 msgid "Biblio entry:"
 msgstr "Citace:"
 
-#: views/paper.py:267
+#: views/paper.py:275
 msgid "Edit Paper"
 msgstr "Upravit článek"
 
-#: views/paper.py:272 views/paper.py:291 views/paper.py:321 views/paper.py:357
-#: views/paper.py:377 views/paper.py:409 views/paper.py:437 views/paper.py:469
-#: views/paper.py:517 views/paper.py:544 views/paper.py:590 views/paper.py:612
+#: views/paper.py:280 views/paper.py:299 views/paper.py:329 views/paper.py:365
+#: views/paper.py:385 views/paper.py:417 views/paper.py:445 views/paper.py:477
+#: views/paper.py:525 views/paper.py:552 views/paper.py:598 views/paper.py:620
 msgid "You are not one of the authors."
 msgstr "Nejste jedním z autorů."
 
-#: views/paper.py:283
+#: views/paper.py:291
 msgid "Add Paper Author"
 msgstr "Přidat autora článku"
 
-#: views/paper.py:323
+#: views/paper.py:331
 msgid "Rejected authorship cannot be deleted."
 msgstr "Odmítnuté autorství nelze smazat."
 
-#: views/paper.py:371
+#: views/paper.py:379
 msgid "Add Paper Identifier"
 msgstr "Přidat identifikátor článku"
 
-#: views/paper.py:402
+#: views/paper.py:410
 msgid "Delete Paper Identifier"
 msgstr "Smazat identifikátor článku"
 
-#: views/paper.py:411 views/user.py:161
+#: views/paper.py:419 views/user.py:161
 msgid "This identifier is permanent."
 msgstr "Tento identifikátor je trvalý."
 
-#: views/paper.py:428
+#: views/paper.py:436
 msgid "Add Citations"
 msgstr "Přidat citace"
 
-#: views/paper.py:512
+#: views/paper.py:520
 msgid "Add Supplemental Link"
 msgstr "Přidat doplňující odkaz"
 
-#: views/paper.py:582
+#: views/paper.py:590
 msgid "Add Scientific Field"
 msgstr "Přidat vědecký obor"
 

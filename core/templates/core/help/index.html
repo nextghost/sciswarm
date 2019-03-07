@@ -1,0 +1,44 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'Sciswarm Help' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Sciswarm Help' %}</h1>
+
+<div class="box">
+<p>{% blocktrans %}Most social networks are about interacting with other users directly. This social network focuses on interaction with scientific papers instead. You can think of Sciswarm as a massively collaborative overlay journal where you get to pick your own editorial board by following people you trust. But it's not an overlay of any particular preprint repository. It's an overlay of the entire body of scientific literature, including papers published in paywalled journals. Sciswarm stores only basic paper metadata and links to content hosted elsewhere (sometimes behind paywall) so that you don't have to compromise between your career advancement and supporting Open Access. When Sciswarm paper metrics become more important than journal impact factor, Open Access will win without a fight.{% endblocktrans %}</p>
+</div>
+
+<h2>{% trans 'Help Topics' %}</h2>
+<div class="box">
+<ul>
+<li><a href="{% url 'core:help_page' pagename='identifiers' %}">{% trans 'Using identifiers' %}</a></li>
+<li><a href="{% url 'core:help_page' pagename='users' %}">{% trans 'User profiles' %}</a></li>
+<li><a href="{% url 'core:help_page' pagename='papers' %}">{% trans 'Paper metadata' %}</a></li>
+<li><a href="{% url 'core:help_page' pagename='papers' %}#management">{% trans 'Paper management' %}</a></li>
+<li><a href="{% url 'core:help_page' pagename='papers' %}#reviews">{% trans 'Reviewing papers' %}</a></li>
+</ul>
+</div>
+
+<h2>{% trans 'Planned Features' %}</h2>
+<div class="box">
+<ul>
+<li>{% trans 'Detailed citation and review metrics for papers' %}</li>
+<li>{% trans 'Event notifications' %}</li>
+<li>{% trans 'Paper collections' %}</li>
+<li>{% trans 'Research replications and other relationships between papers' %}</li>
+<li>{% trans 'Open data' %}</li>
+<li>{% trans 'Federation protocol' %}</li>
+</ul>
+</div>
+
+<h2>{% trans 'Changelog' %}</h2>
+<div class="box">
+<ul>
+<li><b>{% blocktrans %}Mar. 1, 2019{% endblocktrans %}</b>
+<ul><li>{% blocktrans %}First public version{% endblocktrans %}</li></ul></li>
+</ul>
+</div>
+{% endblock %}

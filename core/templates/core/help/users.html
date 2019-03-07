@@ -1,0 +1,20 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'User Profiles' %}{% endblock %}
+
+{% block content %}
+{% url 'core:edit_profile' as edit_profile_url %}{% url 'core:add_person_identifier' as add_identifier_url %}{% url 'core:help_page' pagename='identifiers' as help_identifiers_url %}{% url 'core:help_page' pagename='papers' as help_papers_url %}
+<h1>{% trans 'User Profiles' %}</h1>
+<div class="box">
+<p>{% blocktrans %}Your user profile contains some public information about you (name and short bio) and basic system settings (language and time zone). To select your time zone, you need to <a href="{{ edit_profile_url }}">edit your user profile</a> after registration by clicking your name in the upper right corner of the page.{% endblocktrans %}</p>
+<p>{% blocktrans %}However, to make full use of Sciswarm, you also need to <a href="{{ add_identifier_url }}">add</a> some <a href="{{ help_identifiers_url }}">unique identifiers</a> to your profile, for example your public e-mail address which you include in your scientific papers or your ORCID iD. Click &#8220;My profile&#8221; in the main menu, then click the green &#8220;+&#8221; icon next to the &#8220;Identifiers&#8221; subheader. Sciswarm will then use these identifiers to connect you with your papers which have been posted by somebody else. See the section on <a href="{{ help_papers_url }}#management">paper management</a> for instructions how to claim authorship of existing papers.{% endblocktrans %}</p>
+</div>
+
+<h2>{% trans 'Following Other Users' %}</h2>
+<div class="box">
+<p>{% blocktrans %}After you log into Sciswarm, the main page will show a timeline of new papers, recommendations and reviews from people you follow. In order to follow somebody, you need to visit their user profile page and select which types of events you're interested in. There is no public list of all users in Sciswarm (by design) so you need to ask your colleagues for a link to their profile or find them through linked paper authorship.{% endblocktrans %}</p>
+<p>{% blocktrans %}Other people can see whom you follow but nobody else can see which types of events you have subscribed to. Not even the person you follow.{% endblocktrans %}</p>
+</div>
+{% endblock %}

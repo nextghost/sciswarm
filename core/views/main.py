@@ -40,6 +40,10 @@ def infopage(request, pagename):
     context = dict(admin_email=settings.SYSTEM_EMAIL_ADMIN)
     return render(request, template_name, context)
 
+def help_page(request, pagename='index'):
+    template_name = 'core/help/%s.html' % pagename
+    return render(request, template_name, dict())
+
 @method_decorator(login_required, name='dispatch')
 class UserTimelineView(BaseListView):
     template_name = 'core/event/feed_detail.html'

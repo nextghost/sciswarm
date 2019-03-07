@@ -1,0 +1,37 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'Using Identifiers' %}{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Using Identifiers' %}</h1>
+
+<div class="box">
+<p>{% blocktrans %}Sciswarm uses various unique identifiers to link authorship and citations. If the author or cited paper isn't registered in the system yet, the identifier will be converted to an external link (if supported). Once the author or paper gets registered in the system, the identifier will be converted to a link to their user profile or paper detail page in Sciswarm, through which you can also access the original external links.{% endblocktrans %}</p>
+<p>{% blocktrans %}Identifiers have two parts: The <b>scheme</b>, which determines the identifier namespace and how the value will be converted to an external link, and the <b>value</b>, which must be unique for the given scheme and permanently associated with the given user or paper.{% endblocktrans %}</p>
+<p>{% blocktrans %}When entering an identifier into Sciswarm, you can either select one of the supported schemes from the drop-down menu, or you can select &#8220;Other&#8221; and enter the full identifier into the text field as &#8220;<tt>prefix:value</tt>&#8221;. Supported scheme prefixes listed below will be automatically recognized as if you had selected the scheme using the drop-down menu. But you can enter any arbitrary scheme prefix as long as the corresponding identifier namespace is well known. Scheme prefixes are case insensitive.{% endblocktrans %}</p>
+
+<h2>{% trans 'User Identifiers' %}</h2>
+<p>{% blocktrans %}Sciswarm supports the following user identifier schemes:{% endblocktrans %}</p>
+<ul>
+<li>{% trans 'E-mail address (prefix: mailto)' %}</li>
+<li>{% trans 'ORCID iD (prefix: orcid)' %}</li>
+<li>{% trans 'XMPP address/JID (prefix: xmpp)' %}</li>
+<li>{% trans 'Twitter handle (prefix: twitter)' %}</li>
+<li>{% trans 'Sciswarm ID (prefix: swarm)' %}</li>
+<li>{% trans 'Personal website (prefixes: http, https, ftp, ftps)' %}</li>
+</ul>
+
+<h2>{% trans 'Paper Identifiers' context 'help' %}</h2>
+<p>{% blocktrans %}Sciswarm supports the following paper identifier schemes:{% endblocktrans %}</p>
+<ul>
+<li>{% trans 'DOI (prefix: doi)' %}</li>
+<li>{% trans 'ISBN (prefix: isbn)' %}</li>
+<li>{% trans 'arXiv ID (prefix: arxiv)' %}</li>
+<li>{% trans 'Sciswarm ID (prefix: swarm)' %}</li>
+<li>{% trans 'Web URL (prefixes: http, https, ftp, ftps)' %}</li>
+</ul>
+<p>{% blocktrans %}When you select arXiv scheme from the drop-down menu, the system will accept arXiv identifiers with or without the (case sensitive) &#8220;arXiv:&#8221; prefix.{% endblocktrans %}</p>
+</div>
+{% endblock %}

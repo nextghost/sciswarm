@@ -157,5 +157,8 @@ urlpatterns = [
     url(r'^p/', include(paper_patterns)),
     url(r'^r/', include(review_patterns)),
     url(r'^account/', include(account_patterns)),
+    url(r'^help/?\Z', main.help_page, name='help_index'),
+    url(r'^help/(?P<pagename>identifiers|users|papers)/?\Z',
+        main.help_page, name='help_page'),
     url(r'^(?P<pagename>about|terms)/?\Z', main.infopage, name='infopage'),
 ]

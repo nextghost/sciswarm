@@ -1,0 +1,36 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{% trans 'Paper Metadata' %}{% endblock %}
+
+{% block content %}
+{% url 'core:help_page' pagename='identifiers' as help_identifiers_url %}{% url 'core:user_paper_managers_list' as delegated_permissions_url %}{% url 'core:create_paper' as create_paper_url %}{% url 'core:mass_authorship_confirmation' as manage_authorship_url %}
+<h1>{% trans 'Paper Metadata' %}</h1>
+<div class="box">
+<p>{% blocktrans %}Paper metadata in Sciswarm includes the usual: title, authors, abstract, keywords, recommended citation format and bibliography. But bibliography needs to be entered using <a href="{{ help_identifiers_url }}">unique identifiers</a> of the cited papers. Authors can be entered either as plain names (only when you're posting a new paper) or using <a href="{{ help_identifiers_url }}">unique identifiers</a>. In addition to that, you can specify one or more scientific fields, the type of research (theory/experiment/observation) and provide supplemental links for example to data or software used in the research.{% endblocktrans %}</p>
+<p>{% blocktrans %}When specifying a scientific field, you can either select both the main field and subfield from the drop-down menu, or you can select the subfield as &#8220;Other&#8221; and type the name of a new subfield into the text field. Always use the English name when creating a new subfield. The new entry will be created under the selected main field.{% endblocktrans %}</p>
+<p>{% blocktrans %}One of the planned features is to track replications of papers. If you have replicated a paper (intentionally or not), you will be able to link your paper with the original one and specify whether you have used the same method and whether your conclusions confirm or contradict the original findings.{% endblocktrans %}</p>
+</div>
+
+<h2 id="management">{% trans 'Paper Management' %}</h2>
+<div class="box">
+<p>{% blocktrans %}You can post papers whether you are the author or not by clicking <a href="{{ create_paper_url }}">New paper</a> in the main menu on the left. But if you're posting somebody else's paper which is not released under one of the free licenses (e.g. Creative Commons), you need to ask the authors for permission first. All authors automatically have edit access to their papers. If none of the authors is registered in the system yet, the poster will be granted provisional edit access instead.{% endblocktrans %}</p>
+<p>{% blocktrans %}Authors can also delegate paper management to other users, for example their librarian or assistant. To do so, visit the other user's profile page and click &#8220;Delegate paper management&#8221;. You can delegate paper management to multiple users. You do not lose your edit access by doing so. Provisional edit access cannot be delegated. You can view or change delegation at any time through the list of <a href="{{ delegated_permissions_url }}">delegated permissions</a> accessible from the main menu on the left.{% endblocktrans %}</p>
+<p>{% blocktrans %}Authorship linked through a unique identifier starts as unconfirmed (highlighted with yellow background). You can then confirm or reject authorship of papers en masse by clicking <a href="{{ manage_authorship_url }}">Manage authorship</a> in the main menu on the left. The list of papers you have rejected is also accessible through this menu option. If you make a mistake, you can change confirmation at any time by clicking &#8220;Manage authorship&#8221; on the detail page of a specific paper. Only confirmed papers will show up in the list of authored papers in your profile. If somebody adds you as an author to a paper which is not yours, it is better to reject the authorship than to simply delete yourself from the list. If you reject authorship, the other user cannot add you back.{% endblocktrans %}</p>
+<p>{% blocktrans %}Make sure that the identifiers which you add to your paper uniquely and permanently identify only the paper itself. Do <b><i>NOT</i></b> use identifiers which point to a larger collection of papers. Links to such paper collections should be added to supplemental links instead.{% endblocktrans %}</p>
+</div>
+
+<h2 id="reviews">{% trans 'Reviewing Papers' %}</h2>
+<div class="box">
+<p>{% blocktrans %}To review a paper in Sciswarm, click &#8220;Add review&#8221; on the paper detail page. You can rate the methodology and importance separately and also write a short explanation of any problems and highlights. The review will also show up on your followers' timeline. The authors can then respond to the review for example to clear up any misunderstandings.{% endblocktrans %}</p>
+<p>{% blocktrans %}You cannot review your own papers or claim authorship of papers which you have reviewed. If you delete a review, you cannot write another one later.{% endblocktrans %}</p>
+</div>
+
+<h2>{% trans 'Notes About Imported Papers' %}</h2>
+<div class="box">
+<p>{% blocktrans %}Sciswarm currently supports importing paper metadata from <a href="https://arxiv.org/">arXiv</a>. While arXiv does support unique author identifiers internally, it doesn't export them through OAI-PMH at the moment. arXiv papers are therefore imported only with plain author names. You will be able to claim your arXiv papers through user profile name match soon.{% endblocktrans %}</p>
+<p>{% blocktrans %}Another import problem is that arXiv doesn't treat DOI as a unique identifier. Multiple papers from different authors often have the same DOI, and this DOI sometimes belongs to a whole collection of papers rather than any specific paper. Sciswarm assigns the DOI to the first paper that appears in the export data and silently ignores the duplicates. If you find out that one of your DOIs was incorrectly assigned to somebody else's paper, contact the administrator.{% endblocktrans %}</p>
+<p>{% blocktrans %}In general, if the import script finds out that one of the imported papers already exists, it'll only attempt to add missing identifiers. It'll not overwrite or delete any other metadata.{% endblocktrans %}</p>
+</div>
+{% endblock %}
