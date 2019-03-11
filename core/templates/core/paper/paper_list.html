@@ -16,8 +16,8 @@
 <div class="box">
 {% for object, author_list, author_names in object_list %}
 <div class="list_item">
-<div class="title">{{ object|object_link }}</div>
-{% if author_list or author_names %}<div>{% for item in author_list %}{{ item.target_link }}{% if author_names or not forloop.last %}; {% endif %}{% endfor %}{% for item in author_names %}{{ item }}{% if not forloop.last %}; {% endif %}{% endfor %}</div>{% endif %}
+<div class="paper_title">{{ object|object_link }}</div>
+{% if author_list or author_names %}<div class="authors">{% for item in author_list %}{{ item.target_link }}{% if author_names or not forloop.last %}; {% endif %}{% endfor %}{% for item in author_names %}{{ item }}{% if not forloop.last %}; {% endif %}{% endfor %}</div>{% endif %}
 </div>
 {% empty %}
 <div>{% trans 'No papers found.' %}</div>

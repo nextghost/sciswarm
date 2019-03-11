@@ -16,8 +16,8 @@
 {% csrf_token %}
 <table class="form">
   {% for object, author_list, author_names, fieldname in object_list %}
-  <tr><td><div class="title">{{ object|object_link }}</div>
-{% if author_list or author_names %}<div>{% for item in author_list %}{{ item.target_link }}{% if author_names or not forloop.last %}; {% endif %}{% endfor %}{% for item in author_names %}{{ item }}{% if not forloop.last %}; {% endif %}{% endfor %}</div>{% endif %}</td><td>{{ form|getattr:fieldname }}</td></tr>
+  <tr class="list_item"><td><div class="paper_title">{{ object|object_link }}</div>
+{% if author_list or author_names %}<div class="authors">{% for item in author_list %}{{ item.target_link }}{% if author_names or not forloop.last %}; {% endif %}{% endfor %}{% for item in author_names %}{{ item }}{% if not forloop.last %}; {% endif %}{% endfor %}</div>{% endif %}</td><td>{{ form|getattr:fieldname }}</td></tr>
   {% endfor %}
   <tr><td colspan="2">{{ form.submit_buttons }}</td></tr>
 </table>

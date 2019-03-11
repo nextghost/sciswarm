@@ -104,6 +104,10 @@ textarea {
 	margin-left: 17em;
 }
 
+#main {
+	margin-right: 1em;
+}
+
 #content {
 	padding: 1em;
 }
@@ -154,10 +158,19 @@ textarea {
 	font-size: 150%;
 }
 
+.paper_title {
+	font-size: 110%;
+	font-weight: bold;
+}
+
 .list_item {
 	margin-bottom: 5px;
 	padding-bottom: 5px;
 	border-bottom: 1px dotted black;
+}
+
+.list_item .authors {
+	padding-left: 1em;
 }
 
 .highlight {
