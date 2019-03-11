@@ -28,7 +28,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView
 from .base import (BaseCreateView, BaseUpdateView, BaseListView,
     SearchListView, BaseModelFormsetView, BaseDeleteView, BaseUnlinkAliasView)
-from .utils import paper_navbar
+from .utils import fetch_authors, paper_navbar
 from ..forms.paper import (PaperSearchForm, PaperForm, PaperAliasForm,
     PaperAliasFormset, PaperAuthorNameFormset, PaperSupplementalLinkForm,
     PaperRecommendationForm, ScienceSubfieldForm)
@@ -66,16 +66,7 @@ class BasePaperListView(SearchListView):
 
     def get_context_data(self, *args, **kwargs):
         ret = super(BasePaperListView, self).get_context_data(*args, **kwargs)
-        obj_list = list(ret['object_list'])
-        refs = models.PaperAuthorReference.objects.filter_unrejected(obj_list)
-        refs = refs.select_related('author_alias__target')
-        ref_map = list_map(((x.paper_id, x) for x in refs))
-        antab = models.PaperAuthorName.query_model
-        query = antab.paper.belongs(obj_list)
-        names = models.PaperAuthorName.objects.filter(query)
-        name_map = list_map(((x.paper_id,x) for x in names))
-        ret['object_list'] = [(x, ref_map.get(x.pk,[]), name_map.get(x.pk,[]))
-            for x in obj_list]
+        ret['object_list'] = fetch_authors(ret['object_list'])
         ret['page_title'] = self.page_title
         ret['navbar'] = ''
         return ret

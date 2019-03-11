@@ -16,6 +16,7 @@
 
 from django.contrib.auth import REDIRECT_FIELD_NAME, views as auth
 from django.core import paginator
+from django.db.models import QuerySet
 from django.utils.encoding import force_text
 from django.http import Http404
 from django.shortcuts import render
@@ -23,6 +24,7 @@ from django.utils.html import format_html, mark_safe
 from django.utils.http import urlencode
 from django.utils.translation import pgettext, ugettext as _
 from ..utils.html import NavigationBar
+from ..utils.utils import list_map
 from .. import models
 
 def error_page(request, status, message, title=None):
@@ -96,6 +98,19 @@ def paper_navbar(request, paper):
             links.append((_('Manage authorship'),
                 'core:paper_authorship_confirmation', tuple(), kwargs))
     return NavigationBar(request, links)
+
+def fetch_authors(paper_list):
+    if isinstance(paper_list, QuerySet):
+        paper_list = list(paper_list)
+    refs = models.PaperAuthorReference.objects.filter_unrejected(paper_list)
+    refs = refs.select_related('author_alias__target')
+    ref_map = list_map(((x.paper_id, x) for x in refs))
+    antab = models.PaperAuthorName.query_model
+    query = antab.paper.belongs(paper_list)
+    names = models.PaperAuthorName.objects.filter(query)
+    name_map = list_map(((x.paper_id,x) for x in names))
+    return [(x, ref_map.get(x.pk,[]), name_map.get(x.pk,[]))
+        for x in paper_list]
 
 class PageNavigator(object):
     def __init__(self, request, object_list, per_page=25, arg_name=None):

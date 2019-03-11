@@ -26,7 +26,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView
 from .base import BaseCreateView, BaseListView, BaseUnlinkAliasView
-from .utils import PageNavigator
+from .utils import fetch_authors, PageNavigator
 from ..models import const
 from ..utils.html import NavigationBar
 from ..utils.utils import logger
@@ -208,7 +208,8 @@ class MassAuthorshipConfirmationView(FormView):
         subqs = subqs.filter(query).values_list('paper_id')
         query = (~papertab.pk.belongs(subqs) & reftab.confirmed.isnull() &
             (reftab.author_alias.target == person))
-        qs = models.Paper.objects.filter(query).distinct().order_by('pk')
+        qs = models.Paper.objects.filter_public().filter(query).distinct()
+        qs = qs.order_by('pk')
         pagenav = PageNavigator(self.request, qs, 50)
         page = pagenav.page
         self.paginator = pagenav
@@ -225,7 +226,9 @@ class MassAuthorshipConfirmationView(FormView):
         ret = super(MassAuthorshipConfirmationView, self).get_context_data(
             *args, **kwargs)
         ret['paginator'] = self.paginator
-        ret['object_list'] = self.object_list
+        paper_list = fetch_authors(self.object_list)
+        field_map = dict((p.pk, f) for p,f in ret['form'].paper_fields)
+        ret['object_list'] = [(p,a,n,field_map[p.pk]) for p,a,n in paper_list]
         links = [(_('Rejected papers'), 'core:rejected_authorship_paper_list',
             tuple(), dict())]
         ret['navbar'] = NavigationBar(self.request, links)
