@@ -23,7 +23,7 @@ from django.template.defaultfilters import stringfilter
 from django.template import defaulttags
 from django.urls import reverse
 from django.utils import six
-from django.utils.html import format_html
+from django.utils.html import format_html, mark_safe
 from django.utils.translation import ugettext as _
 from ..utils import html
 from .. import models
@@ -124,6 +124,20 @@ def login_url(parser, token):
 @register.simple_tag(takes_context=True)
 def current_url(context):
     return context['request'].get_full_path()
+
+@register.simple_tag
+def sql_info():
+    if not settings.DEBUG:
+        return ''
+    from django.db import connections
+    tpl = '<tr><td>{sql}</td><td>{time}</td></tr>'
+    ret = [mark_safe('<table><thead>'),
+        format_html(tpl, sql=_('Query'), time=_('Time')),
+        mark_safe('</thead>\n<tbody>')]
+    for conn in connections.all():
+        ret.extend((format_html(tpl, **q) for q in conn.queries_log))
+    ret.append(mark_safe('</tbody></table>'))
+    return mark_safe('\n'.join(ret))
 
 class IfOwnNode(template.Node):
     def __init__(self, objvar, block, elblock=None):
