@@ -28,7 +28,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView
 from .base import (BaseCreateView, BaseUpdateView, BaseListView,
     SearchListView, BaseModelFormsetView, BaseDeleteView, BaseUnlinkAliasView)
-from .utils import fetch_authors, paper_navbar
+from .utils import fetch_authors, paper_navbar, manage_authorship_navbar
 from ..forms.paper import (PaperSearchForm, PaperForm, PaperAliasForm,
     PaperAliasFormset, PaperAuthorNameFormset, PaperSupplementalLinkForm,
     PaperRecommendationForm, ScienceSubfieldForm)
@@ -149,9 +149,7 @@ class RejectedAuthorshipPaperListView(BasePaperListView):
     def get_context_data(self, *args, **kwargs):
         ret = super(RejectedAuthorshipPaperListView, self).get_context_data(
             *args, **kwargs)
-        links = [(_('Manage authorship'), 'core:mass_authorship_confirmation',
-            tuple(), dict())]
-        ret['navbar'] = NavigationBar(self.request, links)
+        ret['navbar'] = manage_authorship_navbar(self.request)
         return ret
 
 class PaperDetailView(DetailView):
@@ -218,37 +216,35 @@ class CreatePaperView(BaseCreateView):
         self.object = None
         form = self.get_form()
         formlist = [form, *self.subforms.values()]
-        if all((x.is_valid() for x in formlist)):
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+        try:
+            with atomic():
+                if all((x.is_valid() for x in formlist)):
+                    return self.form_valid(form)
+        except IntegrityError:
+            logger.info('Race condition detected while linking paper alias.',
+                exc_info=False)
+        return self.form_invalid(form)
 
     def form_valid(self, form):
         form.instance.posted_by = self.request.user.person
         form.instance.changed_by = self.request.user.person
-        try:
-            with atomic():
-                ret = super(CreatePaperView, self).form_valid(form)
-                subfield = self.subforms['subfield'].save()
-                self.object.fields.add(subfield)
-                for subform in self.subforms['aliases']:
-                    subform.instance.target = self.object
-                self.subforms['aliases'].save()
-                authors = self.subforms['authors'].save()
-                ref_cls = models.PaperAuthorReference
-                author_refs = [ref_cls(paper=self.object, author_alias=x)
-                    for x in authors]
-                ref_cls.objects.bulk_create(author_refs)
-                for subform in self.subforms['author_names']:
-                    subform.instance.paper = self.object
-                self.subforms['author_names'].save()
-                biblio = self.subforms['bibliography'].save()
-                self.object.bibliography.add(*biblio)
-                return ret
-        except IntegrityError:
-            logger.info('Race condition detected while linking paper alias.',
-                exc_info=False)
-            return self.form_invalid(form)
+        ret = super(CreatePaperView, self).form_valid(form)
+        subfield = self.subforms['subfield'].save()
+        self.object.fields.add(subfield)
+        for subform in self.subforms['aliases']:
+            subform.instance.target = self.object
+        self.subforms['aliases'].save()
+        authors = self.subforms['authors'].save()
+        ref_cls = models.PaperAuthorReference
+        author_refs = [ref_cls(paper=self.object, author_alias=x)
+            for x in authors]
+        ref_cls.objects.bulk_create(author_refs)
+        for subform in self.subforms['author_names']:
+            subform.instance.paper = self.object
+        self.subforms['author_names'].save()
+        biblio = self.subforms['bibliography'].save()
+        self.object.bibliography.add(*biblio)
+        return ret
 
     def get_success_url(self):
         return self.object.get_absolute_url()

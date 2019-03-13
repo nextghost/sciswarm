@@ -29,7 +29,7 @@
 
 <h2>{% trans 'Notes About Imported Papers' %}</h2>
 <div class="box">
-<p>{% blocktrans %}Sciswarm currently supports importing paper metadata from <a href="https://arxiv.org/">arXiv</a>. While arXiv does support unique author identifiers internally, it doesn't export them through OAI-PMH at the moment. arXiv papers are therefore imported only with plain author names. You will be able to claim your arXiv papers through user profile name match soon.{% endblocktrans %}</p>
+<p>{% blocktrans %}Sciswarm currently supports importing paper metadata from <a href="https://arxiv.org/">arXiv</a>. While arXiv does support unique author identifiers internally, it doesn't export them through OAI-PMH at the moment. arXiv papers are therefore imported only with plain author names.{% endblocktrans %}</p>
 <p>{% blocktrans %}Another import problem is that arXiv doesn't treat DOI as a unique identifier. Multiple papers from different authors often have the same DOI, and this DOI sometimes belongs to a whole collection of papers rather than any specific paper. Sciswarm assigns the DOI to the first paper that appears in the export data and silently ignores the duplicates. If you find out that one of your DOIs was incorrectly assigned to somebody else's paper, contact the administrator.{% endblocktrans %}</p>
 <p>{% blocktrans %}In general, if the import script finds out that one of the imported papers already exists, it'll only attempt to add missing identifiers. It'll not overwrite or delete any other metadata.{% endblocktrans %}</p>
 </div>

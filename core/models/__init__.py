@@ -20,3 +20,4 @@ from .paper import (Person, PaperManagementDelegation, PersonAlias,
     PaperAuthorName, PaperSupplementalLink, PaperImportSource)
 from .comment import PaperReview, PaperReviewResponse
 from .event import FeedEvent, FeedSubscription
+from . import lookups

@@ -26,13 +26,15 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView
 from .base import BaseCreateView, BaseListView, BaseUnlinkAliasView
-from .utils import fetch_authors, PageNavigator
+from .utils import fetch_authors, manage_authorship_navbar, PageNavigator
 from ..models import const
 from ..utils.html import NavigationBar
-from ..utils.utils import logger
+from ..utils.utils import logger, fold_or
 from ..forms.user import (PersonAliasForm, MassAuthorshipConfirmationForm,
-    FeedSubscriptionForm, PaperManagementDelegationForm)
+    MassAuthorshipClaimForm, FeedSubscriptionForm,
+    PaperManagementDelegationForm)
 from .. import models
+import unicodedata
 
 class PersonFollowerListView(BaseListView):
     template_name = 'core/person/person_list.html'
@@ -229,9 +231,74 @@ class MassAuthorshipConfirmationView(FormView):
         paper_list = fetch_authors(self.object_list)
         field_map = dict((p.pk, f) for p,f in ret['form'].paper_fields)
         ret['object_list'] = [(p,a,n,field_map[p.pk]) for p,a,n in paper_list]
-        links = [(_('Rejected papers'), 'core:rejected_authorship_paper_list',
-            tuple(), dict())]
-        ret['navbar'] = NavigationBar(self.request, links)
+        ret['navbar'] = manage_authorship_navbar(self.request)
+        ret['page_title'] = _('Confirm Authorship')
+        return ret
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(atomic(), name='post')
+class MassAuthorshipClaimView(FormView):
+    form_class = MassAuthorshipClaimForm
+    template_name = 'core/person/mass_authorship_confirmation.html'
+    success_url = reverse_lazy('core:mass_claim_authorship')
+
+    def get_form_kwargs(self, *args, **kwargs):
+        ret = super(MassAuthorshipClaimView, self).get_form_kwargs(*args,
+            **kwargs)
+        # Prepare name variants to search for
+        person = self.request.user.person
+        last_name = person.last_name.strip()
+        first_name = person.first_name.split()
+        search_names = set()
+        if first_name:
+            first_name = first_name[0]
+            search_names.add(last_name + ' ' + first_name)
+            search_names.add(last_name + ' ' + first_name[:1])
+        else:
+            search_names.add(last_name)
+        tmp = [x.casefold() for x in search_names]
+        search_names.update(tmp)
+        tmp = [unicodedata.normalize('NFKD', x).encode('ascii',
+            'ignore').decode('ascii') for x in search_names]
+        search_names.update((x for x in tmp if x))
+
+        # Search query
+        papertab = models.Paper.query_model
+        nametab = papertab.paperauthorname
+        reftab = models.PaperAuthorReference.query_model
+        query = (models.PaperReview.query_model.deleted == False)
+        subqs = models.PaperReview.objects.filter_by_author(person)
+        subqs = subqs.filter(query).values_list('paper_id')
+
+        query = (reftab.author_alias.target == person)
+        subqs2 = models.PaperAuthorReference.objects.filter(query)
+        subqs2 = subqs2.values_list('paper_id')
+
+        query = (~papertab.pk.belongs(subqs) & ~papertab.pk.belongs(subqs2) &
+            fold_or([nametab.author_name.tsphrase(x) for x in search_names]))
+        qs = models.Paper.objects.filter_public().filter(query).distinct()
+        qs = qs.order_by('pk')
+        pagenav = PageNavigator(self.request, qs, 50)
+        page = pagenav.page
+        self.paginator = pagenav
+        self.object_list = page.object_list
+        ret['paper_list'] = page.object_list
+        ret['person'] = self.request.user.person
+        return ret
+
+    def form_valid(self, form):
+        form.save()
+        return super(MassAuthorshipClaimView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(MassAuthorshipClaimView, self).get_context_data(*args,
+            **kwargs)
+        ret['paginator'] = self.paginator
+        paper_list = fetch_authors(self.object_list)
+        field_map = dict((p.pk, f) for p,f in ret['form'].paper_fields)
+        ret['object_list'] = [(p,a,n,field_map[p.pk]) for p,a,n in paper_list]
+        ret['navbar'] = manage_authorship_navbar(self.request)
+        ret['page_title'] = _('Claim Authorship')
         return ret
 
 @method_decorator(login_required, name='dispatch')

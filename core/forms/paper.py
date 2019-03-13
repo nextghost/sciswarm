@@ -202,13 +202,7 @@ class PaperForm(ModelForm):
         author = None
         new_paper = self.instance.pk is None
         if new_paper and self.cleaned_data.get('own_paper'):
-            alias_tab = models.PersonAlias.query_model
-            alias_objs = models.PersonAlias.objects
-            query = (alias_tab.target == self.instance.posted_by)
-            query2 = (alias_tab.scheme == const.person_alias_schemes.SCISWARM)
-            author = alias_objs.filter(query & query2).order_by('pk').first()
-            if author is None:
-                author = alias_objs.filter(query).order_by('pk').first()
+            author = self.instance.posted_by.get_primary_alias()
         ret = super(PaperForm, self).save()
 
         # Update keywords

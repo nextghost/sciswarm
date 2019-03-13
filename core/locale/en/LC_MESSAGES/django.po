@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-07 17:53+0100\n"
+"POT-Creation-Date: 2019-03-13 17:20+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -151,36 +151,36 @@ msgstr ""
 msgid "Some keywords are longer than %(limit_value)s characters."
 msgstr ""
 
-#: forms/paper.py:288
+#: forms/paper.py:282
 msgid "This paper already has a link with this name."
 msgstr ""
 
-#: forms/paper.py:291
+#: forms/paper.py:285
 msgid "This paper already has this link."
 msgstr ""
 
-#: forms/paper.py:316
+#: forms/paper.py:310
 msgid "Cancel recommendation"
 msgstr ""
 
-#: forms/paper.py:318
+#: forms/paper.py:312
 msgid "Recommend"
 msgstr ""
 
-#: forms/paper.py:343
+#: forms/paper.py:337
 msgid "Subfield"
 msgstr ""
 
-#: forms/paper.py:345
+#: forms/paper.py:339
 msgid "Other:"
 msgstr ""
 
-#: forms/paper.py:386
+#: forms/paper.py:380
 #, python-format
 msgid "This subfield already exists under %s."
 msgstr ""
 
-#: forms/paper.py:392
+#: forms/paper.py:386
 msgid "Select a subfield from the list or enter new subfield name."
 msgstr ""
 
@@ -192,7 +192,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: forms/user.py:117
+#: forms/user.py:117 forms/user.py:201
 msgid "Reject"
 msgstr ""
 
@@ -200,17 +200,21 @@ msgstr ""
 msgid "Please choose whether to accept or reject authorship."
 msgstr ""
 
-#: forms/user.py:216
+#: forms/user.py:200
+msgid "Claim"
+msgstr ""
+
+#: forms/user.py:253
 msgid ""
 "You cannot accept authorship of a paper which you have reviewed. You must "
 "delete the review first."
 msgstr ""
 
-#: forms/user.py:298
+#: forms/user.py:335
 msgid "Cancel delegation"
 msgstr ""
 
-#: forms/user.py:300
+#: forms/user.py:337
 msgid "Delegate"
 msgstr ""
 
@@ -239,7 +243,7 @@ msgstr ""
 msgid "{first_name} {last_name}"
 msgstr ""
 
-#: models/comment.py:32 models/paper.py:280
+#: models/comment.py:32 models/paper.py:290
 msgid "date posted"
 msgstr ""
 
@@ -247,7 +251,7 @@ msgstr ""
 msgid "date changed"
 msgstr ""
 
-#: models/comment.py:36 models/paper.py:282
+#: models/comment.py:36 models/paper.py:292
 msgid "posted by"
 msgstr ""
 
@@ -255,9 +259,9 @@ msgstr ""
 msgid "message"
 msgstr ""
 
-#: models/comment.py:52 models/event.py:32 models/paper.py:356
-#: models/paper.py:393 models/paper.py:421 models/paper.py:468
-#: models/paper.py:480
+#: models/comment.py:52 models/event.py:32 models/paper.py:366
+#: models/paper.py:403 models/paper.py:431 models/paper.py:478
+#: models/paper.py:490
 msgid "paper"
 msgstr ""
 
@@ -480,178 +484,178 @@ msgstr ""
 msgid "{last_name}, {first_name}"
 msgstr ""
 
-#: models/paper.py:114 models/paper.py:423 models/paper.py:470
+#: models/paper.py:124 models/paper.py:433 models/paper.py:480
 msgid "author"
 msgstr ""
 
-#: models/paper.py:116
+#: models/paper.py:126
 msgid "delegate"
 msgstr ""
 
-#: models/paper.py:180 models/paper.py:352
+#: models/paper.py:190 models/paper.py:362
 msgid "scheme"
 msgstr ""
 
-#: models/paper.py:182 models/paper.py:354
+#: models/paper.py:192 models/paper.py:364
 msgid "identifier"
 msgstr ""
 
-#: models/paper.py:184
+#: models/paper.py:194
 msgid "user"
 msgstr ""
 
-#: models/paper.py:224
+#: models/paper.py:234
 msgid "field"
 msgstr ""
 
-#: models/paper.py:226
+#: models/paper.py:236
 msgid "name"
 msgstr ""
 
-#: models/paper.py:227
+#: models/paper.py:237
 msgid "Please enter only the English name of the subfield."
 msgstr ""
 
-#: models/paper.py:235
+#: models/paper.py:245
 #, python-format
 msgid "%(field)s / %(subfield)s"
 msgstr ""
 
-#: models/paper.py:255 models/paper.py:482
+#: models/paper.py:265 models/paper.py:492
 msgid "title"
 msgstr ""
 
-#: models/paper.py:256
+#: models/paper.py:266
 msgid "abstract"
 msgstr ""
 
-#: models/paper.py:257
+#: models/paper.py:267
 msgid "theory development"
 msgstr ""
 
-#: models/paper.py:258
+#: models/paper.py:268
 msgid "Check this box if the paper expands prior theory."
 msgstr ""
 
-#: models/paper.py:260
+#: models/paper.py:270
 msgid "survey data"
 msgstr ""
 
-#: models/paper.py:261
+#: models/paper.py:271
 msgid "Check this box if the paper contains or analyzes survey data."
 msgstr ""
 
-#: models/paper.py:263
+#: models/paper.py:273
 msgid "observational data"
 msgstr ""
 
-#: models/paper.py:264
+#: models/paper.py:274
 msgid ""
 "Check this box if the paper contains or analyzes data from observation of "
 "natural phenomena."
 msgstr ""
 
-#: models/paper.py:266
+#: models/paper.py:276
 msgid "experimental data"
 msgstr ""
 
-#: models/paper.py:267
+#: models/paper.py:277
 msgid ""
 "Check this box if the paper contains or analyzes data from controlled "
 "experiments."
 msgstr ""
 
-#: models/paper.py:269
+#: models/paper.py:279
 msgid "metaanalysis"
 msgstr ""
 
-#: models/paper.py:270
+#: models/paper.py:280
 msgid ""
 "Check this box if the paper contains extensive metaanalysis or literature "
 "review (aside from the usual summary in introduction)."
 msgstr ""
 
-#: models/paper.py:272
+#: models/paper.py:282
 msgid "year published"
 msgstr ""
 
-#: models/paper.py:274
+#: models/paper.py:284
 msgid ""
 "Year when this paper was officially published, e.g. in a journal. Leave "
 "blank if publication date is pending."
 msgstr ""
 
-#: models/paper.py:275
+#: models/paper.py:285
 msgid "cite as"
 msgstr ""
 
-#: models/paper.py:276
+#: models/paper.py:286
 msgid "Preferred citation text."
 msgstr ""
 
-#: models/paper.py:277
+#: models/paper.py:287
 msgid "incomplete metadata"
 msgstr ""
 
-#: models/paper.py:278
+#: models/paper.py:288
 msgid ""
 "Check this box if some information about this paper is missing (e.g. omitted "
 "citations because the cited papers have no usable identifier)."
 msgstr ""
 
-#: models/paper.py:285
+#: models/paper.py:295
 msgid "last changed"
 msgstr ""
 
-#: models/paper.py:287
+#: models/paper.py:297
 msgid "changed by"
 msgstr ""
 
-#: models/paper.py:290
+#: models/paper.py:300
 msgid "public"
 msgstr ""
 
-#: models/paper.py:392
+#: models/paper.py:402
 msgid "keyword"
 msgstr ""
 
-#: models/paper.py:425
+#: models/paper.py:435
 msgid "confirmed"
 msgstr ""
 
-#: models/paper.py:459
+#: models/paper.py:469
 msgid "Confirmed"
 msgstr ""
 
-#: models/paper.py:461
+#: models/paper.py:471
 msgid "Pending"
 msgstr ""
 
-#: models/paper.py:462
+#: models/paper.py:472
 msgid "Rejected"
 msgstr ""
 
-#: models/paper.py:471
+#: models/paper.py:481
 msgid "Additional authors with no unique identifier"
 msgstr ""
 
-#: models/paper.py:483
+#: models/paper.py:493
 msgid "URL"
 msgstr ""
 
-#: models/paper.py:493
+#: models/paper.py:503
 msgid "code"
 msgstr ""
 
-#: models/paper.py:494
+#: models/paper.py:504
 msgid "repository name"
 msgstr ""
 
-#: models/paper.py:495
+#: models/paper.py:505
 msgid "bot profile"
 msgstr ""
 
-#: models/paper.py:497
+#: models/paper.py:507
 msgid "import cursor"
 msgstr ""
 
@@ -1185,8 +1189,7 @@ msgid ""
 "Sciswarm currently supports importing paper metadata from <a href=\"https://"
 "arxiv.org/\">arXiv</a>. While arXiv does support unique author identifiers "
 "internally, it doesn't export them through OAI-PMH at the moment. arXiv "
-"papers are therefore imported only with plain author names. You will be able "
-"to claim your arXiv papers through user profile name match soon."
+"papers are therefore imported only with plain author names."
 msgstr ""
 
 #: templates/core/help/papers.html:33
@@ -1289,7 +1292,7 @@ msgstr ""
 msgid "My profile"
 msgstr ""
 
-#: templates/core/layout.html:35 views/paper.py:161 views/utils.py:96
+#: templates/core/layout.html:35 views/utils.py:98
 msgid "Manage authorship"
 msgstr ""
 
@@ -1546,12 +1549,7 @@ msgid ""
 "Do you really want to give this user permission to edit all your papers?"
 msgstr ""
 
-#: templates/core/person/mass_authorship_confirmation.html:5
-#: templates/core/person/mass_authorship_confirmation.html:8
-msgid "Manage Authorship"
-msgstr ""
-
-#: templates/core/person/mass_authorship_confirmation.html:25
+#: templates/core/person/mass_authorship_confirmation.html:26
 msgid "No papers awaiting authorship confirmation have been found."
 msgstr ""
 
@@ -1606,6 +1604,14 @@ msgid ""
 "your password."
 msgstr ""
 
+#: templatetags/sciswarm.py:135
+msgid "Query"
+msgstr ""
+
+#: templatetags/sciswarm.py:135
+msgid "Time"
+msgstr ""
+
 #: utils/html.py:43
 msgid "(at)"
 msgstr ""
@@ -1658,7 +1664,7 @@ msgstr ""
 msgid "Lost password?"
 msgstr ""
 
-#: views/account.py:70 views/account.py:170 views/user.py:111
+#: views/account.py:70 views/account.py:170 views/user.py:113
 msgid "Edit profile"
 msgstr ""
 
@@ -1736,236 +1742,252 @@ msgstr ""
 msgid "Latest papers"
 msgstr ""
 
-#: views/paper.py:97
+#: views/paper.py:88
 #, python-format
 msgid "Papers Citing: %s"
 msgstr ""
 
-#: views/paper.py:111
+#: views/paper.py:102
 #, python-format
 msgid "Papers Posted by %s"
 msgstr ""
 
-#: views/paper.py:128
+#: views/paper.py:119
 #, python-format
 msgid "Papers by %s"
 msgstr ""
 
-#: views/paper.py:144
+#: views/paper.py:135
 #, python-format
 msgid "Papers Recommended by %s"
 msgstr ""
 
-#: views/paper.py:150
+#: views/paper.py:141
 msgid "Papers You Have Rejected"
 msgstr ""
 
-#: views/paper.py:174
+#: views/paper.py:163
 msgid "This paper is not available for legal reasons."
 msgstr ""
 
-#: views/paper.py:200
+#: views/paper.py:189
 msgid "Create Paper"
 msgstr ""
 
-#: views/paper.py:209
+#: views/paper.py:198
 msgid "Author:"
 msgstr ""
 
-#: views/paper.py:221 views/paper.py:449
+#: views/paper.py:210 views/paper.py:438
 msgid "Biblio entry:"
 msgstr ""
 
-#: views/paper.py:275
+#: views/paper.py:264
 msgid "Edit Paper"
 msgstr ""
 
-#: views/paper.py:280 views/paper.py:299 views/paper.py:329 views/paper.py:365
-#: views/paper.py:385 views/paper.py:417 views/paper.py:445 views/paper.py:477
-#: views/paper.py:525 views/paper.py:552 views/paper.py:598 views/paper.py:620
+#: views/paper.py:269 views/paper.py:288 views/paper.py:318 views/paper.py:354
+#: views/paper.py:374 views/paper.py:406 views/paper.py:434 views/paper.py:466
+#: views/paper.py:514 views/paper.py:541 views/paper.py:587 views/paper.py:609
 msgid "You are not one of the authors."
 msgstr ""
 
-#: views/paper.py:291
+#: views/paper.py:280
 msgid "Add Paper Author"
 msgstr ""
 
-#: views/paper.py:331
+#: views/paper.py:320
 msgid "Rejected authorship cannot be deleted."
 msgstr ""
 
-#: views/paper.py:379
+#: views/paper.py:368
 msgid "Add Paper Identifier"
 msgstr ""
 
-#: views/paper.py:410
+#: views/paper.py:399
 msgid "Delete Paper Identifier"
 msgstr ""
 
-#: views/paper.py:419 views/user.py:161
+#: views/paper.py:408 views/user.py:163
 msgid "This identifier is permanent."
 msgstr ""
 
-#: views/paper.py:436
+#: views/paper.py:425
 msgid "Add Citations"
 msgstr ""
 
-#: views/paper.py:520
+#: views/paper.py:509
 msgid "Add Supplemental Link"
 msgstr ""
 
-#: views/paper.py:590
+#: views/paper.py:579
 msgid "Add Scientific Field"
 msgstr ""
 
-#: views/user.py:52
+#: views/user.py:54
 #, python-format
 msgid "Followers of %s"
 msgstr ""
 
-#: views/user.py:71
+#: views/user.py:73
 #, python-format
 msgid "People Followed by %s"
 msgstr ""
 
-#: views/user.py:92
+#: views/user.py:94
 msgid "Feed"
 msgstr ""
 
-#: views/user.py:94
+#: views/user.py:96
 msgid "Following"
 msgstr ""
 
-#: views/user.py:96
+#: views/user.py:98
 msgid "Followers"
 msgstr ""
 
-#: views/user.py:98
+#: views/user.py:100
 msgid "Posted papers"
 msgstr ""
 
-#: views/user.py:100
+#: views/user.py:102
 msgid "Authored papers"
 msgstr ""
 
-#: views/user.py:102
+#: views/user.py:104
 msgid "Recommended papers"
 msgstr ""
 
-#: views/user.py:114
+#: views/user.py:116
 msgid "Delegate paper management"
 msgstr ""
 
-#: views/user.py:129
+#: views/user.py:131
 msgid "Add Personal Identifier"
 msgstr ""
 
-#: views/user.py:154
+#: views/user.py:156
 msgid "Delete Personal Identifier"
 msgstr ""
 
-#: views/user.py:229
-msgid "Rejected papers"
+#: views/user.py:235
+msgid "Confirm Authorship"
 msgstr ""
 
-#: views/user.py:266
+#: views/user.py:301
+msgid "Claim Authorship"
+msgstr ""
+
+#: views/user.py:336
 msgid "Delegating authors"
 msgstr ""
 
-#: views/user.py:269
+#: views/user.py:339
 msgid "Your Delegated Paper Managers"
 msgstr ""
 
-#: views/user.py:282
+#: views/user.py:352
 msgid "Your paper managers"
 msgstr ""
 
-#: views/user.py:285
+#: views/user.py:355
 msgid "Authors Who Delegated Paper Management to You"
 msgstr ""
 
-#: views/utils.py:32
+#: views/utils.py:34
 #, python-brace-format
 msgid "Error {0}"
 msgstr ""
 
-#: views/utils.py:40
+#: views/utils.py:42
 msgid "Invalid request"
 msgstr ""
 
-#: views/utils.py:44
+#: views/utils.py:46
 msgid "Permission denied"
 msgstr ""
 
-#: views/utils.py:48
+#: views/utils.py:50
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: views/utils.py:52
+#: views/utils.py:54
 msgid "The requested page does not exist."
 msgstr ""
 
-#: views/utils.py:59
+#: views/utils.py:61
 #, python-brace-format
 msgid "Accessing this page using the {0} method is not allowed."
 msgstr ""
 
-#: views/utils.py:67
+#: views/utils.py:69
 msgid ""
 "Unexpected error occurred while processing your request. We will fix the "
 "problem soon."
 msgstr ""
 
-#: views/utils.py:71
+#: views/utils.py:73
 msgid "Cannot Edit Record"
 msgstr ""
 
-#: views/utils.py:73
+#: views/utils.py:75
 msgid "You cannot edit this record."
 msgstr ""
 
-#: views/utils.py:79
+#: views/utils.py:81
 msgid "Paper detail"
 msgstr ""
 
-#: views/utils.py:80
+#: views/utils.py:82
 msgid "Reviews"
 msgstr ""
 
-#: views/utils.py:81
+#: views/utils.py:83
 msgid "Cited by"
 msgstr ""
 
-#: views/utils.py:86
+#: views/utils.py:88
 msgid "Edit"
 msgstr ""
 
-#: views/utils.py:91
+#: views/utils.py:93
 msgid "Add review"
 msgstr ""
 
-#: views/utils.py:119
+#: views/utils.py:104
+msgid "Confirm authorship"
+msgstr ""
+
+#: views/utils.py:106
+msgid "Claim authorship"
+msgstr ""
+
+#: views/utils.py:107
+msgid "Rejected papers"
+msgstr ""
+
+#: views/utils.py:144
 msgctxt "navigation"
 msgid "First"
 msgstr ""
 
-#: views/utils.py:125
+#: views/utils.py:150
 msgctxt "navigation"
 msgid "Previous"
 msgstr ""
 
-#: views/utils.py:128
+#: views/utils.py:153
 #, python-format
 msgctxt "navigation"
 msgid "%(page)s of %(total)s"
 msgstr ""
 
-#: views/utils.py:133
+#: views/utils.py:158
 msgctxt "navigation"
 msgid "Next"
 msgstr ""
 
-#: views/utils.py:137
+#: views/utils.py:162
 msgctxt "navigation"
 msgid "Last"
 msgstr ""

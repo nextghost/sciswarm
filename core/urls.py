@@ -33,6 +33,8 @@ account_patterns = [
     url(r'^manage_authorship/?\Z',
         user.MassAuthorshipConfirmationView.as_view(),
         name='mass_authorship_confirmation'),
+    url(r'^claim_authorship/?\Z', user.MassAuthorshipClaimView.as_view(),
+        name='mass_claim_authorship'),
     url(r'^rejected_papers/?\Z',
         paper.RejectedAuthorshipPaperListView.as_view(),
         name='rejected_authorship_paper_list'),

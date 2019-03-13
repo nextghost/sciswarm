@@ -23,7 +23,7 @@ from .base import Form, ModelForm, BaseAliasForm
 from .widgets import SubmitButton
 from ..models import const
 from ..utils.transaction import lock_record
-from ..utils.utils import update_diff
+from ..utils.utils import logger, update_diff
 from ..utils.validators import validate_person_alias
 from .. import models
 
@@ -194,6 +194,43 @@ class MassAuthorshipConfirmationForm(BaseAuthorshipConfirmationForm):
         for item in qs:
             del papermap[item.pk]
         self.selected_papers = list(papermap.values())
+
+class MassAuthorshipClaimForm(MassAuthorshipConfirmationForm):
+    def get_buttons(self):
+        return (('_confirm_authorship', _('Claim')),
+            ('_reject_authorship', _('Reject')))
+
+    def clean(self):
+        super(MassAuthorshipClaimForm, self).clean()
+        # Unselect papers which already have authorship records pointing
+        # to the target user (regardless of confirmation)
+        papermap = dict(((x.pk, x) for x in self.selected_papers))
+        table = models.PaperAuthorReference.query_model
+        query = (table.paper.pk.belongs(list(papermap.keys())) &
+            (table.author_alias.target == self.person))
+        qs = models.PaperAuthorReference.objects.filter(query)
+        qs = qs.values_list('paper_id').distinct()
+        for paper_id in qs:
+            del papermap[paper_id]
+        self.selected_papers = list(papermap.values())
+
+    def save(self):
+        if not self.selected_papers:
+            return
+        author_alias = self.person.get_primary_alias()
+        if author_alias is None:
+            logger.warning('Could not find primary alias for user %s.',
+                self.person.username)
+            return
+        # Create unconfirmed authorship records and let parent class handle
+        # confirmation
+        create_list = [models.PaperAuthorReference(paper=paper,
+            author_alias=author_alias, confirmed=None)
+            for paper in self.selected_papers]
+        models.PaperAuthorReference.objects.bulk_create(create_list)
+        super(MassAuthorshipClaimForm, self).save()
+
+    save.alters_data = True
 
 # This form must be processed and saved under transaction
 class AuthorshipConfirmationForm(BaseAuthorshipConfirmationForm):

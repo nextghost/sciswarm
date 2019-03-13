@@ -103,6 +103,16 @@ class Person(models.Model):
         tpl = ' '.join(tokens)
         return tpl.format(**args)
 
+    def get_primary_alias(self):
+        alias_tab = PersonAlias.query_model
+        alias_objs = PersonAlias.objects
+        query = (alias_tab.target == self)
+        query2 = (alias_tab.scheme == const.person_alias_schemes.SCISWARM)
+        alias = alias_objs.filter(query & query2).order_by('pk').first()
+        if alias is None:
+            alias = alias_objs.filter(query).order_by('pk').first()
+        return alias
+
     def get_absolute_url(self):
         kwargs = dict(username=self.username)
         return reverse('core:person_detail', kwargs=kwargs)

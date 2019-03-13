@@ -99,6 +99,16 @@ def paper_navbar(request, paper):
                 'core:paper_authorship_confirmation', tuple(), kwargs))
     return NavigationBar(request, links)
 
+def manage_authorship_navbar(request):
+    links = [
+        (_('Confirm authorship'), 'core:mass_authorship_confirmation', tuple(),
+            dict()),
+        (_('Claim authorship'), 'core:mass_claim_authorship', tuple(), dict()),
+        (_('Rejected papers'), 'core:rejected_authorship_paper_list', tuple(),
+            dict())
+    ]
+    return NavigationBar(request, links)
+
 def fetch_authors(paper_list):
     if isinstance(paper_list, QuerySet):
         paper_list = list(paper_list)
