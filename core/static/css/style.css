@@ -154,6 +154,10 @@ textarea {
 	float: left;
 }
 
+.number {
+	text-align: right;
+}
+
 .title {
 	font-size: 150%;
 }

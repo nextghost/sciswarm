@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-14 17:49+0100\n"
+"POT-Creation-Date: 2019-03-14 18:29+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: Czech <doucha@swarmtech.cz>\n"
@@ -1133,38 +1133,34 @@ msgid "Planned Features"
 msgstr "Plánované funkce"
 
 #: templates/core/help/index.html:28
-msgid "Detailed citation and review metrics for papers"
-msgstr "Podrobné metriky článků podle citací a recenzí"
-
-#: templates/core/help/index.html:29
 msgid "Event notifications"
 msgstr "Oznámení o událostech"
 
-#: templates/core/help/index.html:30
+#: templates/core/help/index.html:29
 msgid "Paper collections"
 msgstr "Kolekce článků"
 
-#: templates/core/help/index.html:31
+#: templates/core/help/index.html:30
 msgid "Research replications and other relationships between papers"
 msgstr "Replikace výzkumu a další vztahy mezi články"
 
-#: templates/core/help/index.html:32
+#: templates/core/help/index.html:31
 msgid "Open data"
 msgstr "Otevřená data"
 
-#: templates/core/help/index.html:33
+#: templates/core/help/index.html:32
 msgid "Federation protocol"
 msgstr "Protokol pro decentralizaci systému"
 
-#: templates/core/help/index.html:37
+#: templates/core/help/index.html:36
 msgid "Changelog"
 msgstr "Průběh vývoje"
 
-#: templates/core/help/index.html:40
+#: templates/core/help/index.html:39
 msgid "Mar. 1, 2019"
 msgstr "1. března 2019"
 
-#: templates/core/help/index.html:41
+#: templates/core/help/index.html:40
 msgid "First public version"
 msgstr "První veřejná verze"
 
@@ -1569,7 +1565,7 @@ msgid "Paper Identifiers"
 msgstr "Identifikátory článku"
 
 #: templates/core/paper/create_paper.html:37
-#: templates/core/paper/paper_detail.html:65
+#: templates/core/paper/paper_detail.html:68
 msgid "Bibliography"
 msgstr "Literatura"
 
@@ -1642,9 +1638,9 @@ msgstr "Autoři:"
 
 #: templates/core/paper/paper_detail.html:21
 #: templates/core/paper/paper_detail.html:25
-#: templates/core/paper/paper_detail.html:48
-#: templates/core/paper/paper_detail.html:57
-#: templates/core/paper/paper_detail.html:68
+#: templates/core/paper/paper_detail.html:51
+#: templates/core/paper/paper_detail.html:60
+#: templates/core/paper/paper_detail.html:71
 #: templates/core/person/paper_managers_list.html:13
 #: templates/core/person/person_detail.html:32
 msgid "(delete)"
@@ -1652,9 +1648,9 @@ msgstr "(smazat)"
 
 #: templates/core/paper/paper_detail.html:21
 #: templates/core/paper/paper_detail.html:27
-#: templates/core/paper/paper_detail.html:45
-#: templates/core/paper/paper_detail.html:54
-#: templates/core/paper/paper_detail.html:65
+#: templates/core/paper/paper_detail.html:48
+#: templates/core/paper/paper_detail.html:57
+#: templates/core/paper/paper_detail.html:68
 #: templates/core/person/person_detail.html:29
 msgid "(add)"
 msgstr "(přidat)"
@@ -1707,51 +1703,51 @@ msgstr "Změnil(a):"
 msgid "Citation count:"
 msgstr "Počet citací:"
 
-#: templates/core/paper/paper_detail.html:37
-msgid "Methodology (global):"
-msgstr "Metodika (vše):"
+#: templates/core/paper/paper_detail.html:41 views/utils.py:82
+msgid "Reviews"
+msgstr "Recenze"
 
-#: templates/core/paper/paper_detail.html:37
-#: templates/core/paper/paper_detail.html:38
-#: templates/core/paper/paper_detail.html:40
 #: templates/core/paper/paper_detail.html:41
+msgid "Methodology"
+msgstr "Metodika"
+
+#: templates/core/paper/paper_detail.html:41
+msgid "Importance"
+msgstr "Důležitost"
+
+#: templates/core/paper/paper_detail.html:43
+msgid "Global"
+msgstr "Všechny recenze"
+
+#: templates/core/paper/paper_detail.html:43
+#: templates/core/paper/paper_detail.html:44
 #, python-format
-msgid "%(value)s%% (N=%(count)s; σ=%(sigma)s)"
-msgstr "%(value)s %% (N=%(count)s; σ=%(sigma)s)"
+msgid "%(value)s%% (σ=%(sigma)s)"
+msgstr "%(value)s %% (σ=%(sigma)s)"
 
-#: templates/core/paper/paper_detail.html:37
-#: templates/core/paper/paper_detail.html:38
-#: templates/core/paper/paper_detail.html:40
-#: templates/core/paper/paper_detail.html:41
-msgid "No reviews"
-msgstr "Žádné recenze"
+#: templates/core/paper/paper_detail.html:43
+#: templates/core/paper/paper_detail.html:44
+msgid "N/A"
+msgstr "-"
 
-#: templates/core/paper/paper_detail.html:38
-msgid "Importance (global):"
-msgstr "Důležitost (vše):"
+#: templates/core/paper/paper_detail.html:44
+msgid "Your network"
+msgstr "Jen Vaše síť"
 
-#: templates/core/paper/paper_detail.html:40
-msgid "Methodology (your network):"
-msgstr "Metodika (Vaše síť):"
-
-#: templates/core/paper/paper_detail.html:41
-msgid "Importance (your network):"
-msgstr "Důležitost (Vaše síť):"
-
-#: templates/core/paper/paper_detail.html:45
+#: templates/core/paper/paper_detail.html:48
 #: templates/core/person/person_detail.html:29
 msgid "Identifiers"
 msgstr "Identifikátory"
 
-#: templates/core/paper/paper_detail.html:54
+#: templates/core/paper/paper_detail.html:57
 msgid "Supplemental Links"
 msgstr "Doplňující odkazy"
 
-#: templates/core/paper/paper_detail.html:61
+#: templates/core/paper/paper_detail.html:64
 msgid "No links have been entered."
 msgstr "Nebyly zadány žádné odkazy."
 
-#: templates/core/paper/paper_detail.html:72
+#: templates/core/paper/paper_detail.html:75
 msgid "No citations have been entered."
 msgstr "Nebyly zadány žádné citace."
 
@@ -2188,10 +2184,6 @@ msgstr "Tento záznam nemůžete upravit."
 #: views/utils.py:81
 msgid "Paper detail"
 msgstr "Podrobnosti článku"
-
-#: views/utils.py:82
-msgid "Reviews"
-msgstr "Recenze"
 
 #: views/utils.py:83
 msgid "Cited by"

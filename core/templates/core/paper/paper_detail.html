@@ -34,12 +34,15 @@
 <tr><th>{% trans 'Last changed:' %}</th><td>{{ object.last_changed }}</td></tr>
 {% if edit_access %}<tr><th>{% trans 'Changed by:' %}</th><td>{{ object.changed_by|object_link:_('Deleted user') }}</td></tr>{% endif %}
 <tr><th>{% trans 'Citation count:' %}</th><td>{{ citation_count }}</td></tr>
-<tr><th>{% trans 'Methodology (global):' %}</th><td>{% if global_rating is not None and global_rating.review_count %}{% blocktrans with value=global_rating.methodology_avg|floatformat:0 count=global_rating.review_count sigma=global_rating.methodology_sd|floatformat:1 %}{{ value }}% (N={{ count }}; σ={{ sigma }}){% endblocktrans %}{% else %}{% trans 'No reviews' %}{% endif %}</td></tr>
-<tr><th>{% trans 'Importance (global):' %}</th><td>{% if global_rating is not None and global_rating.review_count %}{% blocktrans with value=global_rating.importance_avg|floatformat:0 count=global_rating.review_count sigma=global_rating.importance_sd|floatformat:1 %}{{ value }}% (N={{ count }}; σ={{ sigma }}){% endblocktrans %}{% else %}{% trans 'No reviews' %}{% endif %}</td></tr>
-{% if network_rating is not None %}
-<tr><th>{% trans 'Methodology (your network):' %}</th><td>{% if network_rating.review_count %}{% blocktrans with value=network_rating.methodology_avg|floatformat:0 count=network_rating.review_count sigma=network_rating.methodology_sd|floatformat:1 %}{{ value }}% (N={{ count }}; σ={{ sigma }}){% endblocktrans %}{% else %}{% trans 'No reviews' %}{% endif %}</td></tr>
-<tr><th>{% trans 'Importance (your network):' %}</th><td>{% if network_rating.review_count %}{% blocktrans with value=network_rating.importance_avg|floatformat:0 count=network_rating.review_count sigma=network_rating.importance_sd|floatformat:1 %}{{ value }}% (N={{ count }}; σ={{ sigma }}){% endblocktrans %}{% else %}{% trans 'No reviews' %}{% endif %}</td></tr>
-{% endif %}
+</table>
+
+<table class="info">
+<thead><tr>
+<td>&nbsp;</td><td>{% trans 'Reviews' %}</td><td>{% trans 'Methodology' %}</td><td>{% trans 'Importance' %}</td></tr></thead>
+<tbody>
+<tr><th>{% trans 'Global' %}</th><td class="number">{% if global_rating is not None %}{{ global_rating.review_count }}{% else %}0{% endif %}</td>{% if global_rating is not None and global_rating.review_count %}<td class="number">{% blocktrans with value=global_rating.methodology_avg|floatformat:0 sigma=global_rating.methodology_sd|floatformat:1 %}{{ value }}% (σ={{ sigma }}){% endblocktrans %}</td><td class="number">{% blocktrans with value=global_rating.importance_avg|floatformat:0 sigma=global_rating.importance_sd|floatformat:1 %}{{ value }}% (σ={{ sigma }}){% endblocktrans %}</td>{% else %}<td class="number">{% trans 'N/A' %}</td><td class="number">{% trans 'N/A' %}</td>{% endif %}</tr>
+{% if request.user.is_authenticated %}<tr><th>{% trans 'Your network' %}</th><td class="number">{% if network_rating is not None %}{{ network_rating.review_count }}{% else %}0{% endif %}</td>{% if network_rating is not None and network_rating.review_count %}<td class="number">{% blocktrans with value=network_rating.methodology_avg|floatformat:0 sigma=network_rating.methodology_sd|floatformat:1 %}{{ value }}% (σ={{ sigma }}){% endblocktrans %}</td><td class="number">{% blocktrans with value=network_rating.importance_avg|floatformat:0 sigma=network_rating.importance_sd|floatformat:1 %}{{ value }}% (σ={{ sigma }}){% endblocktrans %}</td>{% else %}<td class="number">{% trans 'N/A' %}</td><td class="number">{% trans 'N/A' %}</td>{% endif %}</tr>{% endif %}
+</tbody>
 </table>
 
 <h2>{% trans 'Identifiers' %}{% if edit_access %} <a href="{% url 'core:add_paper_identifier' pk=object.pk %}"><img src="{% static 'img/create.png' %}" alt="{% trans '(add)' %}"/></a>{% endif %}</h2>

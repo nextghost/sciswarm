@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-14 17:49+0100\n"
+"POT-Creation-Date: 2019-03-14 18:29+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -1037,38 +1037,34 @@ msgid "Planned Features"
 msgstr ""
 
 #: templates/core/help/index.html:28
-msgid "Detailed citation and review metrics for papers"
-msgstr ""
-
-#: templates/core/help/index.html:29
 msgid "Event notifications"
 msgstr ""
 
-#: templates/core/help/index.html:30
+#: templates/core/help/index.html:29
 msgid "Paper collections"
 msgstr ""
 
-#: templates/core/help/index.html:31
+#: templates/core/help/index.html:30
 msgid "Research replications and other relationships between papers"
 msgstr ""
 
-#: templates/core/help/index.html:32
+#: templates/core/help/index.html:31
 msgid "Open data"
 msgstr ""
 
-#: templates/core/help/index.html:33
+#: templates/core/help/index.html:32
 msgid "Federation protocol"
 msgstr ""
 
-#: templates/core/help/index.html:37
+#: templates/core/help/index.html:36
 msgid "Changelog"
 msgstr ""
 
-#: templates/core/help/index.html:40
+#: templates/core/help/index.html:39
 msgid "Mar. 1, 2019"
 msgstr ""
 
-#: templates/core/help/index.html:41
+#: templates/core/help/index.html:40
 msgid "First public version"
 msgstr ""
 
@@ -1368,7 +1364,7 @@ msgid "Paper Identifiers"
 msgstr ""
 
 #: templates/core/paper/create_paper.html:37
-#: templates/core/paper/paper_detail.html:65
+#: templates/core/paper/paper_detail.html:68
 msgid "Bibliography"
 msgstr ""
 
@@ -1441,9 +1437,9 @@ msgstr ""
 
 #: templates/core/paper/paper_detail.html:21
 #: templates/core/paper/paper_detail.html:25
-#: templates/core/paper/paper_detail.html:48
-#: templates/core/paper/paper_detail.html:57
-#: templates/core/paper/paper_detail.html:68
+#: templates/core/paper/paper_detail.html:51
+#: templates/core/paper/paper_detail.html:60
+#: templates/core/paper/paper_detail.html:71
 #: templates/core/person/paper_managers_list.html:13
 #: templates/core/person/person_detail.html:32
 msgid "(delete)"
@@ -1451,9 +1447,9 @@ msgstr ""
 
 #: templates/core/paper/paper_detail.html:21
 #: templates/core/paper/paper_detail.html:27
-#: templates/core/paper/paper_detail.html:45
-#: templates/core/paper/paper_detail.html:54
-#: templates/core/paper/paper_detail.html:65
+#: templates/core/paper/paper_detail.html:48
+#: templates/core/paper/paper_detail.html:57
+#: templates/core/paper/paper_detail.html:68
 #: templates/core/person/person_detail.html:29
 msgid "(add)"
 msgstr ""
@@ -1506,51 +1502,51 @@ msgstr ""
 msgid "Citation count:"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:37
-msgid "Methodology (global):"
+#: templates/core/paper/paper_detail.html:41 views/utils.py:82
+msgid "Reviews"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:37
-#: templates/core/paper/paper_detail.html:38
-#: templates/core/paper/paper_detail.html:40
 #: templates/core/paper/paper_detail.html:41
+msgid "Methodology"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:41
+msgid "Importance"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:43
+msgid "Global"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:43
+#: templates/core/paper/paper_detail.html:44
 #, python-format
-msgid "%(value)s%% (N=%(count)s; σ=%(sigma)s)"
+msgid "%(value)s%% (σ=%(sigma)s)"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:37
-#: templates/core/paper/paper_detail.html:38
-#: templates/core/paper/paper_detail.html:40
-#: templates/core/paper/paper_detail.html:41
-msgid "No reviews"
+#: templates/core/paper/paper_detail.html:43
+#: templates/core/paper/paper_detail.html:44
+msgid "N/A"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:38
-msgid "Importance (global):"
+#: templates/core/paper/paper_detail.html:44
+msgid "Your network"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:40
-msgid "Methodology (your network):"
-msgstr ""
-
-#: templates/core/paper/paper_detail.html:41
-msgid "Importance (your network):"
-msgstr ""
-
-#: templates/core/paper/paper_detail.html:45
+#: templates/core/paper/paper_detail.html:48
 #: templates/core/person/person_detail.html:29
 msgid "Identifiers"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:54
+#: templates/core/paper/paper_detail.html:57
 msgid "Supplemental Links"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:61
+#: templates/core/paper/paper_detail.html:64
 msgid "No links have been entered."
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:72
+#: templates/core/paper/paper_detail.html:75
 msgid "No citations have been entered."
 msgstr ""
 
@@ -1971,10 +1967,6 @@ msgstr ""
 
 #: views/utils.py:81
 msgid "Paper detail"
-msgstr ""
-
-#: views/utils.py:82
-msgid "Reviews"
 msgstr ""
 
 #: views/utils.py:83
