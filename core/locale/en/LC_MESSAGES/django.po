@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-13 17:20+0100\n"
+"POT-Creation-Date: 2019-03-14 17:49+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -1368,7 +1368,7 @@ msgid "Paper Identifiers"
 msgstr ""
 
 #: templates/core/paper/create_paper.html:37
-#: templates/core/paper/paper_detail.html:58
+#: templates/core/paper/paper_detail.html:65
 msgid "Bibliography"
 msgstr ""
 
@@ -1441,9 +1441,9 @@ msgstr ""
 
 #: templates/core/paper/paper_detail.html:21
 #: templates/core/paper/paper_detail.html:25
-#: templates/core/paper/paper_detail.html:41
-#: templates/core/paper/paper_detail.html:50
-#: templates/core/paper/paper_detail.html:61
+#: templates/core/paper/paper_detail.html:48
+#: templates/core/paper/paper_detail.html:57
+#: templates/core/paper/paper_detail.html:68
 #: templates/core/person/paper_managers_list.html:13
 #: templates/core/person/person_detail.html:32
 msgid "(delete)"
@@ -1451,9 +1451,9 @@ msgstr ""
 
 #: templates/core/paper/paper_detail.html:21
 #: templates/core/paper/paper_detail.html:27
-#: templates/core/paper/paper_detail.html:38
-#: templates/core/paper/paper_detail.html:47
-#: templates/core/paper/paper_detail.html:58
+#: templates/core/paper/paper_detail.html:45
+#: templates/core/paper/paper_detail.html:54
+#: templates/core/paper/paper_detail.html:65
 #: templates/core/person/person_detail.html:29
 msgid "(add)"
 msgstr ""
@@ -1502,20 +1502,55 @@ msgstr ""
 msgid "Changed by:"
 msgstr ""
 
+#: templates/core/paper/paper_detail.html:36
+msgid "Citation count:"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:37
+msgid "Methodology (global):"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:37
 #: templates/core/paper/paper_detail.html:38
+#: templates/core/paper/paper_detail.html:40
+#: templates/core/paper/paper_detail.html:41
+#, python-format
+msgid "%(value)s%% (N=%(count)s; σ=%(sigma)s)"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:37
+#: templates/core/paper/paper_detail.html:38
+#: templates/core/paper/paper_detail.html:40
+#: templates/core/paper/paper_detail.html:41
+msgid "No reviews"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:38
+msgid "Importance (global):"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:40
+msgid "Methodology (your network):"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:41
+msgid "Importance (your network):"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:45
 #: templates/core/person/person_detail.html:29
 msgid "Identifiers"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:47
+#: templates/core/paper/paper_detail.html:54
 msgid "Supplemental Links"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:54
+#: templates/core/paper/paper_detail.html:61
 msgid "No links have been entered."
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:65
+#: templates/core/paper/paper_detail.html:72
 msgid "No citations have been entered."
 msgstr ""
 
@@ -1738,89 +1773,89 @@ msgstr ""
 msgid "Timeline"
 msgstr ""
 
-#: views/paper.py:46
+#: views/paper.py:47
 msgid "Latest papers"
 msgstr ""
 
-#: views/paper.py:88
+#: views/paper.py:89
 #, python-format
 msgid "Papers Citing: %s"
 msgstr ""
 
-#: views/paper.py:102
+#: views/paper.py:103
 #, python-format
 msgid "Papers Posted by %s"
 msgstr ""
 
-#: views/paper.py:119
+#: views/paper.py:120
 #, python-format
 msgid "Papers by %s"
 msgstr ""
 
-#: views/paper.py:135
+#: views/paper.py:136
 #, python-format
 msgid "Papers Recommended by %s"
 msgstr ""
 
-#: views/paper.py:141
+#: views/paper.py:142
 msgid "Papers You Have Rejected"
 msgstr ""
 
-#: views/paper.py:163
+#: views/paper.py:164
 msgid "This paper is not available for legal reasons."
 msgstr ""
 
-#: views/paper.py:189
+#: views/paper.py:200
 msgid "Create Paper"
 msgstr ""
 
-#: views/paper.py:198
+#: views/paper.py:209
 msgid "Author:"
 msgstr ""
 
-#: views/paper.py:210 views/paper.py:438
+#: views/paper.py:221 views/paper.py:447
 msgid "Biblio entry:"
 msgstr ""
 
-#: views/paper.py:264
+#: views/paper.py:273
 msgid "Edit Paper"
 msgstr ""
 
-#: views/paper.py:269 views/paper.py:288 views/paper.py:318 views/paper.py:354
-#: views/paper.py:374 views/paper.py:406 views/paper.py:434 views/paper.py:466
-#: views/paper.py:514 views/paper.py:541 views/paper.py:587 views/paper.py:609
+#: views/paper.py:278 views/paper.py:297 views/paper.py:327 views/paper.py:363
+#: views/paper.py:383 views/paper.py:415 views/paper.py:443 views/paper.py:475
+#: views/paper.py:523 views/paper.py:550 views/paper.py:596 views/paper.py:618
 msgid "You are not one of the authors."
 msgstr ""
 
-#: views/paper.py:280
+#: views/paper.py:289
 msgid "Add Paper Author"
 msgstr ""
 
-#: views/paper.py:320
+#: views/paper.py:329
 msgid "Rejected authorship cannot be deleted."
 msgstr ""
 
-#: views/paper.py:368
+#: views/paper.py:377
 msgid "Add Paper Identifier"
 msgstr ""
 
-#: views/paper.py:399
+#: views/paper.py:408
 msgid "Delete Paper Identifier"
 msgstr ""
 
-#: views/paper.py:408 views/user.py:163
+#: views/paper.py:417 views/user.py:163
 msgid "This identifier is permanent."
 msgstr ""
 
-#: views/paper.py:425
+#: views/paper.py:434
 msgid "Add Citations"
 msgstr ""
 
-#: views/paper.py:509
+#: views/paper.py:518
 msgid "Add Supplemental Link"
 msgstr ""
 
-#: views/paper.py:579
+#: views/paper.py:588
 msgid "Add Scientific Field"
 msgstr ""
 

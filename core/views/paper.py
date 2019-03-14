@@ -36,6 +36,7 @@ from ..forms.user import (PaperAuthorForm, PersonAliasForm, PersonAliasFormset,
     AuthorshipConfirmationForm)
 from ..models import const
 from ..utils.html import NavigationBar
+from ..utils.paper import paper_review_rating_subquery
 from ..utils.utils import list_map, logger, remove_duplicates
 from .. import models
 
@@ -167,6 +168,7 @@ class PaperDetailView(DetailView):
     def get_context_data(self, *args, **kwargs):
         ret = super(PaperDetailView, self).get_context_data(*args, **kwargs)
         obj = ret['object']
+        papertab = models.Paper.query_model
         qs = models.PaperAuthorReference.objects.filter_unrejected(obj)
         ret['author_list'] = qs.select_related('author_alias__target')
         ret['author_names'] = obj.paperauthorname_set.all()
@@ -175,10 +177,19 @@ class PaperDetailView(DetailView):
         ret['alias_list'] = obj.paperalias_set.all()
         ret['suplink_list'] = obj.papersupplementallink_set.all()
         ret['field_list'] = obj.fields.all()
+        query = (papertab.bibliography.target == obj)
+        cite_count = models.Paper.objects.filter_public().filter(query).count()
+        ret['citation_count'] = cite_count
+        result = paper_review_rating_subquery(obj.pk).execute()
+        ret['global_rating'] = result.first()
+        ret['network_rating'] = None
         ret['edit_access'] = obj.is_owned_by(self.request.user)
         if self.request.user.is_authenticated:
+            person = self.request.user.person
+            result = paper_review_rating_subquery(obj.pk, person.pk).execute()
+            ret['network_rating'] = result.first()
             ret['recommend_form'] = PaperRecommendationForm(paper=obj,
-                person=self.request.user.person)
+                person=person)
         ret['navbar'] = paper_navbar(self.request, obj)
         return ret
 

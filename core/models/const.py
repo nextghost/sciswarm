@@ -58,9 +58,9 @@ paper_alias_schemes = ConstEnum(
 )
 
 paper_quality_ratings = ConstEnum(
-    ('BAD', -1, _('Questionable')),
-    ('MIXED', 0, _('Mixed')),
-    ('GOOD', 1, _('Rigorous')),
+    ('BAD', 0, _('Questionable')),
+    ('MIXED', 1, _('Mixed')),
+    ('GOOD', 2, _('Rigorous')),
 )
 
 paper_importance_ratings = ConstEnum(

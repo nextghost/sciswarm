@@ -430,6 +430,15 @@ def clean_sum(expr):
 def count(expr, distinct=False):
     return NumericExpression(CountOp(distinct), make_expr(expr))
 
+def avg(expr):
+    return NumericExpression(FunctionOp('AVG'), expr)
+
+def stddev_pop(expr):
+    return NumericExpression(FunctionOp('STDDEV_POP'), expr)
+
+def stddev_samp(expr):
+    return NumericExpression(FunctionOp('STDDEV_SAMP'), expr)
+
 def all(query):
     return Expression(FunctionOp('ALL'), SubqueryExpression(query))
 
@@ -798,6 +807,12 @@ class SQLResult(object):
         for rset in self.data:
             for row in rset:
                 yield SQLRow(self, row)
+
+    def first(self):
+        for rset in self.data:
+            for row in rset:
+                return SQLRow(self, row)
+        return None
 
 class ModelMapping(object):
     def __init__(self, model, *fields, alias=dict(), annotations=dict()):
