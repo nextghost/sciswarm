@@ -28,7 +28,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView
 from .base import (BaseCreateView, BaseUpdateView, BaseListView,
     SearchListView, BaseModelFormsetView, BaseDeleteView, BaseUnlinkAliasView)
-from .utils import fetch_authors, paper_navbar, manage_authorship_navbar
+from .utils import (fetch_authors, person_navbar, paper_navbar,
+    manage_authorship_navbar)
 from ..forms.paper import (PaperSearchForm, PaperForm, PaperAliasForm,
     PaperAliasFormset, PaperAuthorNameFormset, PaperSupplementalLinkForm,
     PaperRecommendationForm, ScienceSubfieldForm)
@@ -101,6 +102,8 @@ class PersonPostedPaperListView(BasePaperListView):
         ret = super(PersonPostedPaperListView, self).get_context_data(*args,
             **kwargs)
         ret['page_title'] = _('Papers Posted by %s') % self.person.full_name
+        ret['navbar'] = person_navbar(self.request, self.kwargs['username'],
+            self.person)
         return ret
 
 class PersonAuthoredPaperListView(BasePaperListView):
@@ -118,6 +121,8 @@ class PersonAuthoredPaperListView(BasePaperListView):
         ret = super(PersonAuthoredPaperListView, self).get_context_data(*args,
             **kwargs)
         ret['page_title'] = _('Papers by %s') % self.person.full_name
+        ret['navbar'] = person_navbar(self.request, self.kwargs['username'],
+            self.person)
         return ret
 
 class PersonRecommendedPaperListView(BasePaperListView):
@@ -135,6 +140,8 @@ class PersonRecommendedPaperListView(BasePaperListView):
             *args, **kwargs)
         title = _('Papers Recommended by %s') % self.person.full_name
         ret['page_title'] = title
+        ret['navbar'] = person_navbar(self.request, self.kwargs['username'],
+            self.person)
         return ret
 
 @method_decorator(login_required, name='dispatch')

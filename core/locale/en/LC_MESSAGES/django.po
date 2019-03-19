@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-14 18:29+0100\n"
+"POT-Creation-Date: 2019-03-19 13:08+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -1288,7 +1288,7 @@ msgstr ""
 msgid "My profile"
 msgstr ""
 
-#: templates/core/layout.html:35 views/utils.py:98
+#: templates/core/layout.html:35 views/utils.py:120
 msgid "Manage authorship"
 msgstr ""
 
@@ -1502,7 +1502,7 @@ msgstr ""
 msgid "Citation count:"
 msgstr ""
 
-#: templates/core/paper/paper_detail.html:41 views/utils.py:82
+#: templates/core/paper/paper_detail.html:41 views/utils.py:104
 msgid "Reviews"
 msgstr ""
 
@@ -1695,7 +1695,7 @@ msgstr ""
 msgid "Lost password?"
 msgstr ""
 
-#: views/account.py:70 views/account.py:170 views/user.py:113
+#: views/account.py:70 views/account.py:170 views/utils.py:93
 msgid "Edit profile"
 msgstr ""
 
@@ -1760,7 +1760,7 @@ msgstr ""
 msgid "You cannot delete somebody else's comment."
 msgstr ""
 
-#: views/event.py:40
+#: views/event.py:41
 #, python-format
 msgid "Latest Actions of %s"
 msgstr ""
@@ -1769,159 +1769,131 @@ msgstr ""
 msgid "Timeline"
 msgstr ""
 
-#: views/paper.py:47
+#: views/paper.py:48
 msgid "Latest papers"
 msgstr ""
 
-#: views/paper.py:89
+#: views/paper.py:90
 #, python-format
 msgid "Papers Citing: %s"
 msgstr ""
 
-#: views/paper.py:103
+#: views/paper.py:104
 #, python-format
 msgid "Papers Posted by %s"
 msgstr ""
 
-#: views/paper.py:120
+#: views/paper.py:123
 #, python-format
 msgid "Papers by %s"
 msgstr ""
 
-#: views/paper.py:136
+#: views/paper.py:141
 #, python-format
 msgid "Papers Recommended by %s"
 msgstr ""
 
-#: views/paper.py:142
+#: views/paper.py:149
 msgid "Papers You Have Rejected"
 msgstr ""
 
-#: views/paper.py:164
+#: views/paper.py:171
 msgid "This paper is not available for legal reasons."
 msgstr ""
 
-#: views/paper.py:200
+#: views/paper.py:207
 msgid "Create Paper"
 msgstr ""
 
-#: views/paper.py:209
+#: views/paper.py:216
 msgid "Author:"
 msgstr ""
 
-#: views/paper.py:221 views/paper.py:447
+#: views/paper.py:228 views/paper.py:454
 msgid "Biblio entry:"
 msgstr ""
 
-#: views/paper.py:273
+#: views/paper.py:280
 msgid "Edit Paper"
 msgstr ""
 
-#: views/paper.py:278 views/paper.py:297 views/paper.py:327 views/paper.py:363
-#: views/paper.py:383 views/paper.py:415 views/paper.py:443 views/paper.py:475
-#: views/paper.py:523 views/paper.py:550 views/paper.py:596 views/paper.py:618
+#: views/paper.py:285 views/paper.py:304 views/paper.py:334 views/paper.py:370
+#: views/paper.py:390 views/paper.py:422 views/paper.py:450 views/paper.py:482
+#: views/paper.py:530 views/paper.py:557 views/paper.py:603 views/paper.py:625
 msgid "You are not one of the authors."
 msgstr ""
 
-#: views/paper.py:289
+#: views/paper.py:296
 msgid "Add Paper Author"
 msgstr ""
 
-#: views/paper.py:329
+#: views/paper.py:336
 msgid "Rejected authorship cannot be deleted."
 msgstr ""
 
-#: views/paper.py:377
+#: views/paper.py:384
 msgid "Add Paper Identifier"
 msgstr ""
 
-#: views/paper.py:408
+#: views/paper.py:415
 msgid "Delete Paper Identifier"
 msgstr ""
 
-#: views/paper.py:417 views/user.py:163
+#: views/paper.py:424 views/user.py:143
 msgid "This identifier is permanent."
 msgstr ""
 
-#: views/paper.py:434
+#: views/paper.py:441
 msgid "Add Citations"
 msgstr ""
 
-#: views/paper.py:518
+#: views/paper.py:525
 msgid "Add Supplemental Link"
 msgstr ""
 
-#: views/paper.py:588
+#: views/paper.py:595
 msgid "Add Scientific Field"
 msgstr ""
 
-#: views/user.py:54
+#: views/user.py:55
 #, python-format
 msgid "Followers of %s"
 msgstr ""
 
-#: views/user.py:73
+#: views/user.py:75
 #, python-format
 msgid "People Followed by %s"
 msgstr ""
 
-#: views/user.py:94
-msgid "Feed"
-msgstr ""
-
-#: views/user.py:96
-msgid "Following"
-msgstr ""
-
-#: views/user.py:98
-msgid "Followers"
-msgstr ""
-
-#: views/user.py:100
-msgid "Posted papers"
-msgstr ""
-
-#: views/user.py:102
-msgid "Authored papers"
-msgstr ""
-
-#: views/user.py:104
-msgid "Recommended papers"
-msgstr ""
-
-#: views/user.py:116
-msgid "Delegate paper management"
-msgstr ""
-
-#: views/user.py:131
+#: views/user.py:111
 msgid "Add Personal Identifier"
 msgstr ""
 
-#: views/user.py:156
+#: views/user.py:136
 msgid "Delete Personal Identifier"
 msgstr ""
 
-#: views/user.py:235
+#: views/user.py:215
 msgid "Confirm Authorship"
 msgstr ""
 
-#: views/user.py:301
+#: views/user.py:281
 msgid "Claim Authorship"
 msgstr ""
 
-#: views/user.py:336
+#: views/user.py:316
 msgid "Delegating authors"
 msgstr ""
 
-#: views/user.py:339
+#: views/user.py:319
 msgid "Your Delegated Paper Managers"
 msgstr ""
 
-#: views/user.py:352
+#: views/user.py:332
 msgid "Your paper managers"
 msgstr ""
 
-#: views/user.py:355
+#: views/user.py:335
 msgid "Authors Who Delegated Paper Management to You"
 msgstr ""
 
@@ -1966,55 +1938,87 @@ msgid "You cannot edit this record."
 msgstr ""
 
 #: views/utils.py:81
-msgid "Paper detail"
+msgid "User profile"
+msgstr ""
+
+#: views/utils.py:82
+msgid "Feed"
 msgstr ""
 
 #: views/utils.py:83
-msgid "Cited by"
+msgid "Following"
+msgstr ""
+
+#: views/utils.py:84
+msgid "Followers"
+msgstr ""
+
+#: views/utils.py:85
+msgid "Posted papers"
+msgstr ""
+
+#: views/utils.py:86
+msgid "Authored papers"
 msgstr ""
 
 #: views/utils.py:88
+msgid "Recommended papers"
+msgstr ""
+
+#: views/utils.py:96
+msgid "Delegate paper management"
+msgstr ""
+
+#: views/utils.py:103
+msgid "Paper detail"
+msgstr ""
+
+#: views/utils.py:105
+msgid "Cited by"
+msgstr ""
+
+#: views/utils.py:110
 msgid "Edit"
 msgstr ""
 
-#: views/utils.py:93
+#: views/utils.py:115
 msgid "Add review"
 msgstr ""
 
-#: views/utils.py:104
+#: views/utils.py:126
 msgid "Confirm authorship"
 msgstr ""
 
-#: views/utils.py:106
+#: views/utils.py:128
 msgid "Claim authorship"
 msgstr ""
 
-#: views/utils.py:107
+#: views/utils.py:129
 msgid "Rejected papers"
 msgstr ""
 
-#: views/utils.py:144
+#: views/utils.py:166
 msgctxt "navigation"
 msgid "First"
 msgstr ""
 
-#: views/utils.py:150
+#: views/utils.py:172
 msgctxt "navigation"
 msgid "Previous"
 msgstr ""
 
-#: views/utils.py:153
+#: views/utils.py:175
 #, python-format
 msgctxt "navigation"
 msgid "%(page)s of %(total)s"
 msgstr ""
 
-#: views/utils.py:158
+#: views/utils.py:180
 msgctxt "navigation"
 msgid "Next"
 msgstr ""
 
-#: views/utils.py:162
+#: views/utils.py:184
 msgctxt "navigation"
 msgid "Last"
 msgstr ""

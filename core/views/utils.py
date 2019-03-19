@@ -75,6 +75,28 @@ def editing_forbidden_error(request, message=None):
         message = _('You cannot edit this record.')
     return error_page(request, 403, message, title)
 
+def person_navbar(request, username, person):
+    kwargs = dict(username=username)
+    links = [
+        (_('User profile'), 'core:person_detail', tuple(), kwargs),
+        (_('Feed'), 'core:person_event_feed', tuple(), kwargs),
+        (_('Following'), 'core:person_subscription_list', tuple(), kwargs),
+        (_('Followers'), 'core:person_follower_list', tuple(), kwargs),
+        (_('Posted papers'), 'core:person_posted_paper_list', tuple(), kwargs),
+        (_('Authored papers'), 'core:person_authored_paper_list', tuple(),
+            kwargs),
+        (_('Recommended papers'), 'core:person_recommended_paper_list',
+            tuple(), kwargs),
+    ]
+    if request.user.is_authenticated:
+        if request.user.person == person:
+            links.append((_('Edit profile'), 'core:edit_profile', tuple(),
+                dict()))
+        else:
+            links.append((_('Delegate paper management'),
+                'core:delegate_paper_management', tuple(), kwargs))
+    return NavigationBar(request, links)
+
 def paper_navbar(request, paper):
     kwargs = dict(pk=paper.pk)
     links = [

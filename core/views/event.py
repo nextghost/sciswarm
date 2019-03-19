@@ -22,6 +22,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from .base import BaseListView
+from .utils import person_navbar
 from .. import models
 
 class PersonEventFeed(BaseListView):
@@ -38,5 +39,6 @@ class PersonEventFeed(BaseListView):
         ret = super(PersonEventFeed, self).get_context_data(*args, **kwargs)
         ret['person'] = self.person
         ret['page_title'] = _('Latest Actions of %s') % self.person.full_name
-        ret['navbar'] = ''
+        ret['navbar'] = person_navbar(self.request, self.kwargs['username'],
+            self.person)
         return ret

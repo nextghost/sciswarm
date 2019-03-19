@@ -26,7 +26,8 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import DetailView, FormView
 from .base import BaseCreateView, BaseListView, BaseUnlinkAliasView
-from .utils import fetch_authors, manage_authorship_navbar, PageNavigator
+from .utils import (fetch_authors, person_navbar, manage_authorship_navbar,
+    PageNavigator)
 from ..models import const
 from ..utils.html import NavigationBar
 from ..utils.utils import logger, fold_or
@@ -52,7 +53,8 @@ class PersonFollowerListView(BaseListView):
         ret = super(PersonFollowerListView, self).get_context_data(*args,
             **kwargs)
         ret['page_title'] = _('Followers of %s') % self.person.full_name
-        ret['navbar'] = ''
+        ret['navbar'] = person_navbar(self.request, self.kwargs['username'],
+            self.person)
         return ret
 
 class PersonSubscriptionListView(BaseListView):
@@ -71,7 +73,8 @@ class PersonSubscriptionListView(BaseListView):
         ret = super(PersonSubscriptionListView, self).get_context_data(*args,
             **kwargs)
         ret['page_title'] = _('People Followed by %s') % self.person.full_name
-        ret['navbar'] = ''
+        ret['navbar'] = person_navbar(self.request, self.kwargs['username'],
+            self.person)
         return ret
 
 class PersonDetailView(DetailView):
@@ -88,41 +91,18 @@ class PersonDetailView(DetailView):
         ret = super(PersonDetailView, self).get_context_data(*args, **kwargs)
         obj = ret['object']
         ret['alias_list'] = obj.personalias_set.select_related('target')
-        for item in ret['alias_list']:
-            item.is_deletable()
-        links = [
-            (_('Feed'), 'core:person_event_feed', tuple(),
-                dict(username=self.kwargs['username'])),
-            (_('Following'), 'core:person_subscription_list', tuple(),
-                dict(username=self.kwargs['username'])),
-            (_('Followers'), 'core:person_follower_list', tuple(),
-                dict(username=self.kwargs['username'])),
-            (_('Posted papers'), 'core:person_posted_paper_list', tuple(),
-                dict(username=self.kwargs['username'])),
-            (_('Authored papers'), 'core:person_authored_paper_list', tuple(),
-                dict(username=self.kwargs['username'])),
-            (_('Recommended papers'), 'core:person_recommended_paper_list',
-                tuple(), dict(username=self.kwargs['username'])),
-        ]
         ret['edit_access'] = False
         ret['subscribe_form'] = None
         ret['delegated_permissions'] = False
         if self.request.user.is_authenticated:
             ret['edit_access'] = (self.request.user.person == obj)
-            if self.request.user.person == obj:
-                links.append((_('Edit profile'), 'core:edit_profile', tuple(),
-                    dict()))
-            else:
-                links.append((_('Delegate paper management'),
-                    'core:delegate_paper_management', tuple(),
-                    dict(username=obj.username)))
+            if self.request.user.person != obj:
                 query = (models.Person.query_model.pk == obj.pk)
                 qs = self.request.user.person.paper_managers.filter(query)
                 ret['delegated_permissions'] = qs.exists()
                 ret['subscribe_form'] = FeedSubscriptionForm(poster=obj,
                     follower=self.request.user.person)
-        ret['navbar'] = NavigationBar(self.request, links)
-        # TODO: Show latest events from this user
+        ret['navbar'] = person_navbar(self.request,self.kwargs['username'],obj)
         return ret
 
 @method_decorator(login_required, name='dispatch')
