@@ -58,8 +58,17 @@ select, input {
 	margin-right: 1ex;
 }
 
+input[type="submit"] {
+	margin-top: 1ex;
+	margin-bottom: 1ex;
+}
+
 textarea {
 	width: 100%;
+}
+
+img.icon {
+	height: 1em;
 }
 
 #header {
@@ -141,6 +150,24 @@ textarea {
 	padding-left: 1em;
 }
 
+.sidebox {
+	margin: 5px;
+	border: 1px solid #ccccff;
+	padding-left: 0px;
+	border-radius: 5px;
+	background-color: #f7f7ff;
+	padding-left: 1em;
+	padding-right: 1em;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	float: right;
+}
+
+.sidebox h1, .sidebox h2, .sidebox h3 {
+	margin-top: 1ex;
+	margin-bottom: 1ex;
+}
+
 .navbar {
 	margin-bottom: 2em;
 }
@@ -175,6 +202,27 @@ textarea {
 
 .list_item .authors {
 	padding-left: 1em;
+}
+
+.event_item {
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+	border-bottom: 1px dotted black;
+	padding-left: 2.5em;
+	background-repeat: no-repeat;
+	background-size: auto 2em;
+}
+
+.event_item.new_paper {
+	background-image: url("../img/new_paper.svg");
+}
+
+.event_item.review {
+	background-image: url("../img/review.svg");
+}
+
+.event_item.recommend {
+	background-image: url("../img/recommend.svg");
 }
 
 .highlight {

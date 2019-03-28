@@ -45,6 +45,15 @@ class FeedEvent(models.Model):
         paper = html.render_link(self.paper.get_absolute_url(),str(self.paper))
         return format_html(msg, person=self.person.__html__(), paper=paper)
 
+    def css_class(self):
+        css_map = {
+            const.user_feed_events.PAPER_POSTED: 'new_paper',
+            const.user_feed_events.AUTHORSHIP_CONFIRMED: 'new_paper',
+            const.user_feed_events.PAPER_REVIEW: 'review',
+            const.user_feed_events.PAPER_RECOMMENDATION: 'recommend',
+        }
+        return css_map.get(self.event_type, '')
+
 class FeedSubscription(models.Model):
     class Meta:
         ordering = ('-pk',)

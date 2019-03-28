@@ -9,7 +9,7 @@
 {{ navbar }}
 <div class="box">
 {% for object in object_list %}
-<div class="list_item">
+<div class="event_item {{ object.css_class }}">
 <div>{{ object.event_date }}</div>
 <div>{{ object|html }}</div>
 </div>
