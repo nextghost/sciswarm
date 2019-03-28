@@ -68,9 +68,11 @@ class PaperReviewForm(ModelForm):
                 raise ValidationError(msg, 'unique')
 
     def save(self):
+        new_review = (self.instance.pk is None)
         ret = super(PaperReviewForm, self).save()
-        models.FeedEvent.objects.create(person=ret.posted_by, paper=ret.paper,
-            event_type=const.user_feed_events.PAPER_REVIEW)
+        if new_review:
+            models.FeedEvent.objects.create(person=ret.posted_by,
+                paper=ret.paper,event_type=const.user_feed_events.PAPER_REVIEW)
         return ret
 
     save.alters_data = True
