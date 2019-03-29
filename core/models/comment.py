@@ -15,7 +15,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from django.db import models
+from django.forms.utils import flatatt
 from django.urls import reverse
+from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 from . import const, paper
 
@@ -59,6 +61,28 @@ class PaperReview(BaseComment):
         help_text=_('How much attention this paper deserves, not just for its conclusions but also for new methodologies or any other revolutionary scientific ideas.'))
     deleted = models.BooleanField(_('deleted'), editable=False, db_index=True,
         default=False)
+
+    def get_methodology_html(self):
+        css_map = {
+            const.paper_quality_ratings.BAD: 'bad_result',
+            const.paper_quality_ratings.MIXED: 'medium_result',
+            const.paper_quality_ratings.GOOD: 'good_result',
+        }
+        args = {'class': css_map.get(self.methodology)}
+        text = self.get_methodology_display()
+        tpl = '<span{attr}>{text}</span>'
+        return format_html(tpl, attr=flatatt(args), text=text)
+
+    def get_importance_html(self):
+        css_map = {
+            const.paper_importance_ratings.LOW: 'bad_result',
+            const.paper_importance_ratings.MEDIUM: 'medium_result',
+            const.paper_importance_ratings.HIGH: 'good_result',
+        }
+        args = {'class': css_map.get(self.importance)}
+        text = self.get_importance_display()
+        tpl = '<span{attr}>{text}</span>'
+        return format_html(tpl, attr=flatatt(args), text=text)
 
     def get_absolute_url(self):
         return reverse('core:paperreview_detail', kwargs=dict(pk=self.pk))

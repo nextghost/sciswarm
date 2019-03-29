@@ -9,7 +9,7 @@
 {{ navbar }}
 <div class="list_item">
 <div>{{ object.posted_by|object_link:_('Deleted user') }} {{ object.date_posted }}{% if user_person == object.posted_by and user_person is not None %} <a href="{% url 'core:edit_paperreview' pk=object.pk %}">{% trans '(Edit)' %}</a> <a href="{% url 'core:delete_paperreview' pk=object.pk %}">{% trans '(Delete)' %}</a>{% endif %}{% if reply_access %} <a href="{% url 'core:create_paperreviewresponse_main' pk=object.pk %}">{% trans '(Reply)' %}</a>{% endif %}</div>
-<div>{% blocktrans with methodology=object.get_methodology_display importance=object.get_importance_display %}Methodology: {{ methodology }}; Importance: {{ importance }}{% endblocktrans %}</div>
+<div>{% blocktrans with methodology=object.get_methodology_html importance=object.get_importance_html %}Methodology: {{ methodology }}; Importance: {{ importance }}{% endblocktrans %}</div>
 <div>{{ object.message|linebreaks }}</div>
 </div>
 <div class="box">

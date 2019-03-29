@@ -8,7 +8,7 @@
 <h1>{% trans 'Delete Paper Review' %}</h1>
 <div class="box">
 <div>{{ object.posted_by|object_link:_('Deleted user') }} {{ object.date_posted }}</div>
-<div>{% with methodology=object.get_methodology_display importance=object.get_importance_display %}{% blocktrans %}Methodology: {{ methodology }}; Importance: {{ importance }}{% endblocktrans %}{% endwith %}</div>
+<div>{% with methodology=object.get_methodology_html importance=object.get_importance_html %}{% blocktrans %}Methodology: {{ methodology }}; Importance: {{ importance }}{% endblocktrans %}{% endwith %}</div>
 <div>{{ object.message|linebreaks }}</div>
 </div>
 <h2>{% trans 'Do you really want to delete this review? You will not be allowed to write another one.' %}</h2>

@@ -236,3 +236,18 @@ span.author.rejected {
 span.author.unconfirmed {
 	background-color: yellow;
 }
+
+.bad_result {
+	color: red;
+	font-weight: bold;
+}
+
+.medium_result {
+	color: orange;
+	font-weight: bold;
+}
+
+.good_result {
+	color: #00c000;
+	font-weight: bold;
+}
