@@ -26,10 +26,10 @@
 {{ object.bio|linebreaks }}
 </div>
 
-<h2>{% trans 'Identifiers' %}{% if edit_access %} <a href="{% url 'core:add_person_identifier' %}"><img class="icon" src="{% static 'img/create.svg' %}" alt="{% trans '(add)' %}"/></a>{% endif %}</h2>
+<h2>{% trans 'Identifiers' %}{% if edit_access %} <a href="{% url 'core:add_person_identifier' %}"><img class="icon" src="{% static 'img/create.svg' %}" alt="{% trans '(add)' %}" title="{% trans 'Add' %}"/></a>{% endif %}</h2>
 <div class="box">
 <ul>
-{% for item in alias_list %}<li>{{ item|html }}{% if edit_access and item.is_deletable %} <a href="{% url 'core:unlink_person_identifier' pk=item.pk %}"><img class="icon" src="{% static 'img/delete.svg' %}" alt="{% trans '(delete)' %}"/></a>{% endif %}</li>
+{% for item in alias_list %}<li>{{ item|html }}{% if edit_access and item.is_deletable %} <a href="{% url 'core:unlink_person_identifier' pk=item.pk %}"><img class="icon" src="{% static 'img/delete.svg' %}" alt="{% trans '(delete)' %}" title="{% trans 'Delete' %}"/></a>{% endif %}</li>
 {% endfor %}
 </ul>
 </div>

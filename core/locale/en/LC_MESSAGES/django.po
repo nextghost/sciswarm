@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-19 13:08+0100\n"
+"POT-Creation-Date: 2019-03-29 19:00+0100\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -67,7 +67,7 @@ msgid "Wrong password."
 msgstr ""
 
 #: forms/auth.py:141 forms/comment.py:50 forms/comment.py:59
-#: forms/comment.py:101 forms/paper.py:194
+#: forms/comment.py:103 forms/paper.py:194
 msgid "Database error, please try again later."
 msgstr ""
 
@@ -210,7 +210,7 @@ msgid ""
 "delete the review first."
 msgstr ""
 
-#: forms/user.py:335
+#: forms/user.py:335 templates/core/person/paper_managers_list.html:13
 msgid "Cancel delegation"
 msgstr ""
 
@@ -230,7 +230,7 @@ msgstr ""
 msgid "account deletion date"
 msgstr ""
 
-#: models/auth.py:44 models/event.py:30 models/event.py:52 models/event.py:55
+#: models/auth.py:44 models/event.py:30 models/event.py:61 models/event.py:64
 msgid "person"
 msgstr ""
 
@@ -243,53 +243,53 @@ msgstr ""
 msgid "{first_name} {last_name}"
 msgstr ""
 
-#: models/comment.py:32 models/paper.py:290
+#: models/comment.py:34 models/paper.py:290
 msgid "date posted"
 msgstr ""
 
-#: models/comment.py:34
+#: models/comment.py:36
 msgid "date changed"
 msgstr ""
 
-#: models/comment.py:36 models/paper.py:292
+#: models/comment.py:38 models/paper.py:292
 msgid "posted by"
 msgstr ""
 
-#: models/comment.py:38
+#: models/comment.py:40
 msgid "message"
 msgstr ""
 
-#: models/comment.py:52 models/event.py:32 models/paper.py:366
+#: models/comment.py:54 models/event.py:32 models/paper.py:366
 #: models/paper.py:403 models/paper.py:431 models/paper.py:478
 #: models/paper.py:490
 msgid "paper"
 msgstr ""
 
-#: models/comment.py:54
+#: models/comment.py:56
 msgid "methodology"
 msgstr ""
 
-#: models/comment.py:56
+#: models/comment.py:58
 msgid ""
 "Quality of methodology. If about half of the conclusions are invalid due to "
 "methodology errors, choose \"Mixed\"."
 msgstr ""
 
-#: models/comment.py:57
+#: models/comment.py:59
 msgid "importance"
 msgstr ""
 
-#: models/comment.py:59
+#: models/comment.py:61
 msgid ""
 "How much attention this paper deserves, not just for its conclusions but "
 "also for new methodologies or any other revolutionary scientific ideas."
 msgstr ""
 
-#: models/comment.py:60
+#: models/comment.py:62
 msgid "deleted"
 msgstr ""
 
-#: models/comment.py:77
+#: models/comment.py:101
 msgid "review"
 msgstr ""
 
@@ -451,7 +451,7 @@ msgstr ""
 msgid "event date"
 msgstr ""
 
-#: models/event.py:36 models/event.py:57
+#: models/event.py:36 models/event.py:66
 msgid "event type"
 msgstr ""
 
@@ -665,7 +665,7 @@ msgstr ""
 #: templates/core/comment/paperreviewresponse_form.html:22
 #: templates/core/paper/create_paper.html:43
 #: templates/core/paper/science_subfield_form.html:18
-#: templates/core/person/person_detail.html:24
+#: templates/core/person/person_detail.html:19
 #: templates/registration/password_change_form.html:16
 msgid "Save"
 msgstr ""
@@ -677,10 +677,19 @@ msgstr ""
 #: templates/common/unlink_alias.html:15
 #: templates/core/comment/delete_paperreview.html:17
 #: templates/core/comment/delete_paperreviewresponse.html:16
+#: templates/core/comment/paperreview_detail.html:12
+#: templates/core/comment/paperreview_detail.html:19
+#: templates/core/comment/paperreview_list.html:14
 #: templates/core/paper/delete_citation.html:18
 #: templates/core/paper/delete_paper_author.html:19
 #: templates/core/paper/delete_paper_author_name.html:13
 #: templates/core/paper/delete_paper_supplemental_link.html:17
+#: templates/core/paper/paper_detail.html:21
+#: templates/core/paper/paper_detail.html:25
+#: templates/core/paper/paper_detail.html:51
+#: templates/core/paper/paper_detail.html:60
+#: templates/core/paper/paper_detail.html:71
+#: templates/core/person/person_detail.html:32
 msgid "Delete"
 msgstr ""
 
@@ -771,9 +780,9 @@ msgstr ""
 
 #: templates/core/comment/delete_paperreview.html:10
 #: templates/core/comment/delete_paperreviewresponse.html:10
-#: templates/core/comment/paperreview_detail.html:11
-#: templates/core/comment/paperreview_detail.html:18
-#: templates/core/comment/paperreview_list.html:13
+#: templates/core/comment/paperreview_detail.html:12
+#: templates/core/comment/paperreview_detail.html:19
+#: templates/core/comment/paperreview_list.html:14
 #: templates/core/comment/paperreviewresponse_form.html:11
 #: templates/core/paper/paper_detail.html:33
 #: templates/core/paper/paper_detail.html:35
@@ -781,8 +790,8 @@ msgid "Deleted user"
 msgstr ""
 
 #: templates/core/comment/delete_paperreview.html:11
-#: templates/core/comment/paperreview_detail.html:12
-#: templates/core/comment/paperreview_list.html:14
+#: templates/core/comment/paperreview_detail.html:13
+#: templates/core/comment/paperreview_list.html:15
 #, python-format
 msgid "Methodology: %(methodology)s; Importance: %(importance)s"
 msgstr ""
@@ -801,27 +810,39 @@ msgstr ""
 msgid "Do you really want to delete this message?"
 msgstr ""
 
-#: templates/core/comment/paperreview_detail.html:5
-#: templates/core/comment/paperreview_detail.html:8
+#: templates/core/comment/paperreview_detail.html:6
+#: templates/core/comment/paperreview_detail.html:9
 msgid "Paper Review And Replies"
 msgstr ""
 
-#: templates/core/comment/paperreview_detail.html:11
-#: templates/core/comment/paperreview_detail.html:18
-#: templates/core/comment/paperreview_list.html:13
+#: templates/core/comment/paperreview_detail.html:12
+#: templates/core/comment/paperreview_detail.html:19
+#: templates/core/comment/paperreview_list.html:14
 msgid "(Edit)"
 msgstr ""
 
-#: templates/core/comment/paperreview_detail.html:11
-#: templates/core/comment/paperreview_detail.html:18
-#: templates/core/comment/paperreview_list.html:13
+#: templates/core/comment/paperreview_detail.html:12
+#: templates/core/comment/paperreview_detail.html:19
+#: templates/core/comment/paperreview_list.html:14 views/utils.py:110
+msgid "Edit"
+msgstr ""
+
+#: templates/core/comment/paperreview_detail.html:12
+#: templates/core/comment/paperreview_detail.html:19
+#: templates/core/comment/paperreview_list.html:14
 msgid "(Delete)"
 msgstr ""
 
-#: templates/core/comment/paperreview_detail.html:11
-#: templates/core/comment/paperreview_detail.html:18
-#: templates/core/comment/paperreview_list.html:13
+#: templates/core/comment/paperreview_detail.html:12
+#: templates/core/comment/paperreview_detail.html:19
+#: templates/core/comment/paperreview_list.html:14
 msgid "(Reply)"
+msgstr ""
+
+#: templates/core/comment/paperreview_detail.html:12
+#: templates/core/comment/paperreview_detail.html:19
+#: templates/core/comment/paperreview_list.html:14
+msgid "Reply"
 msgstr ""
 
 #: templates/core/comment/paperreview_form.html:13
@@ -829,14 +850,14 @@ msgstr ""
 msgid "Paper:"
 msgstr ""
 
-#: templates/core/comment/paperreview_list.html:16
+#: templates/core/comment/paperreview_list.html:17
 #, python-format
 msgid "%(counter)s response"
 msgid_plural "%(counter)s responses"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/core/comment/paperreview_list.html:19
+#: templates/core/comment/paperreview_list.html:20
 msgid "No reviews found."
 msgstr ""
 
@@ -1440,7 +1461,6 @@ msgstr ""
 #: templates/core/paper/paper_detail.html:51
 #: templates/core/paper/paper_detail.html:60
 #: templates/core/paper/paper_detail.html:71
-#: templates/core/person/paper_managers_list.html:13
 #: templates/core/person/person_detail.html:32
 msgid "(delete)"
 msgstr ""
@@ -1452,6 +1472,15 @@ msgstr ""
 #: templates/core/paper/paper_detail.html:68
 #: templates/core/person/person_detail.html:29
 msgid "(add)"
+msgstr ""
+
+#: templates/core/paper/paper_detail.html:21
+#: templates/core/paper/paper_detail.html:27
+#: templates/core/paper/paper_detail.html:48
+#: templates/core/paper/paper_detail.html:57
+#: templates/core/paper/paper_detail.html:68
+#: templates/core/person/person_detail.html:29
+msgid "Add"
 msgstr ""
 
 #: templates/core/paper/paper_detail.html:23
@@ -1584,16 +1613,20 @@ msgstr ""
 msgid "No papers awaiting authorship confirmation have been found."
 msgstr ""
 
+#: templates/core/person/paper_managers_list.html:13
+msgid "(Cancel)"
+msgstr ""
+
 #: templates/core/person/paper_managers_list.html:15
 msgid "No users with delegated editing permissions found."
 msgstr ""
 
-#: templates/core/person/person_detail.html:11
-msgid "This user has permission to edit all your articles."
+#: templates/core/person/person_detail.html:15
+msgid "Subscribe"
 msgstr ""
 
-#: templates/core/person/person_detail.html:20
-msgid "Subscribe"
+#: templates/core/person/person_detail.html:24
+msgid "This user has permission to edit all your articles."
 msgstr ""
 
 #: templates/core/person/person_list.html:14
@@ -1975,10 +2008,6 @@ msgstr ""
 
 #: views/utils.py:105
 msgid "Cited by"
-msgstr ""
-
-#: views/utils.py:110
-msgid "Edit"
 msgstr ""
 
 #: views/utils.py:115

@@ -1,4 +1,5 @@
 {% extends 'core/layout.html' %}
+{% load static %}
 {% load i18n %}
 {% load sciswarm %}
 
@@ -10,7 +11,7 @@
 <div class="box">
 {% for object in object_list %}
 <div class="list_item">
-<div>{{ object.posted_by|object_link:_('Deleted user') }} {{ object.date_posted }}{% if user_person == object.posted_by and user_person is not None %} <a href="{% url 'core:edit_paperreview' pk=object.pk %}">{% trans '(Edit)' %}</a> <a href="{% url 'core:delete_paperreview' pk=object.pk %}">{% trans '(Delete)' %}</a>{% endif %}{% if user_person is not None %}{% if is_paper_author or user_person == object.posted_by %} <a href="{% url 'core:create_paperreviewresponse_main' pk=object.pk %}">{% trans '(Reply)' %}</a>{% endif %}{% endif %}</div>
+<div>{{ object.posted_by|object_link:_('Deleted user') }} {{ object.date_posted }}{% if user_person == object.posted_by and user_person is not None %} <a href="{% url 'core:edit_paperreview' pk=object.pk %}"><img class="icon" src="{% static 'img/edit.svg' %}" alt="{% trans '(Edit)' %}" title="{% trans 'Edit' %}"/></a> <a href="{% url 'core:delete_paperreview' pk=object.pk %}"><img class="icon" src="{% static 'img/delete.svg' %}" alt="{% trans '(Delete)' %}" title="{% trans 'Delete' %}"/></a>{% endif %}{% if user_person is not None %}{% if is_paper_author or user_person == object.posted_by %} <a href="{% url 'core:create_paperreviewresponse_main' pk=object.pk %}"><img class="icon" src="{% static 'img/reply.svg' %}" alt="{% trans '(Reply)' %}" title="{% trans 'Reply' %}"/></a>{% endif %}{% endif %}</div>
 <div>{% blocktrans with methodology=object.get_methodology_html importance=object.get_importance_html %}Methodology: {{ methodology }}; Importance: {{ importance }}{% endblocktrans %}</div>
 <div>{{ object.message|linebreaks }}</div>
 <div><a href="{{ object.get_absolute_url }}">{% blocktrans count counter=object.response_count %}{{ counter }} response{% plural %}{{ counter }} responses{% endblocktrans %}</a></div>

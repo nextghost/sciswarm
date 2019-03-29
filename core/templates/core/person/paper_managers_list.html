@@ -10,7 +10,7 @@
 {{ navbar }}
 <div class="box">
 {% for object in object_list %}
-<div>{{ object|object_link }} <a href="{% url 'core:delegate_paper_management' username=object.username %}"><img class="icon" src="{% static 'img/delete.svg' %}" alt="{% trans '(delete)'%}"/></a></a></div>
+<div>{{ object|object_link }} <a href="{% url 'core:delegate_paper_management' username=object.username %}"><img class="icon" src="{% static 'img/delete.svg' %}" alt="{% trans '(Cancel)'%}" title="{% trans 'Cancel delegation'%}"/></a></a></div>
 {% empty %}
 <div>{% trans 'No users with delegated editing permissions found.' %}</div>
 {% endfor %}
