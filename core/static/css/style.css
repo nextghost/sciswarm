@@ -23,6 +23,7 @@ thead td, th {
 
 td, th {
 	text-align: left;
+	vertical-align: top;
 	padding: 5px;
 }
 
