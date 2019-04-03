@@ -1,0 +1,48 @@
+* {
+	box-sizing: border-box;
+}
+
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
+	font-size: 11pt;
+	color: #333333;
+	line-height: 1.4;
+	margin: 0;
+	padding: 0;
+	background-color: #a0a0a0;
+}
+
+h1 {
+	margin-top: 0;
+}
+
+img {
+	border: none;
+	max-width: 100%;
+}
+
+div.wrapper {
+	max-width: 1100px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div.box {
+	border-radius: 8px;
+	border: 2px solid #ffc0a0;
+	background-color: #fffff0;
+	padding: 1em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+div.screenshot {
+	text-align: center;
+	margin-top: 1em;
+	margin-bottom: 3em;
+}
