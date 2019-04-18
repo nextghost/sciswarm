@@ -103,6 +103,7 @@ def paper_navbar(request, paper):
         (_('Paper detail'), 'core:paper_detail', tuple(), kwargs),
         (_('Reviews'), 'core:paperreview_list', tuple(), kwargs),
         (_('Cited by'), 'core:cited_by_paper_list', tuple(), kwargs),
+        (_('Similar papers'), 'core:similar_paper_list', tuple(), kwargs),
     ]
     if request.user.is_authenticated:
         edit_access = paper.is_owned_by(request.user)

@@ -45,3 +45,20 @@ def paper_review_rating_subquery(paper_list=None, person_id=None):
         importance_sd=sql.stddev_pop(50*revtab.importance),
         review_count=sql.count(revtab.pk))
     return join.select(*fields, alias=alias, where=where, group_by=fields)
+
+def bibcoupling_subquery(alias_list, exclude=[]):
+    bibfield = models.Paper._meta.get_field('bibliography')
+    citetab = sql.Table(bibfield.remote_field.through)
+    aliastab = sql.Table(models.PaperAlias)
+    extaliastab = sql.Table(models.PaperAlias)
+    cond = (aliastab.target_id == extaliastab.target_id)
+    join = aliastab.left_join(extaliastab, cond)
+    join = join.inner_join(citetab, ((aliastab.pk == citetab.paperalias_id) |
+        (extaliastab.pk == citetab.paperalias_id)))
+    fields = [citetab.paper_id]
+    alias = dict(weight=sql.count(aliastab.pk, distinct=True))
+    where = aliastab.pk.belongs(alias_list)
+    if exclude:
+        where &= ~citetab.paper_id.belongs(exclude)
+    return join.select(*fields, alias=alias, where=where, group_by=fields,
+        order_by=[alias['weight'].desc()])

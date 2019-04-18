@@ -37,7 +37,7 @@ from ..forms.user import (PaperAuthorForm, PersonAliasForm, PersonAliasFormset,
     AuthorshipConfirmationForm)
 from ..models import const
 from ..utils.html import NavigationBar
-from ..utils.paper import paper_review_rating_subquery
+from ..utils.paper import paper_review_rating_subquery, bibcoupling_subquery
 from ..utils.utils import list_map, logger, remove_duplicates
 from .. import models
 
@@ -158,6 +158,30 @@ class RejectedAuthorshipPaperListView(BasePaperListView):
         ret = super(RejectedAuthorshipPaperListView, self).get_context_data(
             *args, **kwargs)
         ret['navbar'] = manage_authorship_navbar(self.request)
+        return ret
+
+class SimilarPaperListView(BaseListView):
+    template_name = 'core/paper/similar_paper_list.html'
+
+    def get_queryset(self):
+        qs = models.Paper.objects.filter_public()
+        self.paper = get_object_or_404(qs, pk=self.kwargs['pk'])
+        alias_list = self.paper.bibliography.values_list('pk')
+        return bibcoupling_subquery(alias_list, [self.paper.pk])
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(SimilarPaperListView, self).get_context_data(*args,
+            **kwargs)
+        id_list = [(x['paper_id'], x['weight']) for x in ret['object_list']]
+        paper_map = models.Paper.objects.in_bulk([pk for pk,w in id_list])
+        paper_list = []
+        for pk, weight in id_list:
+            paper = paper_map[pk]
+            paper.weight = weight
+            paper_list.append(paper)
+        ret['object_list'] = fetch_authors(paper_list)
+        ret['navbar'] = paper_navbar(self.request, self.paper)
+        ret['page_title'] = _('Papers Similar to %s') % self.paper.name
         return ret
 
 class PaperDetailView(DetailView):

@@ -1,0 +1,22 @@
+{% extends 'core/layout.html' %}
+{% load i18n %}
+{% load sciswarm %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<h1>{{ page_title }}</h1>
+{{ navbar }}
+<div class="box">
+{% for object, author_list, author_names in object_list %}
+<div class="list_item">
+<div class="paper_title">{{ object|object_link }}</div>
+{% if author_list or author_names %}<div class="authors">{% for item in author_list %}{{ item.target_link }}{% if author_names or not forloop.last %}; {% endif %}{% endfor %}{% for item in author_names %}{{ item }}{% if not forloop.last %}; {% endif %}{% endfor %}</div>{% endif %}
+<div class="authors">{% blocktrans with coupling=object.weight %}Bibliographic coupling: {{ coupling }}{% endblocktrans %}</div>
+</div>
+{% empty %}
+<div>{% trans 'No papers found.' %}</div>
+{% endfor %}
+{{ paginator }}
+</div>
+{% endblock %}

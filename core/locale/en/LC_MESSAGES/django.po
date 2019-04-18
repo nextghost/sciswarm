@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-29 19:00+0100\n"
+"POT-Creation-Date: 2019-04-18 13:13+0200\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -823,7 +823,7 @@ msgstr ""
 
 #: templates/core/comment/paperreview_detail.html:12
 #: templates/core/comment/paperreview_detail.html:19
-#: templates/core/comment/paperreview_list.html:14 views/utils.py:110
+#: templates/core/comment/paperreview_list.html:14 views/utils.py:111
 msgid "Edit"
 msgstr ""
 
@@ -1309,7 +1309,7 @@ msgstr ""
 msgid "My profile"
 msgstr ""
 
-#: templates/core/layout.html:35 views/utils.py:120
+#: templates/core/layout.html:35 views/utils.py:121
 msgid "Manage authorship"
 msgstr ""
 
@@ -1584,7 +1584,13 @@ msgid "Search"
 msgstr ""
 
 #: templates/core/paper/paper_list.html:23
+#: templates/core/paper/similar_paper_list.html:18
 msgid "No papers found."
+msgstr ""
+
+#: templates/core/paper/similar_paper_list.html:15
+#, python-format
+msgid "Bibliographic coupling: %(coupling)s"
 msgstr ""
 
 #: templates/core/person/delegate_paper_management.html:5
@@ -1830,61 +1836,66 @@ msgstr ""
 msgid "Papers You Have Rejected"
 msgstr ""
 
-#: views/paper.py:171
+#: views/paper.py:184
+#, python-format
+msgid "Papers Similar to %s"
+msgstr ""
+
+#: views/paper.py:195
 msgid "This paper is not available for legal reasons."
 msgstr ""
 
-#: views/paper.py:207
+#: views/paper.py:231
 msgid "Create Paper"
 msgstr ""
 
-#: views/paper.py:216
+#: views/paper.py:240
 msgid "Author:"
 msgstr ""
 
-#: views/paper.py:228 views/paper.py:454
+#: views/paper.py:252 views/paper.py:478
 msgid "Biblio entry:"
 msgstr ""
 
-#: views/paper.py:280
+#: views/paper.py:304
 msgid "Edit Paper"
 msgstr ""
 
-#: views/paper.py:285 views/paper.py:304 views/paper.py:334 views/paper.py:370
-#: views/paper.py:390 views/paper.py:422 views/paper.py:450 views/paper.py:482
-#: views/paper.py:530 views/paper.py:557 views/paper.py:603 views/paper.py:625
+#: views/paper.py:309 views/paper.py:328 views/paper.py:358 views/paper.py:394
+#: views/paper.py:414 views/paper.py:446 views/paper.py:474 views/paper.py:506
+#: views/paper.py:554 views/paper.py:581 views/paper.py:627 views/paper.py:649
 msgid "You are not one of the authors."
 msgstr ""
 
-#: views/paper.py:296
+#: views/paper.py:320
 msgid "Add Paper Author"
 msgstr ""
 
-#: views/paper.py:336
+#: views/paper.py:360
 msgid "Rejected authorship cannot be deleted."
 msgstr ""
 
-#: views/paper.py:384
+#: views/paper.py:408
 msgid "Add Paper Identifier"
 msgstr ""
 
-#: views/paper.py:415
+#: views/paper.py:439
 msgid "Delete Paper Identifier"
 msgstr ""
 
-#: views/paper.py:424 views/user.py:143
+#: views/paper.py:448 views/user.py:143
 msgid "This identifier is permanent."
 msgstr ""
 
-#: views/paper.py:441
+#: views/paper.py:465
 msgid "Add Citations"
 msgstr ""
 
-#: views/paper.py:525
+#: views/paper.py:549
 msgid "Add Supplemental Link"
 msgstr ""
 
-#: views/paper.py:595
+#: views/paper.py:619
 msgid "Add Scientific Field"
 msgstr ""
 
@@ -2010,44 +2021,48 @@ msgstr ""
 msgid "Cited by"
 msgstr ""
 
-#: views/utils.py:115
+#: views/utils.py:106
+msgid "Similar papers"
+msgstr ""
+
+#: views/utils.py:116
 msgid "Add review"
 msgstr ""
 
-#: views/utils.py:126
+#: views/utils.py:127
 msgid "Confirm authorship"
 msgstr ""
 
-#: views/utils.py:128
+#: views/utils.py:129
 msgid "Claim authorship"
 msgstr ""
 
-#: views/utils.py:129
+#: views/utils.py:130
 msgid "Rejected papers"
 msgstr ""
 
-#: views/utils.py:166
+#: views/utils.py:167
 msgctxt "navigation"
 msgid "First"
 msgstr ""
 
-#: views/utils.py:172
+#: views/utils.py:173
 msgctxt "navigation"
 msgid "Previous"
 msgstr ""
 
-#: views/utils.py:175
+#: views/utils.py:176
 #, python-format
 msgctxt "navigation"
 msgid "%(page)s of %(total)s"
 msgstr ""
 
-#: views/utils.py:180
+#: views/utils.py:181
 msgctxt "navigation"
 msgid "Next"
 msgstr ""
 
-#: views/utils.py:184
+#: views/utils.py:185
 msgctxt "navigation"
 msgid "Last"
 msgstr ""

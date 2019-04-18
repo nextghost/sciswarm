@@ -16,6 +16,7 @@
 
 from django.db.models.expressions import OrderBy
 from django.db.models.sql import compiler
+from django.db.models import QuerySet
 from django.db import models, DEFAULT_DB_ALIAS, connections
 from django.utils import timezone
 from collections import OrderedDict
@@ -68,7 +69,9 @@ class CountOp(object):
         else:
             self.template = 'COUNT({arg})'
 
-    def __call__(self, arg):
+    def __call__(self, arg=None):
+        if arg is None:
+            arg = '*'
         return self.template.format(arg=arg)
 
 # Expressions
@@ -311,6 +314,9 @@ class BelongsExpression(BooleanExpression):
             comp2 = self._rhs.get_compiler(connection=connection)
             rhs, params = comp2.as_sql()
             ret_params.extend(params)
+        elif isinstance(self._rhs, QuerySet):
+            rhs, params = self._rhs._as_sql(connection=connection)
+            ret_params.extend(params)
         else:
             raise ValueError('Invalid argument for "IN" expression')
         return template.format(lhs=lhs, rhs=rhs), ret_params
@@ -427,7 +433,9 @@ def sum(expr):
 def clean_sum(expr):
     return coalesce(sum(expr), 0)
 
-def count(expr, distinct=False):
+def count(expr=None, distinct=False):
+    if expr is None:
+        return NumericExpression(CountOp(distinct))
     return NumericExpression(CountOp(distinct), make_expr(expr))
 
 def avg(expr):
@@ -635,6 +643,14 @@ class SelectQuery(Joinable):
         return name in self._fieldmap
 
     def __getitem__(self, name):
+        # QuerySet compatibility
+        if isinstance(name, slice):
+            ret = self.clone()
+            if name.step is not None:
+                raise NotImplementedError('Slices with step parameter not supported')
+            ret.low_mark = name.start
+            ret.high_mark = name.stop
+            return ret
         return self._fieldmap[name]
 
     def __getattr__(self, name):
@@ -642,6 +658,9 @@ class SelectQuery(Joinable):
             msg = "'{0}' object has no attribute '{1}'"
             raise AttributeError(msg.format(self.__class__.__name__, name))
         return self[name]
+
+    def __len__(self):
+        return self.count()
 
     def __str__(self):
         sql, params = self.sql_with_params()
@@ -702,6 +721,18 @@ class SelectQuery(Joinable):
 
     def reset_refcounts(self, data):
         pass
+
+    # QuerySet compatibility methods
+    def all(self):
+        return self.clone()
+
+    def count(self):
+        subq = self.clone()
+        subq.order_by = []
+        alias = dict(row_count=globals()['count']())
+        query = subq.select(alias=alias)
+        result = query.execute()
+        return result.first()['row_count']
 
 class SelectCompiler(compiler.SQLCompiler):
     def pre_sql_setup(self):

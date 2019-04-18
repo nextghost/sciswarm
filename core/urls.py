@@ -102,6 +102,8 @@ paper_patterns = [
         name='cited_by_paper_list'),
     url(r'^(?P<pk>[0-9]+)/reviews/?\Z', comment.PaperReviewListView.as_view(),
         name='paperreview_list'),
+    url(r'^(?P<pk>[0-9]+)/similar/?\Z', paper.SimilarPaperListView.as_view(),
+        name='similar_paper_list'),
     url(r'^(?P<pk>[0-9]+)/add_review/?\Z',
         comment.CreatePaperReviewView.as_view(), name='create_paperreview'),
     url(r'^(?P<pk>[0-9]+)/recommend/?\Z',
