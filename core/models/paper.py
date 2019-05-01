@@ -19,7 +19,8 @@ from django.http import QueryDict
 from django.urls import reverse
 from django.utils.html import format_html, mark_safe
 from django.utils.translation import ugettext_lazy as _
-from ..utils import html
+from ..utils.utils import fold_or
+from ..utils import html, pgsql
 from . import auth, const, fields
 
 class PersonQuerySet(models.QuerySet):
@@ -150,6 +151,41 @@ class AliasManager(models.Manager):
                 return self.create(scheme=scheme, identifier=identifier)
         except IntegrityError:
             return qs.get()
+
+    def bulk_create(self, obj_list, **kwargs):
+        if not obj_list:
+            return obj_list
+
+        # Find existing aliases
+        scheme_map = dict()
+        for item in obj_list:
+            if item.target is not None or item.target_id is not None:
+                msg = 'All targets must be None. Use link_alias() to create linked aliases.'
+                raise NotImplementedError(msg)
+            scheme_map.setdefault(item.scheme, []).append(item.identifier)
+        table = self.model.query_model
+        cond_list = [((table.scheme == scheme) & table.identifier.belongs(ids))
+            for scheme, ids in scheme_map.items()]
+        query = fold_or(cond_list)
+
+        with transaction.atomic():
+            pgsql.lock_table(self.model, pgsql.LOCK_SHARE_ROW_EXCLUSIVE)
+            ret = list(self.filter(query))
+            row_map = dict((((x.scheme, x.identifier), x) for x in ret))
+
+            # copy primary keys for compatibility with original bulk_create()
+            for item in obj_list:
+                key = (item.scheme, item.identifier)
+                if key in row_map:
+                    item.pk = row_map[key].pk
+
+            # create missing aliases
+            create_list = [x for x in obj_list
+                if (x.scheme, x.identifier) not in row_map]
+            if create_list:
+                ret.extend(super(AliasManager, self).bulk_create(create_list,
+                    **kwargs))
+        return ret
 
     # This method must be called under a transaction
     def link_alias(self, scheme, identifier, target):

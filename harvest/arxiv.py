@@ -1,8 +1,8 @@
-#!/usr/bin/python3
-
 from lxml import etree
+from django.forms import ValidationError
 from core.models import const
 from core.utils.harvest import ImportBridge
+from core.utils.validators import doi_validator
 from .oai import OaiRepository, format_datestamp
 import datetime
 
@@ -254,8 +254,11 @@ def parse_arxiv_meta(record):
 
     nodeset = record.xpath('a:doi', namespaces=_nsmap)
     for node in nodeset:
-        ret['identifiers'].append((const.paper_alias_schemes.DOI,
-            node.text.strip()))
+        try:
+            doi = doi_validator(node.text.strip())
+            ret['identifiers'].append((const.paper_alias_schemes.DOI, doi))
+        except ValidationError:
+            pass
 
     subfields = []
     node = _optional_node(record, 'a:categories')
@@ -289,5 +292,6 @@ def harvest():
         paper_list = [parse_arxiv_meta(x.metadata) for x in data
             if x.metadata is not None]
         del data
-        bridge.import_papers(format_datestamp(cursor), paper_list)
+        bridge.import_papers(format_datestamp(cursor), paper_list,
+            query_crossref=True)
         cursor += day

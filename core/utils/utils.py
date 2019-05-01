@@ -129,3 +129,9 @@ def remove_duplicates(item_list, queryset=None):
         for key in del_items:
             del item_map[key]
     return list(item_map.values())
+
+def make_chunks(data, chunk_size):
+    pos = 0
+    while pos < len(data):
+        yield data[pos:pos+chunk_size]
+        pos += chunk_size

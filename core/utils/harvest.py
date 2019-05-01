@@ -18,16 +18,94 @@ from collections import OrderedDict
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.db import IntegrityError
+from django.db.models import Count
 from django.db.transaction import atomic
 from . import pgsql
 from .transaction import lock_record
-from .utils import fold_or, list_map
+from .utils import fold_or, list_map, make_chunks
 from ..models import const
 from .. import models
+import difflib
 import logging
 import re
 
 harvest_logger = logging.getLogger('sciswarm.harvest')
+
+def normalize_title(title):
+    return ' '.join(title.casefold().split())
+
+def _add_bibliography_batch(data_list):
+    id_map = dict()
+    for item in data_list:
+        scheme, identifier = item['primary_identifier']
+        id_map.setdefault(scheme, []).append(identifier)
+
+    # Load papers for sanity checks
+    max_id_length = models.PaperAlias._meta.get_field('identifier').max_length
+    aliastab = models.PaperAlias.query_model
+    cond_list = [((aliastab.scheme == s) & aliastab.identifier.belongs(ids))
+        for s,ids in id_map.items()]
+    query = fold_or(cond_list) & aliastab.target.pk.notnull()
+    pgsql.lock_table(models.PaperAlias, pgsql.LOCK_SHARE_ROW_EXCLUSIVE)
+    qs = models.PaperAlias.objects.filter(query).select_related('target')
+    qs = qs.defer('target__abstract', 'target__cite_as')
+    qs = qs.annotate(bib_count=Count(aliastab.target.bibliography.f()))
+    paper_map = dict((((x.scheme, x.identifier), x) for x in qs))
+    merge_list = []
+    create_set = set()
+
+    for item in data_list:
+        pid = tuple(item['primary_identifier'])
+        alias = paper_map.get(pid)
+        if alias is None:
+            log_msg = 'add_bibliography(): Paper not found. Alias: %(pid)s'
+            kwargs = dict(pid=pid)
+            harvest_logger.warning(log_msg, kwargs)
+            continue
+        tmp_list = [(s,i) for s,i in item['bibliography']
+            if len(i) <= max_id_length]
+        item['bibliography'] = tmp_list
+
+        # We're importing bibliography from a different source here.
+        # Compare titles to check that the primary alias is assigned correctly.
+        paper = alias.target
+        if item['name'] is not None:
+            check = difflib.SequenceMatcher(None, normalize_title(paper.name),
+                normalize_title(item['name']))
+            ratio = check.ratio()
+            if ratio < 0.5:
+                log_msg = 'add_bibliography(): Paper name mismatch (similarity: %(ratio)4.2f). Alias: %(pid)s'
+                kwargs = dict(pid=pid, ratio=ratio)
+                harvest_logger.warning(log_msg, kwargs)
+                continue
+        # Paper already has bibliography or there's nothing to add => skip
+        if alias.bib_count > 0 or not item['bibliography']:
+            continue
+        merge_list.append((paper, item))
+        create_set.update((tuple(x) for x in item['bibliography']))
+
+    # Create all cited aliases in one big batch
+    create_list = [models.PaperAlias(scheme=s, identifier=i)
+        for s,i in create_set]
+    if not create_list:
+        return
+    alias_list = models.PaperAlias.objects.bulk_create(create_list)
+    alias_map = dict((((x.scheme, x.identifier), x) for x in alias_list))
+
+    # Add aliases to individual papers
+    for paper, data in merge_list:
+        # Remove duplicates using temporary set
+        bib_set = set((tuple(x) for x in data['bibliography']))
+        bib_list = [alias_map[x] for x in bib_set]
+        paper.bibliography.add(*bib_list)
+
+# Call add_bibliography() with a list of dicts in the same format that
+# would be passed to ImportBridge.import_papers()
+def add_bibliography(data_list):
+    batch_size = 100
+    for batch_list in make_chunks(data_list, batch_size):
+        with atomic():
+            _add_bibliography_batch(batch_list)
 
 def clean_paper_list(paper_list):
     alias_map = dict()
@@ -107,7 +185,7 @@ class ImportBridge(object):
         catmap = dict(((k, obj_map[n]) for k,(f,n) in subfield_defs.items()))
         self.category_map = catmap
 
-    def import_papers(self, cursor, paper_list):
+    def import_papers(self, cursor, paper_list, query_crossref=False):
         if not paper_list:
             return
         paper_list = clean_paper_list(paper_list)
@@ -129,6 +207,7 @@ class ImportBridge(object):
         # Save new papers into database
         batch_size = 100
         batch_count = (len(paper_list) + batch_size - 1) // batch_size
+        new_aliases = []
         with atomic():
             tmp = lock_record(self.record)
             if tmp is None:
@@ -137,13 +216,22 @@ class ImportBridge(object):
                 msg = 'Concurrent %s import process detected.'
                 raise RuntimeError(msg % self.record.name)
             pgsql.lock_table(models.PaperAlias, pgsql.LOCK_SHARE_ROW_EXCLUSIVE)
-            for batch in range(batch_count):
-                pos = batch * batch_size
-                self._import_batch(paper_list[pos:pos+batch_size])
+            for batch_list in make_chunks(paper_list, batch_size):
+                tmp_papers, tmp_aliases = self._import_batch(batch_list)
+                new_aliases.extend(tmp_aliases)
             self.record.import_cursor = cursor
             self.record.save(update_fields=['import_cursor'])
+        if query_crossref:
+            from .crossref import crossref_fetch_list
+            doi_scheme = const.paper_alias_schemes.DOI
+            doi_list = [i for s,i in new_aliases if s == doi_scheme]
+            for batch in make_chunks(doi_list, 1000):
+                cr_data = crossref_fetch_list(batch)
+                add_bibliography(cr_data)
 
     def _import_batch(self, paper_list):
+        id_field = models.PaperAlias._meta.get_field('identifier')
+        max_id_length = id_field.max_length
         # Look for existing papers in this batch
         aliastab = models.PaperAlias.query_model
         alias_list = [a for p in paper_list for a in p.get('identifiers', [])]
@@ -163,6 +251,8 @@ class ImportBridge(object):
                 tmp = old_paper_map[item.target_id].setdefault(item.scheme, [])
                 tmp.append(item.identifier)
 
+        created_papers = []
+        linked_aliases = []
         for paper in paper_list:
             primary_alias = paper.get('primary_identifier')
             new_alias_set = set()
@@ -170,7 +260,7 @@ class ImportBridge(object):
             for alias in paper.get('identifiers', []):
                 if alias in alias_map:
                     paper_set.add(alias_map[alias])
-                else:
+                elif len(alias[1]) <= max_id_length:
                     new_alias_set.add(alias)
 
             obj = None
@@ -206,13 +296,18 @@ class ImportBridge(object):
             if obj is not None:
                 for alias in new_alias_set:
                     models.PaperAlias.objects.link_alias(alias[0],alias[1],obj)
+                linked_aliases.extend(new_alias_set)
             # Paper not found, create it
             else:
                 tmp = paper.copy()
                 tmp['identifiers'] = new_alias_set
-                self._create_paper(tmp)
+                created_papers.append(self._create_paper(tmp))
+                linked_aliases.extend(new_alias_set)
+        return (created_papers, linked_aliases)
 
     def _create_paper(self, paper):
+        id_field = models.PaperAlias._meta.get_field('identifier')
+        max_id_length = id_field.max_length
         aaobj = models.PersonAlias.objects
         paobj = models.PaperAlias.objects
         bot_profile = self.record.bot_profile
@@ -250,8 +345,10 @@ class ImportBridge(object):
 
         # Create bibliography
         cite_set = set(paper.get('bibliography', []))
-        cite_list = [paobj.create_alias(x[0], x[1]) for x in cite_set]
-        if cite_list:
+        create_list = [models.PaperAlias(scheme=s, identifier=i)
+            for s,i in cite_set if len(i) <= max_id_length]
+        if create_list:
+            cite_list = paobj.bulk_create(create_list)
             paper.bibliography.add(*cite_list)
 
         # Create keywords

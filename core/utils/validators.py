@@ -69,7 +69,7 @@ def isbn_validator(value):
     err = ValidationError(_('Invalid identifier format.'), 'invalid')
     if not re.match(r'^(?:97[89]-?)?[0-9]+(?:-[0-9]+){0,2}-?[0-9X]$', value):
         raise err
-    number = value.replace('-', '')
+    number = value.replace('-', '').upper()
     if len(number) == 13:
         total = sum((int(x)*y for x,y in zip(number[:-1], [1,3]*6)))
         checksum = 10 - total % 10
@@ -82,7 +82,7 @@ def isbn_validator(value):
             checksum = 'X'
     else:
         raise err
-    if value[-1] != str(checksum):
+    if number[-1] != str(checksum):
         raise ValidationError(_('Identifier checksum is incorrect.'),'invalid')
     return number
 
@@ -92,6 +92,12 @@ def arxiv_validator(value):
     if not result:
         raise ValidationError(_('Invalid identifier format.'), 'invalid')
     return result.group(1)
+
+def doi_validator(value):
+    value = value.lower()
+    validate = validators.RegexValidator(r'^10\.[0-9]{4,}(?:\.[0-9]+)*/.*')
+    validate(value)
+    return value
 
 class SafeURLValidator(validators.URLValidator):
     def __call__(self, value):
@@ -115,8 +121,7 @@ _person_alias_validator_map = {
 _paper_alias_validator_map = {
     const.person_alias_schemes.SCISWARM: sciswarm_paper_id_validator,
     const.person_alias_schemes.URL: SafeURLValidator(),
-    const.paper_alias_schemes.DOI:
-        validators.RegexValidator(r'^10\.[0-9]{4,}(?:\.[0-9]+)*/.*'),
+    const.paper_alias_schemes.DOI: doi_validator,
     const.paper_alias_schemes.ISBN: isbn_validator,
     const.paper_alias_schemes.ARXIV: arxiv_validator,
 }
@@ -163,3 +168,12 @@ def validate_paper_alias(scheme, identifier):
 
 def validate_alias(scheme, identifier):
     return _validate_alias(_alias_validator_map, scheme, identifier)
+
+def filter_wrapper(validator):
+    def wrapped(*args, **kwargs):
+        try:
+            validator(*args, **kwargs)
+            return True
+        except ValidationError:
+            return False
+    return wrapped
