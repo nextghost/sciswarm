@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-09 20:52+0200\n"
+"POT-Creation-Date: 2019-05-09 21:18+0200\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: English <doucha@swarmtech.cz>\n"
@@ -1086,10 +1086,26 @@ msgid "Changelog"
 msgstr ""
 
 #: templates/core/help/index.html:39
-msgid "Mar. 1, 2019"
+msgid "May 9, 2019"
 msgstr ""
 
 #: templates/core/help/index.html:40
+msgid "Added search for similar papers from arbitrary DOI"
+msgstr ""
+
+#: templates/core/help/index.html:41
+msgid "May 1, 2019"
+msgstr ""
+
+#: templates/core/help/index.html:42
+msgid "Added search for similar papers through bibliographic coupling"
+msgstr ""
+
+#: templates/core/help/index.html:43
+msgid "Mar. 1, 2019"
+msgstr ""
+
+#: templates/core/help/index.html:44
 msgid "First public version"
 msgstr ""
 
