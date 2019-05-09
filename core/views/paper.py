@@ -21,7 +21,7 @@ from django.db.models import prefetch_related_objects
 from django.db.transaction import atomic
 from django.forms import ValidationError
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
@@ -32,13 +32,14 @@ from .utils import (fetch_authors, person_navbar, paper_navbar,
     manage_authorship_navbar)
 from ..forms.paper import (PaperSearchForm, PaperForm, PaperAliasForm,
     PaperAliasFormset, PaperAuthorNameFormset, PaperSupplementalLinkForm,
-    PaperRecommendationForm, ScienceSubfieldForm)
+    PaperRecommendationForm, ScienceSubfieldForm, DoiInputForm)
 from ..forms.user import (PaperAuthorForm, PersonAliasForm, PersonAliasFormset,
     AuthorshipConfirmationForm)
 from ..models import const
+from ..utils.crossref import crossref_fetch, crossref_import_bridge
 from ..utils.html import NavigationBar
 from ..utils.paper import paper_review_rating_subquery, bibcoupling_subquery
-from ..utils.utils import list_map, logger, remove_duplicates
+from ..utils.utils import list_map, logger, remove_duplicates, fold_or
 from .. import models
 
 class BasePaperListView(SearchListView):
@@ -657,3 +658,85 @@ class DeleteScienceSubfieldView(BaseDeleteView):
 
     def get_success_url(self):
         return self.parent.get_absolute_url()
+
+class FindSimilarPapersView(FormView):
+    form_class = DoiInputForm
+    template_name = 'core/paper/find_similar_form.html'
+
+    def _find_paper(self, doi):
+        doi_scheme = const.paper_alias_schemes.DOI
+        table = models.PaperAlias.query_model
+        query = ((table.scheme == doi_scheme) & (table.identifier == doi))
+        qs = models.PaperAlias.objects.filter(query).select_related('target')
+        alias = qs.first()
+        if alias is not None:
+            return alias.target
+        return None
+
+    def form_valid(self, form):
+        doi = form.cleaned_data['doi']
+        paper = self._find_paper(doi)
+
+        # Paper found and is public => Redirect to the standard page
+        if paper is not None and paper.public:
+            return redirect('core:similar_paper_list', pk=paper.pk)
+
+        # If the paper is non-public, request data from Crossref anyway
+        try:
+            data = crossref_fetch(doi)
+        except:
+            logger.info('Find similar papers: Crossref query failed. DOI: %s',
+                doi, exc_info=True)
+            msg = _('Crossref query failed. Please make sure that the DOI is valid and try again later.')
+            form.add_error('doi', ValidationError(msg, 'remote'))
+            return self.form_invalid(form)
+
+        # Import paper (unless it already exists and is non-public)
+        if paper is None and data['name'] is not None:
+            bridge = crossref_import_bridge()
+            paper_list = bridge.import_papers('', [data], query_crossref=False)
+            # The paper may have been created by another process while we were
+            # waiting for Crossref response
+            if paper_list:
+                paper = paper_list[0]
+            else:
+                paper = self.find_paper(doi)
+            if paper is not None and paper.public:
+                return redirect('core:similar_paper_list', pk=paper.pk)
+
+        # Paper cannot be imported, generate one-off result page
+        paper_list = []
+        max_results = 100
+        if data['bibliography']:
+            table = models.PaperAlias.query_model
+            cond_list = [((table.scheme == s) & (table.identifier == i))
+                for s,i in data['bibliography']]
+            subqs = models.PaperAlias.objects.filter(fold_or(cond_list))
+            subqs = subqs.values_list('pk')
+            # Limit to 100 best results
+            qs = bibcoupling_subquery(subqs)[:max_results+1]
+            id_list = [(x['paper_id'], x['weight']) for x in qs]
+            paper_map = models.Paper.objects.in_bulk([pk for pk,w in id_list])
+            for pk, weight in id_list:
+                paper = paper_map[pk]
+                paper.weight = weight
+                paper_list.append(paper)
+        paper_name = data['name'] or doi
+        context = dict()
+        context['object_list'] = fetch_authors(paper_list[:max_results])
+        context['navbar'] = ''
+        if len(id_list) > max_results:
+            title_tpl = _('Papers Similar to %(name)s (top %(limit)d results)')
+            args = dict(name=paper_name, limit=max_results)
+            page_title = title_tpl % args
+        else:
+            page_title = _('Papers Similar to %s') % paper_name
+        context['page_title'] = page_title
+        template_name = 'core/paper/similar_paper_list.html'
+        return render(self.request, template_name, context)
+
+    def get_context_data(self, *args, **kwargs):
+        ret = super(FindSimilarPapersView, self).get_context_data(*args,
+            **kwargs)
+        ret['page_title'] = _('Find Similar Papers')
+        return ret

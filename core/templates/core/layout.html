@@ -31,6 +31,9 @@
 	  <div class="menu_group"><a href="{% url 'core:paper_list' %}">{% trans 'Papers' %}</a></div>
 	  {% if request.user.is_authenticated %}
 	  <div class="menu_item"><a href="{% url 'core:create_paper' %}">{% trans 'New paper' %}</a></div>
+	  {% endif %}
+	  <div class="menu_item"><a href="{% url 'core:find_similar_papers' %}">{% trans 'Find similar' %}</a></div>
+	  {% if request.user.is_authenticated %}
 	  <div class="menu_group"><a href="{% url 'core:person_detail' username=request.user.username %}">{% trans 'My profile' %}</a></div>
 	  <div class="menu_item"><a href="{% url 'core:mass_authorship_confirmation' %}">{% trans 'Manage authorship' %}</a></div>
 	  <div class="menu_item"><a href="{% url 'core:user_paper_managers_list' %}">{% trans 'Delegated permissions' %}</a></div>

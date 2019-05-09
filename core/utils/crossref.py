@@ -3,24 +3,31 @@ from django.http import QueryDict
 from django.utils.html import strip_tags
 from core.models import const
 from core import models
-from .validators import doi_validator, filter_wrapper, isbn_validator
+from .validators import (doi_validator, filter_wrapper, validate_paper_alias,
+    validate_person_alias)
 from html import unescape
 from urllib.parse import quote
+import re
 import requests
 import time
+
+def crossref_import_bridge():
+    from .harvest import ImportBridge
+    return ImportBridge('crossref', 'Crossref', 'Crossref Bot')
 
 def crossref_parse_work(data):
     doi_scheme = const.paper_alias_schemes.DOI
     isbn_scheme = const.paper_alias_schemes.ISBN
-    doi = data['DOI'].lower()
+    orcid_scheme = const.person_alias_schemes.ORCID
+    doi = doi_validator(data['DOI'])
     ret = dict()
     ret['id'] = doi
     ret['name'] = None
-    if 'title' in data:
-        ret['name'] = data['title'][0]
+    title_list = data.get('title')
+    if title_list:
+        ret['name'] = title_list[0]
     abstract = data.get('abstract', '(Abstract not available)')
-    tmp = abstract.lower()
-    if '<p>' in tmp or '<jats:p>' in tmp:
+    if re.match(r'<[a-z]', abstract, re.I):
         abstract = unescape(strip_tags(abstract))
     ret['abstract'] = abstract
     ret['primary_identifier'] = (doi_scheme, doi)
@@ -28,8 +35,11 @@ def crossref_parse_work(data):
     id_list = [(doi_scheme, doi)]
 
     if data['type'] == 'book':
-        id_list.extend(((isbn_scheme, x.replace('-', ''))
-            for x in data.get('ISBN', [])))
+        for isbn in data.get('ISBN', []):
+            try:
+                id_list.append(validate_paper_alias(isbn_scheme, isbn))
+            except ValidationError:
+                pass
     ret['identifiers'] = id_list
 
     author_list = []
@@ -40,18 +50,28 @@ def crossref_parse_work(data):
     for item in data.get('author', []):
         if 'ORCID' in item:
             orcid = item['ORCID'].rsplit('/', 1)[-1]
-            author_list.append((const.person_alias_schemes.ORCID, orcid))
-        else:
-            tokens = [item.get(k) for k in author_keys]
-            tokens = [x for x in tokens if x]
-            author_names.append(', '.join(tokens))
+            try:
+                author_list.append(validate_person_alias(orcid_scheme, orcid))
+                continue
+            except ValidationError:
+                pass
+        tokens = [item.get(k) for k in author_keys]
+        tokens = [x for x in tokens if x]
+        author_names.append(', '.join(tokens))
 
     for item in data.get('reference', []):
         if 'DOI' in item:
-            bibliography.append((doi_scheme, item['DOI'].lower()))
-        elif 'ISBN' in item:
             try:
-                bibliography.append((isbn_scheme,isbn_validator(item['ISBN'])))
+                alias = validate_paper_alias(doi_scheme, item['DOI'])
+                bibliography.append(alias)
+                continue
+            except ValidationError:
+                pass
+        if 'ISBN' in item:
+            isbn = item['ISBN'].rsplit('/', 1)[-1]
+            try:
+                bibliography.append(validate_paper_alias(isbn_scheme, isbn))
+                continue
             except ValidationError:
                 pass
 
@@ -80,7 +100,6 @@ def _crossref_list_url(doi_list):
 
 def crossref_fetch_list(doi_list, delay=1):
     from .harvest import harvest_logger
-    doi_scheme = const.paper_alias_schemes.DOI
     check_alias = filter_wrapper(doi_validator)
 
     # Basic input validation

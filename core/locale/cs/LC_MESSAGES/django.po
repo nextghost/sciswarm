@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-18 13:13+0200\n"
+"POT-Creation-Date: 2019-05-09 20:52+0200\n"
 "PO-Revision-Date: 2018-12-03 15:37+0100\n"
 "Last-Translator: Martin Doucha <doucha@swarmtech.cz>\n"
 "Language-Team: Czech <doucha@swarmtech.cz>\n"
@@ -80,7 +80,7 @@ msgid "Wrong password."
 msgstr "Špatné heslo."
 
 #: forms/auth.py:141 forms/comment.py:50 forms/comment.py:59
-#: forms/comment.py:103 forms/paper.py:194
+#: forms/comment.py:103 forms/paper.py:220
 msgid "Database error, please try again later."
 msgstr "Chyba databáze, zkuste to prosím později."
 
@@ -145,7 +145,7 @@ msgstr "Jméno nebo identifikátor autora."
 msgid "Identifier"
 msgstr "Identifikátor"
 
-#: forms/paper.py:40 forms/paper.py:164
+#: forms/paper.py:40 forms/paper.py:190
 msgid "Keywords"
 msgstr "Klíčová slova"
 
@@ -153,51 +153,55 @@ msgstr "Klíčová slova"
 msgid "Comma-separated list of keywords."
 msgstr "Seznam klíčových slov oddělených čárkami."
 
-#: forms/paper.py:165
+#: forms/paper.py:191
 msgid "List of keywords separated by commas or newlines."
 msgstr "Seznam klíčových slov oddělený čárkami nebo konci řádků."
 
-#: forms/paper.py:172
+#: forms/paper.py:198
 msgid "I am an author"
 msgstr "Jsem jedním z autorů"
 
-#: forms/paper.py:185
+#: forms/paper.py:211
 #, python-format
 msgid "Some keywords are longer than %(limit_value)s characters."
 msgstr "Některá klíčová slova jsou delší než %(limit_value)s znaků."
 
-#: forms/paper.py:282
+#: forms/paper.py:308
 msgid "This paper already has a link with this name."
 msgstr "Tento článek již má odkaz s tímto názvem."
 
-#: forms/paper.py:285
+#: forms/paper.py:311
 msgid "This paper already has this link."
 msgstr "Tento článek již má tento odkaz."
 
-#: forms/paper.py:310
+#: forms/paper.py:336
 msgid "Cancel recommendation"
 msgstr "Zrušit doporučení"
 
-#: forms/paper.py:312
+#: forms/paper.py:338
 msgid "Recommend"
 msgstr "Doporučit"
 
-#: forms/paper.py:337
+#: forms/paper.py:363
 msgid "Subfield"
 msgstr "Podobor"
 
-#: forms/paper.py:339
+#: forms/paper.py:365
 msgid "Other:"
 msgstr "Jiný:"
 
-#: forms/paper.py:380
+#: forms/paper.py:406
 #, python-format
 msgid "This subfield already exists under %s."
 msgstr "Tento podobor již existuje v oboru %s."
 
-#: forms/paper.py:386
+#: forms/paper.py:412
 msgid "Select a subfield from the list or enter new subfield name."
 msgstr "Vyberte podobor ze seznamu nebo zadejte nový název podoboru."
+
+#: forms/paper.py:435
+msgid "Enter DOI"
+msgstr "Zadejte DOI"
 
 #: forms/user.py:91
 msgid "This user has rejected authorship."
@@ -255,12 +259,12 @@ msgstr "osoba"
 msgid "time zone"
 msgstr "časové pásmo"
 
-#: models/auth.py:53 models/paper.py:83
+#: models/auth.py:53 models/paper.py:84
 #, python-brace-format
 msgid "{first_name} {last_name}"
 msgstr "{first_name} {last_name}"
 
-#: models/comment.py:34 models/paper.py:290
+#: models/comment.py:34 models/paper.py:326
 msgid "date posted"
 msgstr "datum vložení"
 
@@ -268,7 +272,7 @@ msgstr "datum vložení"
 msgid "date changed"
 msgstr "poslední změna"
 
-#: models/comment.py:38 models/paper.py:292
+#: models/comment.py:38 models/paper.py:328
 msgid "posted by"
 msgstr "vložil(a)"
 
@@ -276,9 +280,9 @@ msgstr "vložil(a)"
 msgid "message"
 msgstr "zpráva"
 
-#: models/comment.py:54 models/event.py:32 models/paper.py:366
-#: models/paper.py:403 models/paper.py:431 models/paper.py:478
-#: models/paper.py:490
+#: models/comment.py:54 models/event.py:32 models/paper.py:402
+#: models/paper.py:439 models/paper.py:467 models/paper.py:514
+#: models/paper.py:526
 msgid "paper"
 msgstr "článek"
 
@@ -476,102 +480,102 @@ msgstr "datum události"
 msgid "event type"
 msgstr "druh události"
 
-#: models/paper.py:49
+#: models/paper.py:50
 msgid "username"
 msgstr "uživatelské jméno"
 
-#: models/paper.py:51
+#: models/paper.py:52
 msgid "titles before name"
 msgstr "tituly před jménem"
 
-#: models/paper.py:53
+#: models/paper.py:54
 msgid "first name"
 msgstr "jméno"
 
-#: models/paper.py:54
+#: models/paper.py:55
 msgid "last name"
 msgstr "příjmení"
 
-#: models/paper.py:55
+#: models/paper.py:56
 msgid "titles after name"
 msgstr "tituly za jménem"
 
-#: models/paper.py:57
+#: models/paper.py:58
 msgid "about you"
 msgstr "o vás"
 
-#: models/paper.py:67
+#: models/paper.py:68
 #, python-brace-format
 msgid "{last_name}, {first_name}"
 msgstr "{last_name}, {first_name}"
 
-#: models/paper.py:124 models/paper.py:433 models/paper.py:480
+#: models/paper.py:125 models/paper.py:469 models/paper.py:516
 msgid "author"
 msgstr "autor"
 
-#: models/paper.py:126
+#: models/paper.py:127
 msgid "delegate"
 msgstr "správce"
 
-#: models/paper.py:190 models/paper.py:362
+#: models/paper.py:226 models/paper.py:398
 msgid "scheme"
 msgstr "schéma"
 
-#: models/paper.py:192 models/paper.py:364
+#: models/paper.py:228 models/paper.py:400
 msgid "identifier"
 msgstr "identifikátor"
 
-#: models/paper.py:194
+#: models/paper.py:230
 msgid "user"
 msgstr "uživatel"
 
-#: models/paper.py:234
+#: models/paper.py:270
 msgid "field"
 msgstr "obor"
 
-#: models/paper.py:236
+#: models/paper.py:272
 msgid "name"
 msgstr "název"
 
-#: models/paper.py:237
+#: models/paper.py:273
 msgid "Please enter only the English name of the subfield."
 msgstr "Zadejte prosím pouze anglický název podoboru."
 
-#: models/paper.py:245
+#: models/paper.py:281
 #, python-format
 msgid "%(field)s / %(subfield)s"
 msgstr "%(field)s / %(subfield)s"
 
-#: models/paper.py:265 models/paper.py:492
+#: models/paper.py:301 models/paper.py:528
 msgid "title"
 msgstr "název"
 
-#: models/paper.py:266
+#: models/paper.py:302
 msgid "abstract"
 msgstr "abstrakt"
 
-#: models/paper.py:267
+#: models/paper.py:303
 msgid "theory development"
 msgstr "rozvoj teorie"
 
-#: models/paper.py:268
+#: models/paper.py:304
 msgid "Check this box if the paper expands prior theory."
 msgstr "Zaškrtněte toto pole, pokud článek dále rozvíjí dřívější teorii."
 
-#: models/paper.py:270
+#: models/paper.py:306
 msgid "survey data"
 msgstr "dotazníková data"
 
-#: models/paper.py:271
+#: models/paper.py:307
 msgid "Check this box if the paper contains or analyzes survey data."
 msgstr ""
 "Zaškrtněte toto pole, pokud článek obsahuje nebo analyzuje data z dotazníků."
 
-#: models/paper.py:273
+#: models/paper.py:309
 msgid "observational data"
 msgstr "data z pozorování"
 
-#: models/paper.py:274
+#: models/paper.py:310
 msgid ""
 "Check this box if the paper contains or analyzes data from observation of "
 "natural phenomena."
@@ -579,11 +583,11 @@ msgstr ""
 "Zaškrtněte toto pole, pokud článek obsahuje nebo analyzuje data z pozorování "
 "přírodních úkazů."
 
-#: models/paper.py:276
+#: models/paper.py:312
 msgid "experimental data"
 msgstr "experimentální data"
 
-#: models/paper.py:277
+#: models/paper.py:313
 msgid ""
 "Check this box if the paper contains or analyzes data from controlled "
 "experiments."
@@ -591,11 +595,11 @@ msgstr ""
 "Zaškrtněte toto pole, pokud článek obsahuje nebo analyzuje data z řízených "
 "experimentů."
 
-#: models/paper.py:279
+#: models/paper.py:315
 msgid "metaanalysis"
 msgstr "metaanalýza"
 
-#: models/paper.py:280
+#: models/paper.py:316
 msgid ""
 "Check this box if the paper contains extensive metaanalysis or literature "
 "review (aside from the usual summary in introduction)."
@@ -603,11 +607,11 @@ msgstr ""
 "Zaškrtněte toto pole, pokud článek obsahuje rozsáhlou metaanalýzu nebo "
 "přehled literatury (mimo obvyklé shrnutí v úvodu)."
 
-#: models/paper.py:282
+#: models/paper.py:318
 msgid "year published"
 msgstr "rok vydání"
 
-#: models/paper.py:284
+#: models/paper.py:320
 msgid ""
 "Year when this paper was officially published, e.g. in a journal. Leave "
 "blank if publication date is pending."
@@ -615,19 +619,19 @@ msgstr ""
 "Rok, kdy byl článek oficiálně vydán, např. ve vědeckém časopise. Pokud o "
 "datu vydání ještě není rozhodnuto, nechte prázdné."
 
-#: models/paper.py:285
+#: models/paper.py:321
 msgid "cite as"
 msgstr "doporučená citace"
 
-#: models/paper.py:286
+#: models/paper.py:322
 msgid "Preferred citation text."
 msgstr "Doporučená forma, jak tento článek citovat."
 
-#: models/paper.py:287
+#: models/paper.py:323
 msgid "incomplete metadata"
 msgstr "neúplná metadata"
 
-#: models/paper.py:288
+#: models/paper.py:324
 msgid ""
 "Check this box if some information about this paper is missing (e.g. omitted "
 "citations because the cited papers have no usable identifier)."
@@ -635,59 +639,59 @@ msgstr ""
 "Zaškrtněte toto pole, pokud některé informace o článku chybí (např. "
 "vynechané citace článků, které zatím nemají žádný použitelný identifikátor)."
 
-#: models/paper.py:295
+#: models/paper.py:331
 msgid "last changed"
 msgstr "poslední změna"
 
-#: models/paper.py:297
+#: models/paper.py:333
 msgid "changed by"
 msgstr "změnil(a)"
 
-#: models/paper.py:300
+#: models/paper.py:336
 msgid "public"
 msgstr "veřejný"
 
-#: models/paper.py:402
+#: models/paper.py:438
 msgid "keyword"
 msgstr "klíčové slovo"
 
-#: models/paper.py:435
+#: models/paper.py:471
 msgid "confirmed"
 msgstr "potvrzeno"
 
-#: models/paper.py:469
+#: models/paper.py:505
 msgid "Confirmed"
 msgstr "Potvrzeno"
 
-#: models/paper.py:471
+#: models/paper.py:507
 msgid "Pending"
 msgstr "Nepotvrzeno"
 
-#: models/paper.py:472
+#: models/paper.py:508
 msgid "Rejected"
 msgstr "Odmítnuto"
 
-#: models/paper.py:481
+#: models/paper.py:517
 msgid "Additional authors with no unique identifier"
 msgstr "Další autoři, kteří nemají žádný unikátní identifikátor"
 
-#: models/paper.py:493
+#: models/paper.py:529
 msgid "URL"
 msgstr "URL"
 
-#: models/paper.py:503
+#: models/paper.py:539
 msgid "code"
 msgstr "kód"
 
-#: models/paper.py:504
+#: models/paper.py:540
 msgid "repository name"
 msgstr "název repozitáře"
 
-#: models/paper.py:505
+#: models/paper.py:541
 msgid "bot profile"
 msgstr "uživatelský profil robota"
 
-#: models/paper.py:507
+#: models/paper.py:543
 msgid "import cursor"
 msgstr "importní záložka"
 
@@ -1491,31 +1495,35 @@ msgstr "Články"
 msgid "New paper"
 msgstr "Nový článek"
 
-#: templates/core/layout.html:34
+#: templates/core/layout.html:35
+msgid "Find similar"
+msgstr "Hledat podobné"
+
+#: templates/core/layout.html:37
 msgid "My profile"
 msgstr "Můj profil"
 
-#: templates/core/layout.html:35 views/utils.py:121
+#: templates/core/layout.html:38 views/utils.py:121
 msgid "Manage authorship"
 msgstr "Správa autorství"
 
-#: templates/core/layout.html:36
+#: templates/core/layout.html:39
 msgid "Delegated permissions"
 msgstr "Seznam pověření"
 
-#: templates/core/layout.html:38
+#: templates/core/layout.html:41
 msgid "Help"
 msgstr "Nápověda"
 
-#: templates/core/layout.html:39
+#: templates/core/layout.html:42
 msgid "About"
 msgstr "Kontakty"
 
-#: templates/core/layout.html:40
+#: templates/core/layout.html:43
 msgid "Terms of Service"
 msgstr "Provozní podmínky"
 
-#: templates/core/layout.html:41
+#: templates/core/layout.html:44
 msgid "Sciswarm on GitHub"
 msgstr "Sciswarm na GitHubu"
 
@@ -1653,6 +1661,11 @@ msgstr "Opravdu chcete článek vyřadit z tohoto vědeckého oboru?"
 msgid "Remove"
 msgstr "Vyřadit"
 
+#: templates/core/paper/find_similar_form.html:14
+#: templates/core/paper/paper_list.html:13
+msgid "Search"
+msgstr "Hledat"
+
 #: templates/core/paper/paper_detail.html:21
 msgid "Authors:"
 msgstr "Autoři:"
@@ -1779,10 +1792,6 @@ msgstr "Nebyly zadány žádné odkazy."
 #: templates/core/paper/paper_detail.html:75
 msgid "No citations have been entered."
 msgstr "Nebyly zadány žádné citace."
-
-#: templates/core/paper/paper_list.html:13
-msgid "Search"
-msgstr "Hledat"
 
 #: templates/core/paper/paper_list.html:23
 #: templates/core/paper/similar_paper_list.html:18
@@ -1920,7 +1929,7 @@ msgstr "Neplatný formát identifikátoru."
 msgid "Identifier checksum is incorrect."
 msgstr "Chybný kontrolní součet identifikátoru."
 
-#: utils/validators.py:101
+#: utils/validators.py:107
 msgid ""
 "We are sorry but Sci-Hub links are not allowed on this site. With all due "
 "respect to Alexandra Elbakyan for putting herself at risk in the name of "
@@ -1936,7 +1945,7 @@ msgstr ""
 "Zadejte raději odkaz na kopii dané stránky nebo souboru na Vašem osobním "
 "webu (pokud daný soubor můžete sami legálně hostovat)."
 
-#: utils/validators.py:147
+#: utils/validators.py:152
 msgid ""
 "Generic identifier must have a scheme prefix separated by color (e.g. scheme:"
 "identifier)."
@@ -2022,96 +2031,113 @@ msgstr "Nedávná aktivita uživatele %s"
 msgid "Timeline"
 msgstr "Novinky z Vaší sítě"
 
-#: views/paper.py:48
+#: views/paper.py:49
 msgid "Latest papers"
 msgstr "Nejnovější články"
 
-#: views/paper.py:90
+#: views/paper.py:91
 #, python-format
 msgid "Papers Citing: %s"
 msgstr "Články citující: %s"
 
-#: views/paper.py:104
+#: views/paper.py:105
 #, python-format
 msgid "Papers Posted by %s"
 msgstr "Články vložené uživatelem %s"
 
-#: views/paper.py:123
+#: views/paper.py:124
 #, python-format
 msgid "Papers by %s"
 msgstr "Články uživatele %s"
 
-#: views/paper.py:141
+#: views/paper.py:142
 #, python-format
 msgid "Papers Recommended by %s"
 msgstr "Články doporučené uživatelem %s"
 
-#: views/paper.py:149
+#: views/paper.py:150
 msgid "Papers You Have Rejected"
 msgstr "Vámi odmítnuté články"
 
-#: views/paper.py:184
+#: views/paper.py:185 views/paper.py:733
 #, python-format
 msgid "Papers Similar to %s"
 msgstr "Podobné články jako %s"
 
-#: views/paper.py:195
+#: views/paper.py:196
 msgid "This paper is not available for legal reasons."
 msgstr "Tento článek je z právních důvodů nedostupný."
 
-#: views/paper.py:231
+#: views/paper.py:232
 msgid "Create Paper"
 msgstr "Vložit článek"
 
-#: views/paper.py:240
+#: views/paper.py:241
 msgid "Author:"
 msgstr "Autor:"
 
-#: views/paper.py:252 views/paper.py:478
+#: views/paper.py:253 views/paper.py:479
 msgid "Biblio entry:"
 msgstr "Citace:"
 
-#: views/paper.py:304
+#: views/paper.py:305
 msgid "Edit Paper"
 msgstr "Upravit článek"
 
-#: views/paper.py:309 views/paper.py:328 views/paper.py:358 views/paper.py:394
-#: views/paper.py:414 views/paper.py:446 views/paper.py:474 views/paper.py:506
-#: views/paper.py:554 views/paper.py:581 views/paper.py:627 views/paper.py:649
+#: views/paper.py:310 views/paper.py:329 views/paper.py:359 views/paper.py:395
+#: views/paper.py:415 views/paper.py:447 views/paper.py:475 views/paper.py:507
+#: views/paper.py:555 views/paper.py:582 views/paper.py:628 views/paper.py:650
 msgid "You are not one of the authors."
 msgstr "Nejste jedním z autorů."
 
-#: views/paper.py:320
+#: views/paper.py:321
 msgid "Add Paper Author"
 msgstr "Přidat autora článku"
 
-#: views/paper.py:360
+#: views/paper.py:361
 msgid "Rejected authorship cannot be deleted."
 msgstr "Odmítnuté autorství nelze smazat."
 
-#: views/paper.py:408
+#: views/paper.py:409
 msgid "Add Paper Identifier"
 msgstr "Přidat identifikátor článku"
 
-#: views/paper.py:439
+#: views/paper.py:440
 msgid "Delete Paper Identifier"
 msgstr "Smazat identifikátor článku"
 
-#: views/paper.py:448 views/user.py:143
+#: views/paper.py:449 views/user.py:143
 msgid "This identifier is permanent."
 msgstr "Tento identifikátor je trvalý."
 
-#: views/paper.py:465
+#: views/paper.py:466
 msgid "Add Citations"
 msgstr "Přidat citace"
 
-#: views/paper.py:549
+#: views/paper.py:550
 msgid "Add Supplemental Link"
 msgstr "Přidat doplňující odkaz"
 
-#: views/paper.py:619
+#: views/paper.py:620
 msgid "Add Scientific Field"
 msgstr "Přidat vědecký obor"
+
+#: views/paper.py:690
+msgid ""
+"Crossref query failed. Please make sure that the DOI is valid and try again "
+"later."
+msgstr ""
+"Nepodařilo se načíst metadata článku z Crossrefu. Zkontrolujte prosím, že "
+"zadaný DOI skutečně existuje, a zkuste to znovu později."
+
+#: views/paper.py:729
+#, python-format
+msgid "Papers Similar to %(name)s (top %(limit)d results)"
+msgstr "Podobné články jako %(name)s (prvních %(limit)d výsledků)"
+
+#: views/paper.py:741
+msgid "Find Similar Papers"
+msgstr "Hledat podobné články"
 
 #: views/user.py:55
 #, python-format

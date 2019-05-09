@@ -88,6 +88,8 @@ person_patterns = [
 
 paper_patterns = [
     url(r'^new/?\Z', paper.CreatePaperView.as_view(), name='create_paper'),
+    url(r'^find_similar/?\Z', paper.FindSimilarPapersView.as_view(),
+        name='find_similar_papers'),
     url(r'^delete_identifier/(?P<pk>[0-9]+)/?\Z',
         paper.UnlinkPaperAliasView.as_view(), name='unlink_paper_identifier'),
     url(r'^delete_author/(?P<pk>[0-9]+)/?\Z',

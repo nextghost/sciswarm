@@ -430,3 +430,12 @@ class ScienceSubfieldForm(ModelForm):
         return subfield
 
     save.alters_data = True
+
+class DoiInputForm(Form):
+    doi = forms.CharField(label=_('Enter DOI'))
+
+    def clean_doi(self):
+        doi_scheme = const.paper_alias_schemes.DOI
+        value = self.cleaned_data['doi']
+        scheme, value = validate_paper_alias(doi_scheme, value)
+        return value

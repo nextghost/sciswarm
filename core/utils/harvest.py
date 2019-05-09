@@ -208,6 +208,7 @@ class ImportBridge(object):
         batch_size = 100
         batch_count = (len(paper_list) + batch_size - 1) // batch_size
         new_aliases = []
+        new_papers = []
         with atomic():
             tmp = lock_record(self.record)
             if tmp is None:
@@ -219,6 +220,7 @@ class ImportBridge(object):
             for batch_list in make_chunks(paper_list, batch_size):
                 tmp_papers, tmp_aliases = self._import_batch(batch_list)
                 new_aliases.extend(tmp_aliases)
+                new_papers.extend(tmp_papers)
             self.record.import_cursor = cursor
             self.record.save(update_fields=['import_cursor'])
         if query_crossref:
@@ -228,6 +230,7 @@ class ImportBridge(object):
             for batch in make_chunks(doi_list, 1000):
                 cr_data = crossref_fetch_list(batch)
                 add_bibliography(cr_data)
+        return new_papers
 
     def _import_batch(self, paper_list):
         id_field = models.PaperAlias._meta.get_field('identifier')

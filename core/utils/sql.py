@@ -606,7 +606,7 @@ class SelectQuery(Joinable):
         self.combined_queries = ()
 
         if limit is not None:
-            self.low_mark = limit[0]
+            self.low_mark = limit[0] or 0
             self.high_mark = limit[0] + limit[1]
 
         self._generate_aliases(self.from_)
@@ -648,7 +648,7 @@ class SelectQuery(Joinable):
             ret = self.clone()
             if name.step is not None:
                 raise NotImplementedError('Slices with step parameter not supported')
-            ret.low_mark = name.start
+            ret.low_mark = name.start or 0
             ret.high_mark = name.stop
             return ret
         return self._fieldmap[name]
