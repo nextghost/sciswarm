@@ -104,10 +104,26 @@ class PaperSearchForm(Form):
 
                 # Search author aliases and linked users
                 tokens = author.split()
+                id_list = []
+                # Normalize known identifiers
+                for scheme in const.person_alias_schemes:
+                    try:
+                        scheme, tmp_id = validate_person_alias(scheme, author)
+                        if tmp_id != author:
+                            id_list.append((scheme, tmp_id))
+                    except ValidationError:
+                        pass
                 tmplist = [(persontab.first_name.icontains(x) |
                     persontab.last_name.icontains(x)) for x in tokens]
-                tmplist.append(aliastab.identifier == author)
-                tmplist.append(extaliastab.identifier == author)
+                tmp1 = (aliastab.identifier == author)
+                tmp2 = (extaliastab.identifier == author)
+                if id_list:
+                    tmp1 |= fold_or((((aliastab.scheme == s) &
+                        (aliastab.identifier == i)) for s,i in id_list))
+                    tmp2 |= fold_or((((extaliastab.scheme == s) &
+                        (extaliastab.identifier == i)) for s,i in id_list))
+                tmplist.append(tmp1)
+                tmplist.append(tmp2)
                 cond = ((papertab.pk == reftab.paper_id) &
                     ((reftab.confirmed==True) | reftab.confirmed.isnull()))
                 join = join.left_join(subjoin, cond & fold_or(tmplist))
@@ -131,7 +147,17 @@ class PaperSearchForm(Form):
                 except ValidationError as err:
                     self.add_error('identifier', err)
             if not self.has_error('identifier'):
-                cond &= (aliastab.identifier == identifier)
+                id_cond = (aliastab.identifier == identifier)
+                # Normalize known identifiers
+                for scheme in const.paper_alias_schemes:
+                    try:
+                        scheme,tmp_id = validate_paper_alias(scheme,identifier)
+                        if tmp_id != identifier:
+                            id_cond |= ((aliastab.scheme == scheme) &
+                                (aliastab.identifier == tmp_id))
+                    except ValidationError:
+                        pass
+                cond &= id_cond
                 join = join.inner_join(aliastab, cond)
                 self.filter = True
 

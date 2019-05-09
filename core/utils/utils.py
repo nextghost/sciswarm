@@ -100,20 +100,20 @@ def group_list(pair_list):
     return ret
 
 def fold_and(value_list):
-    if not value_list:
-        return None
     if not isinstance(value_list, (list, tuple)):
         value_list = list(value_list)
+    if not value_list:
+        return None
     ret = value_list[0]
     for value in value_list[1:]:
         ret &= value
     return ret
 
 def fold_or(value_list):
-    if not value_list:
-        return None
     if not isinstance(value_list, (list, tuple)):
         value_list = list(value_list)
+    if not value_list:
+        return None
     ret = value_list[0]
     for value in value_list[1:]:
         ret |= value
